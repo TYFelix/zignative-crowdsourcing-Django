@@ -1,0 +1,81 @@
+{% load static %}
+{% load designer_filters %}
+<nav>
+     <div class="nav  nav-tabs justify-content-center" id="nav-tab" role="tablist">
+        <a class="nav-item btn nav-link active" id="nav-all-tab" data-toggle="tab" href="#nav-all" role="tab"
+           aria-controls="nav-home" aria-selected="true">All({{ contests|in_status_set:"all"|length }})</a>
+
+        <a class="nav-item btn nav-link {% if contests|in_status_set:"in_progress"|length == 0 %}disabled{% endif %}"
+           id="nav-inprogress-tab" data-toggle="tab"
+           href="#nav-inprogress" role="tab"
+           aria-controls="nav-profile" aria-selected="false">In
+            Progress({{ contests|in_status_set:"in_progress"|length }})</a>
+
+        <a class="nav-item btn nav-link {% if contests|in_status_set:"completed"|length == 0 %}disabled{% endif %}"
+           id="nav-completed-tab" data-toggle="tab" href="#nav-completed" role="tab"
+           aria-controls="nav-contact" aria-selected="false">Completed({{ contests|in_status_set:"completed"|length }})</a>
+
+        <a class="nav-item btn nav-link {% if contests|in_status_set:"canceled"|length == 0 %}disabled{% endif %}"
+           id="nav-canceled-tab" data-toggle="tab" href="#nav-canceled" role="tab"
+           aria-controls="nav-another" aria-selected="false">Canceled({{ contests|in_status_set:"canceled"|length }})</a>
+    </div>
+</nav>
+<div class="tab-content justify-content-md-center row " id="nav-tabContent">
+    <div class="tab-pane fade  col-12 mt-2 show active " id="nav-all" role="tabpanel"
+         aria-labelledby="nav-all-tab">
+        <div class="mt-3">
+            <ul class="list list-inline">
+                {% if works|length  == 0 %}
+                    <div class="text-center">
+                        <h6 class="font-weight-bold">No work found</h6>
+                        <a href="{% url "designer:browse_contests" %}" class="btn btn-success mr-2">Browse Contests</a>
+                    </div>
+                {% else %}
+                    {% for contest in contests|in_status_set:"all" %}
+                        {% include "includes/designer/project_div.html" with contest=contest %}
+                    {% endfor %}
+
+                {% endif %}
+
+
+            </ul>
+        </div>
+
+    </div>
+    <div class="tab-pane fade   col-12 mt-2   row" id="nav-inprogress" role="tabpanel"
+         aria-labelledby="nav-inprogress-tab">
+        <div class="mt-3">
+            <ul class="list list-inline">
+                {% for contest in contests|in_status_set:"in_progress" %}
+                    {% include "includes/designer/project_div.html" with contest=contest %}
+                {% endfor %}
+
+            </ul>
+        </div>
+    </div>
+    <div class="tab-pane fade col-12 mt-2" id="nav-completed" role="tabpanel"
+         aria-labelledby="nav-completed-tab">
+        <div class="mt-3">
+            <ul class="list list-inline">
+                {% for contest in contests|in_status_set:"completed" %}
+                    {% include "includes/designer/project_div.html" with contest=contest %}
+                {% endfor %}
+
+            </ul>
+        </div>
+    </div>
+    <div class="tab-pane fade col-12 mt-2" id="nav-canceled" role="tabpanel"
+         aria-labelledby="nav-canceled-tab">
+        <div class="mt-3">
+            <ul class="list list-inline">
+                {% for contest in contests|in_status_set:"canceled" %}
+                    {% include "includes/designer/project_div.html" with contest=contest %}
+                {% endfor %}
+
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+

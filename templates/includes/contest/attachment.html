@@ -1,0 +1,26 @@
+<div class="border mt-4 mb-4">
+              <div class="row m-1 ">
+
+                   <div class="col-2 p-3">
+
+                      <img src="{{attachment.get_image}}" class="img-responsive border pre-im" width="120" height="120" alt="">
+
+                  </div>
+                  <div class="col-10 pt-3 pb-3 pl-3">
+                      <div class="border p-3" style="max-height:150px;height:100%;overflow-y:auto">
+                          <div class="float-right" style="display:inline">
+                              <a style="cursor:pointer" url="{% url "customer:delete_attachment" attachment.id %}" onclick="are_u_sure_for_delete(this)" class="step-link">
+                                  <span><i class="fa fa-trash"></i></span>
+                              </a>
+                          </div>
+
+
+
+                          {{ attachment.content }}
+
+                      </div>
+                  </div>
+
+
+              </div>
+            </div>

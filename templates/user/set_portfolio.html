@@ -1,0 +1,98 @@
+{% extends "customer/layout.html" %}
+{% load static %}
+{% load designer_filters %}
+{% load crispy_forms_tags %}
+
+{% block head %}
+    <title>Set Portfolio | Zignative </title>
+
+
+{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+    <div class="main-body">
+
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="main-breadcrumb">
+        <ol class="breadcrumb  mb-4 mt-2">
+            <li class="breadcrumb-item "><a href="{% url "user:account" %}" class="step-link">Account</a></li>
+            <li class="breadcrumb-item ">Set Portfolio</li>
+        </ol>
+    </nav>
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.tags == "error" %}
+                <div class="alert alert-danger " role="alert">
+
+            {% else %}
+                <div class="alert alert-{{ message.tags }} " role="alert">
+
+            {% endif %}
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        {% endfor %}
+    {% endif %}
+<div>
+    <div class="container">
+        <h4>Select entries for your portfolio </h4>
+        <div class="row mb-3 p-2 ">
+            {% for work in works %}
+                <div onclick="entryClick(this)" id="{{ work.id }}" class="col-4  logo-element   d-flex justify-content-center p-1 mt-2">
+
+                    <div class="  col-12 text-center">
+                        <span class="float-left"><a
+                                href="{% url "home:entry_detail" work.contest.id work.id %}">#{{ work.id }}</a> </span>
+                        <span class="float-right">From <a href="{% url "home:contest" work.contest.id %}"
+                                                          class="text-success">{{ work.contest }}</a></span><br><br>
+                        <img src="{{ work.get_image }}" width="150" height="150" alt="">
+                        <br><br>
+                    </div>
+                </div>
+            {% endfor %}
+
+
+
+            <button onclick="submit_portfolio()" class="btn btn-primary col-12 btn-sm mt-2">Submit</button>
+        </div>
+    </div>
+</div>
+
+</div>
+
+
+{% endblock %}
+{% block script %}
+    <script>
+        const selected_list = [
+            {% for obj in port_objects %}
+                {{ obj.entry.id }},
+            {% endfor %}
+        ]
+        // thanks to django documentation :)
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        const csrftoken = getCookie('csrftoken');
+        const request = new Request();
+    </script>
+    <script src="{% static "dashboard/js/portfolio.js" %}"></script>
+
+
+{% endblock %}

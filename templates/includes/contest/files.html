@@ -1,0 +1,140 @@
+{% load static %}
+
+{% if request.user.profile.role == "designer" and contest.get_winner.user == request.user and contest.status != "completed" %}
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-12 border">
+
+
+                <h4>Files:</h4>
+                <form action="{% url "designer:submit_final_works" contest.id contest.get_winner.id %}" method="post"
+                      enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% if contest.final_works.all|length != 0 %}
+                        {% for final_work in contest.final_works.all %}
+
+                            <p><a href="{{ final_work.get_file }}" download class="step-link"><i class="fa fa-download"
+                                                                                                 aria-hidden="true"></i> {{ final_work.file }}
+                            </a>
+                                                    {% if not contest.is_submitted %}
+
+                                <a href="{% url "designer:delete_final_work" contest.id final_work.id %}"
+                                   class="step-link">&nbsp;&nbsp;<i class="fa fa-trash" aria-hidden="true"></i></a>
+                            {% endif %}
+                            </p>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted">Please upload your work as editable files from here</p>
+
+                    {% endif %}
+
+                    {% if not contest.is_submitted %}
+                    <input class="mt-5" type="file" name="files" required multiple>
+                    <button class="btn btn-success btn-lg btn-block mt-2  mb-2">Upload</button>
+                    {% endif %}
+{#                    {% if contest.final_works.all|length == 0 %}#}
+{#                        <button class="btn btn-primary btn-lg btn-block mt-2  mb-2" disabled>Submit</button>#}
+{#                    {% else %}#}
+{#                        {% if  contest.is_submitted %}#}
+{#                <button class="btn btn-primary btn-lg btn-block mt-2  mb-2" disabled>Submited</button>#}
+{##}
+{#                            {% else %}#}
+{#                        <button onclick="are_u_sure_for_submit(this)"#}
+{#                           url="{% url "designer:submit_all_files" contest.id %}"#}
+{#                                class="btn btn-primary btn-lg btn-block mt-2  mb-2" >Submit</button>#}
+{#                            {% endif %}#}
+{#                    {% endif %}#}
+
+                </form>
+            </div>
+        </div>
+    </div>
+{% elif  request.user.profile.role == "client" and request.user == contest.user and contest.status != "completed" %}
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-12 border">
+
+
+                <h4>Files:</h4>
+                <form action="{% url "designer:approve_files" contest.id %}" method="post"
+                      enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% if contest.final_works.all|length != 0 %}
+                        {% for final_work in contest.final_works.all %}
+
+                            <p><a href="{{ final_work.get_file }}" download class="step-link"><i class="fa fa-download"
+                                                                                                 aria-hidden="true"></i> {{ final_work.file }}
+                            </a>
+                                <a href="{% url "designer:delete_final_work" contest.id final_work.id %}"
+                                   class="step-link">&nbsp;&nbsp;<i class="fa fa-trash" aria-hidden="true"></i></a>
+                            </p>
+                        {% endfor %}
+
+
+
+                    {% endif %}
+                    {% if contest.final_works.all|length == 0 %}
+                        There is no file now.
+                        <button disabled class="btn btn-success btn-lg btn-block mt-2  mb-2">Approve Files</button>
+
+                    {% else %}
+                        <button class="btn btn-success btn-lg btn-block mt-2  mb-2">Approve Files</button>
+
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    </div>
+{% elif  request.user.profile.role == "client" and request.user == contest.user and contest.status == "completed" %}
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-12 border">
+
+
+                <h4>Files:</h4>
+                {% csrf_token %}
+                {% if contest.final_works.all|length != 0 %}
+                    {% for final_work in contest.final_works.all %}
+
+                        <p><a href="{{ final_work.get_file }}" download class="step-link"><i class="fa fa-download"
+                                                                                             aria-hidden="true"></i> {{ final_work.file }}
+                        </a>
+                        </p>
+                    {% endfor %}
+
+
+
+                {% endif %}
+
+                <button disabled class="btn btn-light disabled btn-lg btn-block mt-2  mb-2">Approved final files!
+                </button>
+            </div>
+        </div>
+    </div>
+{% elif  request.user.profile.role == "designer" and contest.get_winner.user == request.user and contest.status == "completed" %}
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-12 border">
+
+
+                <h4>Files:</h4>
+                {% csrf_token %}
+                {% if contest.final_works.all|length != 0 %}
+                    {% for final_work in contest.final_works.all %}
+
+                        <p><a href="{{ final_work.get_file }}" download class="step-link"><i class="fa fa-download"
+                                                                                             aria-hidden="true"></i> {{ final_work.file }}
+                        </a>
+                        </p>
+                    {% endfor %}
+
+
+
+                {% endif %}
+
+                <button disabled class="btn btn-light disabled btn-lg btn-block mt-2  mb-2">Approved final files!
+                </button>
+            </div>
+        </div>
+    </div>
+{% endif %} 

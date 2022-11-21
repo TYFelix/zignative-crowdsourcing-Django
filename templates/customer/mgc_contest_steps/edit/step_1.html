@@ -1,0 +1,162 @@
+{% extends "customer/layout.html" %}
+{% load static %}
+
+{% block head %}
+    <title>Edit Contest / Zignative Crowdsourcing</title>
+    <style>
+
+    </style>
+{% endblock %}
+{% block body %}
+    <div class="container-fluid">
+        <ol class="breadcrumb  mb-4 mt-2">
+            <li class="breadcrumb-item "><a href="{% url "customer:categories" %}" class="step-link">Categories</a></li>
+            <li class="breadcrumb-item active">Edit Contest</li>
+        </ol>
+        <h3 class="text-center mb-4">Edit Contest</h3>
+        <div class="row  ">
+
+
+            {% block step %}
+
+                <div class="col-lg-3 ">
+
+                    <div class="col-lg-10 mt-2 link-arrow">1. Brief</div>
+                    <div class="col-lg-10 mt-2 ">
+
+                        <a class="step-link" href="{% url "customer:mgc_edit_contest" contest "step_2" %}">2. Style</a>
+                    </div>
+
+
+                </div>
+                <div class="col-lg-7 ">
+                    <h5>Name & Description</h5>
+                    <div class="form-group">
+                        <label for="contest-title">Contest Title</label>
+                        <input required type="text" id="contest_title" onkeyup="setDraft(this)"
+                               class="form-control">
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="contest_detail">Tell us about your organization and your target audience
+                            is</label>
+                        <textarea required type="text" id="contest_detail" onkeyup="setDraft(this)"
+                                  class="form-control"></textarea>
+                    </div>
+
+                    <br>
+
+                    <h5>What size should the cover be?</h5>
+                    <div class="form-group">
+                        <input required type="text" id="what_size" onkeyup="setDraft(this)"
+                               class="form-control">
+                    </div>
+                <h5 class="mt-2">What content should be included?</h5>
+                    <div class="form-group">
+                        <label for="contest_detail">What text, logos, images, calls to action or other material should be included in the design? More
+                        </label>
+                        <textarea required type="text" id="content_include" onkeyup="setDraft(this)"
+                                  class="form-control"></textarea>
+                    </div>
+
+
+                    <h5 class="mt-2">Do you want to provide any additional info?</h5>
+                    <div class="form-group">
+                        <label for="contest_detail">Are there specific design elements you want to see? Is there
+                            anything
+                            you do not want to see? Include links to things that inspired you, competitor information,
+                            or
+                            any other info. If you need special file formats, please list them here.</label>
+                        <textarea  type="text" id="contest_info" onkeyup="setDraft(this)"
+                                  class="form-control"></textarea>
+                    </div>
+                    <br>
+                    <button onclick="nextStep()" type="submit" class="btn btn-primary float-right btn-lg mb-5 btn-block">
+                        Next
+                    </button>
+
+                </div>
+            {% endblock %}
+        </div>
+    </div>
+
+
+
+{% endblock %}
+
+{% block script %}
+    {{ form_fields|json_script:"form_fields" }}
+
+    {{ contest|json_script:"contest_id" }}
+    <script src="{% static "dashboard/js/start_contest.js" %}"></script>
+    <script>
+        document.onload = fillData()
+        var page_in = 0
+        const datas = JSON.parse(localStorage.getItem(contest_id))
+
+        if (datas !== null) {
+            if ("filled_steps" in datas) {
+                if (datas.filled_steps.includes("step_2") && !datas.filled_steps.includes("step_3")) {
+                    document.getElementById("nondraft").classList.remove("text-muted")
+                    document.getElementById("nondraft").innerHTML = `<a class="step-link" href="{% url "customer:contest_step" contest "step_2" %}">2. Style</a>
+`
+                }
+            } else {
+                datas.filled_steps = ["step_1"]
+                storageStuff("filled_steps", datas.filled_steps)
+            }
+        } else {
+            storageStuff("filled_steps", ["step_1"])
+        }
+
+        function verOdunu() {
+            if (localStorage.getItem(contest_id)) {
+                const contest = JSON.parse(localStorage.getItem(contest_id))
+
+                postData('{% comment %}{% url "customer:draft_contest" contest %}{% endcomment %}', {"contest": contest})
+                    .then(data => {
+                        {#console.log(data); // JSON data parsed by `data.json()` call#}
+                    });
+            } else {
+            }
+        }
+
+        verOdunu()
+        if (localStorage.getItem(contest_id)) {
+            const logos = document.getElementsByClassName("logo-element")
+            const datas = JSON.parse(localStorage.getItem(contest_id))
+            if (datas.selected_sizes) {
+
+
+                Array.from(logos).forEach(
+                    function (element, index, array) {
+                        if (datas.selected_sizes.includes(element.id)) {
+                            element.classList.add("logo-selected")
+                            selected_logos.push(element.id)
+                        }
+                    })
+            }
+        }
+
+        function save_as_draft() {
+            if (localStorage.getItem(contest_id)) {
+                storageStuff("page", "step_5")
+
+                const contest = JSON.parse(localStorage.getItem(contest_id))
+                postData('{% url "customer:draft_contest" contest  %}', {"contest": contest})
+                    .then(data => {
+                        console.log(data);
+                    });
+            } else {
+            }
+        }
+
+        function nextStep() {
+            save_as_draft()
+            window.location = "{% url "customer:mgc_edit_contest" contest "step_2" %}"
+
+        }
+    </script>
+
+{% endblock %}

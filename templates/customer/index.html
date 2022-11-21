@@ -1,0 +1,53 @@
+{% extends "customer/layout.html" %}
+{% load static %}
+{% block head %}
+<title>Dashboard | Zignative</title>
+{% endblock %}
+
+{% block body %}
+
+<div class="container-fluid mt-5">
+
+            {% if messages %}
+            {% for message in messages %}
+                {% if message.tags == "error" %}
+                                    <div class="alert alert-danger " role="alert">
+
+                {% else %}
+                                    <div class="alert alert-{{ message.tags }} " role="alert">
+
+                {% endif %}
+            {{ message }}
+<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+            </div>
+            {% endfor %}
+            {% endif %}
+
+                </div>
+                <div class="container">
+
+
+                        <h3 class="jumbotron-heading text-center mb-4">Projects
+                            {% if request.user.contests.count != 0 %}
+                            <a href="{% url "customer:categories" %}" class="btn btn-success btn-sm float-right ">Create New Contest</a>
+                            {% endif %}
+                        </h3>
+
+
+
+
+
+                    {% include "includes/dashboard/projects.html" with contests=contests %}
+                </div>
+
+{% endblock %}
+
+{% block script %}
+<script>
+    document.getElementById("nav_your_contests").style.backgroundColor ="#D2562C"
+    document.getElementById("nav_your_contests").classList.replace("text-dark","text-white")
+
+    </script>
+{% endblock %}

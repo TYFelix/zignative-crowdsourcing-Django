@@ -1,0 +1,231 @@
+{% extends "customer/layout.html" %}
+{% load static %}
+{% load customer_filters %}
+{% block head %}
+    <title>{{ poll.title }} | Zignative </title>
+    <script src="https://use.fontawesome.com/5ac93d4ca8.js"></script>
+    <style>
+
+    </style>
+    <script src="{% static "dashboard/js/star-rating.js" %}"></script>
+
+{% endblock %}
+
+{% block body %}
+
+    <div class="container-fluid">
+    <ol class="breadcrumb  mb-4 mt-2">
+        <li class="breadcrumb-item ">
+            {% if request.user.profile.role == "designer" %}
+                <a href="{% url "designer:browse_contests" %}" class="step-link">Contests</a>
+            {% else %}
+                <a href="{% url "customer:browse_contests" %}" class="step-link">Contests</a>
+            {% endif %}
+        </li>
+        <li class="breadcrumb-item active">
+            <a href="{% url "home:contest" contest.id %}" class="step-link">{{ contest.title }}</a>
+
+        </li>
+    </ol>
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.tags == "error" %}
+                <div class="alert alert-danger " role="alert">
+
+            {% else %}
+                <div class="alert alert-{{ message.tags }} " role="alert">
+
+            {% endif %}
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        {% endfor %}
+    {% endif %}
+
+
+<div class="mb-4">
+    <div class="row">
+        <div class="col-8">
+            <h4 class="">Results for poll #{{ poll.id }}</h4>
+            <span class="text-muted">{{ poll.poll_comments.count }} votes so far</span>
+        </div>
+       {% if request.user == poll.contest.user %}
+        <div class="col-4 ">
+            <label class for="">Share your poll</label>
+            <div class="row">
+                <input id="myInput" type="text" readonly value="{{ domain }}/customer/poll/{{ poll.uid }}" class="form-control col-8" >
+                <button id="copy-button" onclick="copy()" class="btn-sm btn btn-success col-2">Copy</button>
+
+            </div>
+        </div>
+       {% endif %}
+    </div>
+
+</div>
+
+{% for obj in poll.entries.all %}
+    <div class="row mb-4">
+        <div class="col-lg-3 col-sm-12 col-md-12 mr-5">
+            <span><span class="text-muted">#{{ obj.entry.id }} by</span> <a
+                    href="{% url "home:public_profile" obj.entry.user %}"
+                    class="step-link">{{ obj.entry.user }}</a></span> <br>
+            <img src="{{ obj.entry.get_image }}" class="border" height="400" width="400" alt="">
+            <hr>
+            <div class="row ml-3">
+                <div class="col-4 border-right">
+                    <span class="h1 font-weight-bold">{{ obj.get_average_rating|floatformat:1 }}</span><br>
+                    <span class="text-muted">average rating</span>
+                </div>
+                <div class="col-4 border-right">
+                    <span class="h1 font-weight-bold">{{ obj.poll_comments.all.count }}</span><br>
+                    <span class="text-muted">votes</span>
+                </div>
+            </div>
+            {% for i in 6|ranger reversed %}
+                <div class="row mt-3">
+                    <div class="col-3">
+                        <div class="row ml-4  " id="info_rate_{{ i }}_{{ obj.id }}"></div>
+                    </div>
+                    <div class="col-5 ml-4">
+                        <div class="progress">
+
+                            <div class="progress-bar bg-info" role="progressbar"
+                                 aria-valuenow="{{ obj.id|get_obj_ratio:i }}"
+                                 aria-valuemin="0" aria-valuemax="100" style="width:{{ obj.id|get_obj_ratio:i }}%">
+                                {% if not obj.id|get_obj_count:i == 0 %}
+                                    {{ obj.id|get_obj_count:i }}
+                                {% endif %}
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <br>
+
+            {% endfor %}
+
+        </div>
+        <div class="col-lg-8 col-sm-12 col-md-12 mt-4 ml-5">
+            <div style="height: 500px; overflow: auto; overflow-x:hidden ">
+                {% for comment in obj.poll_comments.all %}
+                    <div class="row mb-5">
+
+                        <div class="col-lg-1 col-sm-12">
+                            <img class="img-rounded" width="65" height="65"
+                                 src="{{ comment.user.profile.get_photo }}" alt="">
+
+
+                        </div>
+                        <div class="col-lg-8 col-sm-12">
+
+                            <p class="mb-0"><i>"{{ comment.content }}"</i></p>
+
+                            <div id="rating_{{ comment.id }}" class="mt-1">
+
+                            </div>
+
+                            <br>
+                            <small class="text-muted">{{ comment.user }} - reviewed {{ comment.created_date|timesince }} ago</small>
+
+                        </div>
+                        <div class="col-1">
+
+                            {% if comment.user == request.user %}
+                            <a href="{% url "customer:delete_comment" comment.id %}"><i class="fa fa-trash"></i></a>
+                            {% endif %}
+
+                        </div>
+                    </div>
+
+                {% endfor %}
+                {% if not obj.poll_comments.all %}
+                    There is no vote for this entry
+                {% endif %}
+            </div>
+            <form class="d-flex mt-5 flex-column " action="{% url "customer:add_poll_comment" obj.id %}" method="post"
+                  pid="{{ obj.id }}" onsubmit="return validateForm(this)"
+                  id="review_form">
+                {% csrf_token %}
+
+                <span class="text-danger" hidden id="warn_rate_{{ obj.id }}">Rating must be filled out</span>
+                <div id="rating_f_{{ obj.id }}" class="h2">
+
+                </div>
+
+                <input type="number" name="rate" id="rate_input_{{ obj.id }}" hidden>
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="feedback_textarea">Leave Review</label>
+                    <textarea required class="form-control" id="review" name="review" rows="3"></textarea>
+                </div>
+                <button class="btn btn-success float-right">Submit</button>
+            </form>
+        </div>
+
+    </div>
+    <hr>
+{% endfor %}
+
+
+
+
+</div>
+
+{% endblock %}
+
+{% block script %}
+
+    <script>
+        {% for comment in poll.poll_comments.all %}
+            raterJs({
+                element: document.querySelector("#rating_{{ comment.id }}"),
+                readOnly: true,
+                rating: Number({{ comment.rate }}),
+
+            });
+        {% endfor %}
+    </script>
+    <script>
+        {% for obj in poll.entries.all %}
+            for (var i = 1; i < 6; i++) {
+                raterJs({
+                    element: document.querySelector(`#info_rate_${i}_{{ obj.id }}`),
+                    readOnly: true,
+                    rating: i,
+
+                });
+
+            }
+            raterJs({
+                element: document.querySelector(`#rating_f_{{ obj.id }}`),
+                rateCallback: function rateCallback(rating, done) {
+                    this.setRating(rating);
+                    done();
+                    document.getElementById("rate_input_{{ obj.id }}").value = rating
+                }
+
+            });
+        {% endfor %}
+        function validateForm(e) {
+            var pid = e.getAttribute("pid")
+            if (!document.getElementById("rate_input_" + pid).value) {
+                document.getElementById("warn_rate_" + pid).hidden = false
+                return false;
+            }
+        }
+
+
+    function copy() {
+            var copyText = document.getElementById("myInput");
+            var copyButton = document.getElementById("copy-button")
+            copyText.select();
+            copyText.setSelectionRange(0, 99999)
+            document.execCommand("copy");
+            copyButton.innerHTML = "Copied"
+        }
+    </script>
+
+{% endblock %}

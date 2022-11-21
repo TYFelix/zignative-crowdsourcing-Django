@@ -1,0 +1,651 @@
+{% load static %}
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"><head><script defer src="{% static "new/js/index.bundle.js" %}"></script></head> <![endif]-->
+<!--[if IE 7]>
+<html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>
+<html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+<!--<![endif]-->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Zignative</title>
+    <meta name="author" content="">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+
+<body>
+<div id="cover" style="position: absolute;
+        color: #0DB213;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        z-index: 9999;
+        text-align: center;
+        padding-top: 25%">
+    <div class="spinner-border" role="status"><span
+            class="visually-hidden">Loading...</span></div>
+</div>
+<header>
+    <div class="container">
+        <nav class="navbar navbar-expand-lg">
+            <div class="container-fluid"><a class="navbar-brand"
+                                            href="./index.html"><img
+                    src="{% static "new/images/logo.png" %}" class="img-fluid"
+                    alt="logo"/></a>
+                <button class="navbar-toggler" type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarNavDropdown"><span
+                        class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown"><a
+                                class="nav-link dropdown-toggle" href="#"
+                                role="button"
+                                data-bs-toggle="dropdown">CATEGORIES</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item"
+                                       href="./custom_logo_design.html">Custom
+                                    Logo Design</a></li>
+                                <li><a class="dropdown-item"
+                                       href="./business_card_design.html">Business
+                                    Card Design</a></li>
+                                <li><a class="dropdown-item"
+                                       href="./dashboard.html">Web Page
+                                    Design</a></li>
+                                <li><a class="dropdown-item"
+                                       href="./dashboard_contest.html">Banner
+                                    Ad Design</a></li>
+                                <li><a class="dropdown-item" href="#">Email
+                                    Template Design</a></li>
+                                <li><a class="dropdown-item" href="#">Social
+                                    Media Assets</a></li>
+                                <li><a class="dropdown-item"
+                                       href="#">Company/Product
+                                    Name</a></li>
+                                <li><a class="dropdown-item" href="#">Landing
+                                    Page Design</a></li>
+                                <li><a class="dropdown-item" href="#">Mobile App
+                                    Design</a></li>
+                                <li><a class="dropdown-item" href="#">T-shirt
+                                    Design</a></li>
+                                <li><a class="dropdown-item"
+                                       href="#">Merchandise Design</a>
+                                </li>
+                                <li><a class="dropdown-item" href="#">Book Cover
+                                    Design</a></li>
+                                <li><a class="dropdown-item" href="#">Magazine
+                                    Cover Design</a></li>
+                                <li><a class="dropdown-item" href="#">WordPress
+                                    Design</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item"><a class="nav-link"
+                                                href="./explore.html">EXPLORE</a></li>
+                        <li class="nav-item"><a class="nav-link"
+                                                href="./how_it_works.html">HOW IT
+                            WORKS</a></li>
+                        <li class="nav-item"><a class="nav-link"
+                                                href="pricing.html">PRICING</a></li>
+                    </ul>
+                    <ul class="d-flex navbar-nav sign_in">
+                        <li class="nav-item"><a class="nav-link"
+                                                href="{% url "user:login" %}">LOG IN</a>
+                        </li>
+                        <li class="nav-item">
+                            <button onclick="window.location='{% url "user:register" %}'"
+                                    class="btn btn-primary">
+                                SIGN UP
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+</header>
+<section id="home">
+    <section class="get_design">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="description">
+                        <h1>Get the perfect design, every time</h1>
+                        <p>Join 100+ businesses, agencies, and nonprofits that leverage
+                            zignative to grow their businesses through high-quality
+                            custom design and software development.</p>
+                        <button onclick="window.location='{% url "user:register" %}'"
+                                class="btn btn-default">GET STARTED
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-6 design_authors">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="design_product d-flex flex-column"><img
+                                    src="{{ random_item.get_display_image }}"
+                                    class="img-fluid design_product1"
+                                    alt="by Gabrie"/>
+                                <div class="design_author">by <a
+                                        href="{% url "home:public_profile" random_item.user %}">{{ random_item.user }}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="trusted_by">
+        <div class="container">
+            <p class="text-center">Trusted by over 175,000 agencies and brands,
+                including:</p>
+            <div class="d-flex trusted_images">
+                <div id="trusted-slider" class="splide m-0">
+                    <div class="splide__track">
+                        <ul class="splide__list">
+                            <li class="splide__slide">
+                                <div class="images"><img
+                                        src="{% static "new/images/spotify.png" %}"
+                                        class="img-fluid" alt="spotify">
+                                </div>
+                            </li>
+                            <li class="splide__slide">
+                                <div class="images"><img
+                                        src="{% static "new/images/virgin.png" %}"
+                                        class="img-fluid" alt="virgin">
+                                </div>
+                            </li>
+                            <li class="splide__slide">
+                                <div class="images"><img
+                                        src="{% static "new/images/htc.png" %}"
+                                        class="img-fluid" alt="htc">
+                                </div>
+                            </li>
+                            <li class="splide__slide">
+                                <div class="images"><img
+                                        src="{% static "new/images/amnesty.png" %}"
+                                        class="img-fluid" alt="amnesty">
+                                </div>
+                            </li>
+                            <li class="splide__slide">
+                                <div class="images"><img
+                                        src="{% static "new/images/microsoft.png" %}"
+                                        class="img-fluid"
+                                        alt="microsoft"></div>
+                            </li>
+                            <li class="splide__slide">
+                                <div class="images"><img
+                                        src="{% static "new/images/unicef.png" %}"
+                                        class="img-fluid" alt="unicef">
+                                </div>
+                            </li>
+                            <li class="splide__slide">
+                                <div class="images"><img
+                                        src="{% static "new/images/absolut.png" %}"
+                                        class="img-fluid" alt="absolut">
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="category_slider">
+        <div class="container">
+            <h3 class="text-center">Whatever you need, we've got you covered.</h3>
+            <div id="image-slider" class="splide">
+                <div class="splide__track">
+                    <ul class="splide__list">
+                        <li class="splide__slide">
+                            <div class="category_card"><a
+                                    href="./custom_logo_design.html"><img
+                                    src="{% static "new/images/logo_design.png" %}"
+                                    class="img-fluid"
+                                    alt="logo_design"/>
+                                <div
+                                        class="text-center card-description">
+                                    LOGO DESIGN
+                                </div>
+                            </a></div>
+                        </li>
+                        <li class="splide__slide">
+                            <div class="category_card"><a href="#"><img
+                                    src="{% static "new/images/cards_design.png" %}"
+                                    class="img-fluid"
+                                    alt="cards_design"/>
+                                <div
+                                        class="text-center card-description">
+                                    BUSINESS CARD DESIGN
+                                </div>
+                            </a></div>
+                        </li>
+                        <li class="splide__slide">
+                            <div class="category_card"><a href="#"><img
+                                    src="{% static "new/images/wordpress_design.png" %}"
+                                    class="img-fluid"
+                                    alt="wordpress_design"/>
+                                <div
+                                        class="text-center card-description">
+                                    WORDPRESS<br>THEME DESIGN
+                                </div>
+                            </a></div>
+                        </li>
+                        <li class="splide__slide">
+                            <div class="category_card"><a href="#"><img
+                                    src="{% static "new/images/mobile_design.png" %}"
+                                    class="img-fluid"
+                                    alt="mobile_design"/>
+                                <div
+                                        class="text-center card-description">
+                                    MOBILE APP<br>DESIGN
+                                </div>
+                            </a></div>
+                        </li>
+                        <li class="splide__slide">
+                            <div class="category_card"><a href="#"><img
+                                    src="{% static "new/images/social_design.png" %}"
+                                    class="img-fluid"
+                                    alt="social_design"/>
+                                <div
+                                        class="text-center card-description">
+                                    SOCIAL MEDIA<br>DESIGN
+                                </div>
+                            </a></div>
+                        </li>
+                        <li class="splide__slide">
+                            <div class="category_card"><a href="#"><img
+                                    src="{% static "new/images/shirt_design.png" %}"
+                                    class="img-fluid"
+                                    alt="shirt_design"/>
+                                <div
+                                        class="text-center card-description">
+                                    T-SHIRT DESIGN
+                                </div>
+                            </a></div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="see_categories text-center"><a
+                    href="{% url "customer:categories" %}">SEE ALL CATEGORIES</a></div>
+        </div>
+    </section>
+    <section class="divide_line1 text-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12"><img src="{% static "new/images/line.png" %}">
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="inspired_design">
+        <div class="container">
+            <h3 class="text-center">Get inspired by beautiful design</h3>
+
+
+            <div class="inspired_items">
+                <div class="inspired_first">
+                    <div class="row">
+                        {% for contest in contests %}
+                            <div class="col-lg-3 col-md-6">
+                                <div class="beautiful_design">
+                                    <div class="card">
+                                        <div class="card-body p-0">
+                                            <div class="card-image img-fluid w-100"
+                                                 style="background-image: url('{{ contest.get_winner.get_image }}'); background-size: cover;">
+                                            </div>
+                                        </div>
+                                        <div class="card-footer">
+                                            <div class="row">
+                                                <div
+                                                        class="col-md-6 text-center">
+                                                    <b>{{ contest.get_entry_count }}</b><br>
+                                                    <p>Creative idea
+                                                    </p>
+                                                </div>
+                                                <div
+                                                        class="col-md-6 text-center">
+                                                    <b>{{ contest.get_users|length }}</b><br>
+                                                    <p>Designers</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+
+
+                    </div>
+                </div>
+
+                <div class="inspired_buttons text-center"><a href="#">SEE MORE DETAILS
+                    >&nbsp;&nbsp;&nbsp;</a>
+                    <p>or</p>&nbsp;&nbsp;&nbsp;
+                    <button class="btn btn-default"
+                            onclick="window.location='{% url "user:register" %}'">GET
+                        STARTED
+                        NOW
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="zignative_work">
+        <div class="container">
+            <h3 class="text-center">How does zignative work?</h3>
+            <div class="work_contents">
+                <div class="row">
+                    <div class="col-md-4 text-center"><img
+                            src="{% static "new/images/note.png" %}"
+                            class="img-fluid" alt="note"/>
+                        <div class="work_description">
+                            <h6>Tell us what you need</h6>
+                            <p><a href="#">Choose from 30+ categories, </a>complete
+                                a<br>project brief, and pick a package that
+                                fits<br>your budget.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-center"><img
+                            src="{% static "new/images/pen.png" %}"
+                            class="img-fluid" alt="note"/>
+                        <div class="work_description">
+                            <h6>Creative submit designs</h6>
+                            <p><a href="#">Collaborate with dozens of creative,
+                            </a>give<br>a feedback and score, and get
+                                revised<br>custom designs.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-center"><img
+                            src="{% static "new/images/star.png" %}"
+                            class="img-fluid" alt="note"/>
+                        <div class="work_description">
+                            <h6>Choose your favorite</h6>
+                            <p>Work with the winner to finalize your<br>favorite
+                                design and get print/web-ready<br>files and full
+                                IP rights.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="zignative_scales">
+        <div class="container">
+            <h3 class="text-center">Zignative scales to meet the needs of any
+                business</h3>
+            <p class="text-center scales_introduce">Here's why 100+ businesses have
+                chosen
+                Zignative:</p>
+            <div class="scales_contents">
+                <div class="row">
+                    <div class="col-md-12 col-lg-7 scale_right">
+                        <div class="scale">
+                            <div class="image"><img
+                                    src="{% static "new/images/save_money.png" %}"
+                                    class="img-fluid" alt="save_money"/>
+                            </div>
+                            <div class="description">
+                                <h6>Save money & time</h6>
+                                <p>Our custom design starts at a low price with
+                                    options to meet any budget. On average,
+                                    projects start to receive designs within
+                                    a few hours.</p>
+                            </div>
+                        </div>
+                        <div class="scale">
+                            <div class="image"><img
+                                    src="{% static "new/images/more_creativity.png" %}"
+                                    class="img-fluid"
+                                    alt="more_creativity"/></div>
+                            <div class="description">
+                                <h6>More creativity</h6>
+                                <p>With freelance designers across the globe
+                                    competing on your project, you'll
+                                    receive heaps of design ideas - you just
+                                    need to choose the best.</p>
+                            </div>
+                        </div>
+                        <div class="scale">
+                            <div class="image"><img
+                                    src="{% static "new/images/world_design.png" %}"
+                                    class="img-fluid" alt="world_design"/>
+                            </div>
+                            <div class="description">
+                                <h6>A world of design</h6>
+                                <p>Professional freelance designers around the
+                                    world ready to create you the perfect
+                                    logo, website, business card & more!</p>
+                            </div>
+                        </div>
+                        <div class="scale">
+                            <div class="image"><img
+                                    src="{% static "new/images/money_guarantee.png" %}"
+                                    class="img-fluid"
+                                    alt="money_guarantee"/></div>
+                            <div class="description">
+                                <h6>Money back guarantee*</h6>
+                                <p>If you're not satisfied with the designs and
+                                    don't get the perfect design for your
+                                    business, get your money back*</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5 col-md-12 scale_left text-center">
+                        <div id="scales-slider" class="splide">
+                            <div class="splide__track">
+                                <ul class="splide__list">
+                                    <li class="splide__slide">
+                                        <div class="category_card"><img
+                                                src="{% static "new/images/social_fitness.png" %}"
+                                                class="img-fluid"
+                                                alt="logo_design"/>
+                                        </div>
+                                    </li>
+                                    <li class="splide__slide">
+                                        <div class="category_card"><img
+                                                src="{% static "new/images/social_fitness.png" %}"
+                                                class="img-fluid"
+                                                alt="logo_design"/>
+                                        </div>
+                                    </li>
+                                    <li class="splide__slide">
+                                        <div class="category_card"><img
+                                                src="{% static "new/images/social_fitness.png" %}"
+                                                class="img-fluid"
+                                                alt="logo_design"/>
+                                        </div>
+                                    </li>
+                                    <li class="splide__slide">
+                                        <div class="category_card"><img
+                                                src="{% static "new/images/social_fitness.png" %}"
+                                                class="img-fluid"
+                                                alt="logo_design"/>
+                                        </div>
+                                    </li>
+                                    <li class="splide__slide">
+                                        <div class="category_card"><img
+                                                src="{% static "new/images/social_fitness.png" %}"
+                                                class="img-fluid"
+                                                alt="logo_design"/>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center scales_button">
+                        <button onclick="window.location='{% url "user:register" %}'"
+                                class="btn btn-default">GET STARTED NOW
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="divide_line2 text-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12"><img src="{% static "new/images/line.png" %}">
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="preferred_reason">
+        <div class="container">
+            <h3 class="text-center">Why is Zignative the preferred design partner?</h3>
+            <div id="preferred-slider" class="splide">
+                <div class="splide__track">
+                    <ul class="splide__list">
+                        <li class="splide__slide">
+                            <div class="preferred_contents d-flex">
+                                <div class="circle_avatar"><img
+                                        src="{% static "new/images/design_3.png" %}"
+                                        class="img-fluid"
+                                        alt="design3"/></div>
+                                <div class="preferred_description">
+                                    <blockquote><br>By using Zignative we
+                                        have saved at least 50% compared
+                                        to our normal creative agencies.
+                                        Crowdsourcing is a brilliant way
+                                        to pick the creative brains of a
+                                        global design team.<br><b
+                                                class="designer_name">Gabriel
+                                            Molocea, Founder of
+                                            Zignative</b>
+                                    </blockquote>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="splide__slide">
+                            <div class="preferred_contents d-flex">
+                                <div class="circle_avatar"><img
+                                        src="{% static "new/images/design_3.png" %}"
+                                        class="img-fluid"
+                                        alt="design3"/></div>
+                                <div class="preferred_description">
+                                    <blockquote><br>By using Zignative we
+                                        have saved at least 50% compared
+                                        to our normal creative agencies.
+                                        Crowdsourcing is a brilliant way
+                                        to pick the creative brains of a
+                                        global design team.<br><b
+                                                class="designer_name">Gabriel
+                                            Molocea, Founder of
+                                            Zignative</b>
+                                    </blockquote>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="splide__slide">
+                            <div class="preferred_contents d-flex">
+                                <div class="circle_avatar"><img
+                                        src="{% static "new/images/design_3.png" %}"
+                                        class="img-fluid"
+                                        alt="design3"/></div>
+                                <div class="preferred_description">
+                                    <blockquote><br>By using Zignative we
+                                        have saved at least 50% compared
+                                        to our normal creative agencies.
+                                        Crowdsourcing is a brilliant way
+                                        to pick the creative brains of a
+                                        global design team.<br><b
+                                                class="designer_name">Gabriel
+                                            Molocea, Founder of
+                                            Zignative</b>
+                                    </blockquote>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="splide__slide">
+                            <div class="preferred_contents d-flex">
+                                <div class="circle_avatar"><img
+                                        src="{% static "new/images/design_3.png" %}"
+                                        class="img-fluid"
+                                        alt="design3"/></div>
+                                <div class="preferred_description">
+                                    <blockquote><br>By using Zignative we
+                                        have saved at least 50% compared
+                                        to our normal creative agencies.
+                                        Crowdsourcing is a brilliant way
+                                        to pick the creative brains of a
+                                        global design team.<br><b
+                                                class="designer_name">Gabriel
+                                            Molocea, Founder of
+                                            Zignative</b>
+                                    </blockquote>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>
+<footer>
+    <div class="footer_contents">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-3 col-sm-6 col-6">
+                    <h5>COMPANY</h5>
+                    <ul>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Team</a></li>
+                        <li><a href="#">Testimonials</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-6 col-6">
+                    <h5>Design services</h5>
+                    <ul>
+                        <li><a href="#">Design contests</a></li>
+                        <li><a href="#">Find a designer</a></li>
+                        <li><a href="#">Discover inspiration</a></li>
+                        <li><a href="#">Pricing</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-6 col-6">
+                    <h5>Get a design</h5>
+                    <ul>
+                        <li><a href="#">Logo design</a></li>
+                        <li><a href="#">Business card</a></li>
+                        <li><a href="#">Web page design</a></li>
+                        <li><a href="#">T-shirt design</a></li>
+                        <li><a href="#">Browse all categories</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-6 col-6">
+                    <h5>Resources</h5>
+                    <ul>
+                        <li><a href="#">Become a designer</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Logo ideas</a></li>
+                        <li><a href="#">T-shirt ideas</a></li>
+                        <li><a href="#">Help</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-links text-center"><a href="#"><img
+                    src="{% static "new/images/facebook.png" %}"
+                    class="img-fluid" alt="facebook"></a><a href="#"><img
+                    src="{% static "new/images/twitter.png" %}" class="img-fluid"
+                    alt="twitter"></a><a href="#"><img
+                    src="{% static "new/images/in.png" %}"
+                    class="img-fluid" alt="in"></a></div>
+            <p class="text-center certificate">© 2020–2022 Zignative SRL. All rights
+                reserved.</p>
+        </div>
+    </div>
+</footer>
+<script src="{% static "new/js/index.bundle.js" %}"></script>
+<link rel="stylesheet" href="{% static "new/css/index.min.css" %}">
+</body>
+</head>
+
+</html>

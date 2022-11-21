@@ -1,0 +1,44 @@
+{% extends "designer/layout.html" %}
+{% load static %}
+{% block head %}
+<title>Dashboard | Zignative</title>
+{% endblock %}
+
+{% block body %}
+
+<div class="container-fluid mt-5">
+{% if messages %}
+            {% for message in messages %}
+                {% if message.tags == "error" %}
+                                    <div class="alert alert-danger " role="alert">
+
+                {% else %}
+                                    <div class="alert alert-{{ message.tags }} " role="alert">
+
+                {% endif %}
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+            </div>
+            {% endfor %}
+            {% endif %}
+
+
+                </div>
+                <div class="container">
+                    <h3 class="jumbotron-heading text-center">Your Work</h3>
+
+                    {% include "includes/designer/projects.html" with works=works contests=contests %}
+
+                </div>
+
+{% endblock %}
+
+{% block script %}
+<script>
+    document.getElementById("nav_your_work").style.backgroundColor ="#D2562C"
+    document.getElementById("nav_your_work").classList.replace("text-dark","text-white")
+
+    </script>
+{% endblock %}

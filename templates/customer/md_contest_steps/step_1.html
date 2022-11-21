@@ -1,0 +1,356 @@
+{% extends "customer/layout.html" %}
+{% load static %}
+
+{% block head %}
+    <title>Create {{ contest_object.category.title }} Contest / Zignative Crowdsourcing</title>
+    <style>
+
+    </style>
+{% endblock %}
+{% block body %}
+    <div class="container-fluid">
+    <ol class="breadcrumb  mb-4 mt-2">
+        <li class="breadcrumb-item "><a href="{% url "customer:categories" %}" class="step-link">Categories</a></li>
+        <li class="breadcrumb-item active">Create {{ contest_object.category.title }} Contest</li>
+    </ol>
+    <h3 class="text-center mb-4">Create {{ contest_object.category.title }} Contest</h3>
+    <div class="row  ">
+
+
+    {% block step %}
+
+        <div class="col-lg-3 ">
+
+        <div class="col-lg-10 mt-2 link-arrow">1. Brief</div>
+        {% if "step_2" in form_fields.filled_steps %}
+            <div class="col-lg-10 mt-2 ">
+
+            <a class="step-link" href="{% url "customer:contest_step" contest "step_2" %}">2. Style</a>
+        {% else %}
+            <div class="col-lg-10 mt-2 text-muted" id="nondraft">
+            2. Style
+        {% endif %}</div>
+        {% if "step_3" in form_fields.filled_steps %}
+            <div class="col-lg-10 mt-2 ">
+
+            <a class="step-link" href="{% url "customer:contest_step" contest "step_3" %}">3. Prize & Upgrades</a>
+        {% else %}
+            <div class="col-lg-10 mt-2 text-muted">
+            3. Prize & Upgrades
+        {% endif %}</div>
+        {% if "step_4" in form_fields.filled_steps %}
+            <div class="col-lg-10 mt-2 ">
+            <a class="step-link" href="{% url "customer:contest_step" contest "step_4" %}">4. Payment </a>
+        {% else %}
+            <div class="col-lg-10 mt-2 text-muted">
+
+            4. Payment
+        {% endif %}</div>
+
+
+    </div>
+        <div class="col-lg-7 ">
+            <h5>Name & Description</h5>
+            <form action="{% url "customer:contest_step" contest "step_2" %}" class="mt-2 mb-2">
+                <div class="form-group">
+                    <label for="contest-title">Contest Title</label>
+                    <input required type="text" id="contest_title" onkeyup="setDraft(this)"
+                           class="form-control">
+                </div>
+
+
+                <div class="form-group">
+                    <label for="contest_detail">Tell us about your organization and your target audience
+                        is</label>
+                    <textarea required type="text" id="contest_detail" onkeyup="setDraft(this)"
+                              class="form-control"></textarea>
+                </div>
+
+                <h5 class="mt-2">Who will wear/use the merchandise?</h5>
+                <div class="form-group">
+                    <div class="form-check">
+                        <input onclick="checkboxClick(this)" class="form-check-input" type="checkbox" name="who_use"
+                               id="Men">
+                        <label class="form-check-label" for="flexRadioDefault1">
+                            Men
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input onclick="checkboxClick(this)" class="form-check-input" type="checkbox" name="who_use"
+                               id="Woman">
+                        <label class="form-check-label" for="flexRadioDefault1">
+                            Woman
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input onclick="checkboxClick(this)" class="form-check-input" type="checkbox" name="who_use"
+                               id="Unisex Adult">
+                        <label class="form-check-label" for="flexRadioDefault1">
+                            Unisex Adult
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input onclick="checkboxClick(this)" class="form-check-input" type="checkbox" name="who_use"
+                               id="Boys">
+                        <label class="form-check-label" for="flexRadioDefault1">
+                            Boys
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input onclick="checkboxClick(this)" class="form-check-input" type="checkbox" name="who_use"
+                               id="Girls">
+                        <label class="form-check-label" for="flexRadioDefault1">
+                            Girls
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input onclick="checkboxClick(this)" class="form-check-input" type="checkbox" name="who_use"
+                               id="Unisex children">
+                        <label class="form-check-label" for="flexRadioDefault1">
+                            Unisex children
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input onclick="checkboxClick(this)" class="form-check-input" type="checkbox" name="who_use"
+                               id="Other">
+                        <label class="form-check-label" for="flexRadioDefault1">
+                            Other
+                        </label>
+                    </div>
+                </div>
+                <br>
+
+                <h5 class="mt-2">Which styles of illustration do you prefer?</h5>
+                <div class="form-group">
+                    {% for il in list_of_ils %}
+                        <div class="form-check">
+                            <input onclick="checkboxClick1(this)" class="form-check-input" type="checkbox"
+                                   name="illustration"
+                                   id="{{ il }}">
+                            <label class="form-check-label" for="flexRadioDefault1">
+                                {{ il }}
+                            </label>
+                        </div>
+                    {% endfor %}
+
+
+
+                    <div class="form-check">
+                        <input onclick="checkboxClick1(this)" class="form-check-input" type="checkbox"
+                               name="illustration "
+                               id="Other">
+                        <label class="form-check-label" for="flexRadioDefault1">
+                            Other
+                        </label>
+                    </div>
+                </div>
+                <br>
+                <h5 class="mt-2">What kind of merchandise?</h5>
+
+                <div class="form-group">
+                    <label for="contest_detail">
+                        Tell us what kind of item you need. Is it a bag, sunglasses, pen, umbrella, mug, or something else?
+                    </label>
+                    <textarea required type="text" id="what_kind" onkeyup="setDraft(this)"
+                              class="form-control"></textarea>
+                </div>
+                <br>
+                <h5 class="mt-2">Industry</h5>
+                <div class="form-group">
+                    <label for="exampleFormControlSelect1">Please select your industry:</label>
+                    <select required class="form-control" onchange="setDraft(this)" id="contest_industry">
+                        <option value="">Industry</option>
+                        <option>Accounting</option>
+                        <option>Automotive</option>
+                        <option>Beauty</option>
+                        <option>Construction</option>
+                        <option>Consulting</option>
+                        <option>Dental</option>
+                        <option>Education</option>
+                        <option>Entertainment</option>
+                        <option>Events</option>
+                        <option>Financial</option>
+                        <option>Home & Garden</option>
+                        <option>Insurance</option>
+                        <option>Internet</option>
+                        <option>Legal</option>
+                        <option>Manufacturing & Wholesale</option>
+                        <option>Media</option>
+                        <option>Medical</option>
+                        <option>Miscellaneous</option>
+                        <option>Natural Resources</option>
+                        <option>Non-Profit</option>
+                        <option>Real Estate</option>
+                        <option>Religious</option>
+                        <option>Restaurant</option>
+                        <option>Retail</option>
+                        <option>Service Industries</option>
+                        <option>Sport</option>
+                        <option>Technology</option>
+                        <option>Travel & Hospitality</option>
+
+                    </select>
+                </div>
+                <br>
+                <h5 class="mt-2">Do you want to provide any additional info?</h5>
+                <div class="form-group">
+                    <label for="contest_detail">Are there specific design elements you want to see? Is there anything
+                        you do not want to see? Include links to things that inspired you, competitor information, or
+                        any other info. If you need special file formats, please list them here.</label>
+                    <textarea type="text" id="contest_info" onkeyup="setDraft(this)"
+                              class="form-control"></textarea>
+                </div>
+                <br>
+                <button type="submit" class="btn btn-primary float-right btn-lg mb-5 btn-block">
+                    Next
+                </button>
+
+            </form>
+        </div>
+    {% endblock %}
+</div>
+</div>
+
+
+{% endblock %}
+
+{% block script %}
+    {{ form_fields|json_script:"form_fields" }}
+
+    {{ contest|json_script:"contest_id" }}
+    <script src="{% static "dashboard/js/start_contest.js" %}"></script>
+    <script>
+
+        document.onload = fillData()
+        var page_in = 0
+        const datas = JSON.parse(localStorage.getItem(contest_id))
+
+        if (datas !== null) {
+            if ("filled_steps" in datas) {
+                if (datas.filled_steps.includes("step_2") && !datas.filled_steps.includes("step_3")) {
+                    document.getElementById("nondraft").classList.remove("text-muted")
+                    document.getElementById("nondraft").innerHTML = `<a class="step-link" href="{% url "customer:contest_step" contest "step_2" %}">2. Style</a>
+`
+                }
+            } else {
+                datas.filled_steps = ["step_1"]
+                storageStuff("filled_steps", datas.filled_steps)
+
+            }
+        } else {
+            storageStuff("filled_steps", ["step_1"])
+        }
+
+
+        function verOdunu() {
+            if (localStorage.getItem(contest_id)) {
+                const contest = JSON.parse(localStorage.getItem(contest_id))
+
+                postData('{% comment %}{% url "customer:draft_contest" contest %}{% endcomment %}', {"contest": contest})
+                    .then(data => {
+                        {#console.log(data); // JSON data parsed by `data.json()` call#}
+                    });
+            } else {
+            }
+        }
+
+        verOdunu()
+
+
+        function save_as_draft() {
+            if (localStorage.getItem(contest_id)) {
+                storageStuff("page", "step_5")
+
+                const contest = JSON.parse(localStorage.getItem(contest_id))
+                postData('{% url "customer:draft_contest" contest  %}', {"contest": contest})
+                    .then(data => {
+                        console.log(data);
+                    });
+            } else {
+            }
+        }
+
+
+        var who_use
+        var illustration
+        if (datas) {
+            who_use = datas.who_use || null
+            illustration = datas.illustration || null
+        } else {
+            who_use = null
+            illustration = null
+        }
+
+        if (who_use) {
+            for (var i = 0; i < who_use.length; i++) {
+                document.getElementById(who_use[i]).checked = true
+            }
+        }
+        if (illustration) {
+            for (var i = 0; i < illustration.length; i++) {
+                document.getElementById(illustration[i]).checked = true
+            }
+        }
+
+
+        function checkboxClick(e) {
+            if (who_use) {
+                if (!who_use.includes(e.id)) {
+                    who_use.push(e.id)
+
+                } else {
+                    who_use.splice(who_use.indexOf(e.id), 1)
+                }
+
+
+                storageStuff("who_use", who_use)
+
+            } else {
+                who_use = [e.id]
+                storageStuff("who_use", who_use)
+
+
+            }
+            console.log(who_use)
+        }
+
+        function checkboxClick1(e) {
+            if (illustration) {
+                if (!illustration.includes(e.id)) {
+                    illustration.push(e.id)
+
+                } else {
+                    illustration.splice(illustration.indexOf(e.id), 1)
+                }
+
+
+                storageStuff("illustration", illustration)
+
+            } else {
+                illustration = [e.id]
+                storageStuff("illustration", illustration)
+
+
+            }
+            console.log(illustration)
+        }
+
+        if (localStorage.getItem(contest_id)) {
+            const logos = document.getElementsByClassName("logo-element")
+            const datas = JSON.parse(localStorage.getItem(contest_id))
+            if (datas.selected_positions) {
+
+
+                Array.from(logos).forEach(
+                    function (element, index, array) {
+                        if (datas.selected_positions.includes(element.id)) {
+                            element.classList.add("logo-selected")
+                            selected_logos.push(element.id)
+                        }
+                    })
+            }
+        }
+
+    </script>
+
+{% endblock %}

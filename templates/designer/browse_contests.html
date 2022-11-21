@@ -1,0 +1,154 @@
+{% extends "designer/layout.html" %}
+{% load static %}
+{% load designer_filters %}
+{% block head %}
+<title>Browse Contests / Zignative Crowdsourcing</title>
+{% endblock %}
+
+{% block body %}
+
+    {% if messages %}
+        {% for message in messages %}
+
+            <div class="row  justify-content-center mt-3 ">
+                <div class="alert alert-{{ message.tags }} col-7   " role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+
+    <div class="position-relative overflow-hidden   ">
+        <div class="col-md-8  mx-auto my-5 ">
+            <div class="container fluid">
+                <h3 class="jumbotron-heading text-center">Browse Contests</h3>
+                <hr>
+
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link {% if filter == "in_progress" %}active{% endif %}" id="home-tab"  href="?filter=in_progress" aria-selected="true">In Progress</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link step-link {% if filter == "completed" %}active{% endif %}" id="completed-tab"  href="?filter=completed"
+                            aria-selected="false">Completed</a>
+                    </li>
+
+                </ul>
+
+
+                <div class="tab-content mt-3  " id="myTabContent">
+
+                    <form>
+                        <div class="form-row align-items-center">
+                            <div class="col-auto my-1">
+                                <select class="custom-select mr-sm-2" id="service_select">
+                                    <option selected>All Categories</option>
+                                    {% for service in services %}
+                                        <option value="{{ service.id }}">{{ service.title }}</option>
+
+                                    {% endfor %}
+
+                                </select>
+                            </div>
+                            <div class="col-auto my-1">
+                                <select class="custom-select mr-sm-2" id="industry_select">
+                                    <option selected>All Industries</option>
+                                    <option>Accounting</option>
+                                    <option>Automotive</option>
+                                    <option>Beauty</option>
+                                    <option>Construction</option>
+                                    <option>Consulting</option>
+                                    <option>Dental</option>
+                                    <option>Education</option>
+                                    <option>Entertainment</option>
+                                    <option>Events</option>
+                                    <option>Financial</option>
+                                    <option>Home & Garden</option>
+                                    <option>Insurance</option>
+                                    <option>Internet</option>
+                                    <option>Legal</option>
+                                    <option>Manufacturing & Wholesale</option>
+                                    <option>Media</option>
+                                    <option>Medical</option>
+                                    <option>Miscellaneous</option>
+                                    <option>Natural Resources</option>
+                                    <option>Non-Profit</option>
+                                    <option>Real Estate</option>
+                                    <option>Religious</option>
+                                    <option>Restaurant</option>
+                                    <option>Retail</option>
+                                    <option>Service Industries</option>
+                                    <option>Sport</option>
+                                    <option>Technology</option>
+                                    <option>Travel & Hospitality</option>
+                                </select>
+                            </div>
+
+                            <div class="col-auto ml-auto mr-3">
+                                <select class="custom-select mr-sm-2" id="order_select">
+                                    <option selected value="old_0">Newest first</option>
+                                    <option value="old_1">Oldest first</option>
+                                    <option value="prize_0">Highest prize first</option>
+                                    <option value="prize_1">Lowest prize first</option>
+                                    <option value="time_1">Most time left first</option>
+                                    <option value="time_0">Least time left first</option>
+                                    <option value="entry_0">Most entries first</option>
+                                    <option value="entry_1">Least entries first</option>
+
+                                </select>
+                            </div>
+
+                        </div>
+                    </form>
+
+
+                    {% include "includes/home/contest_list.html" %}
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block script %}
+
+    <script src="{% static "dashboard/js/index_contests.js" %}"></script>
+    <script>
+        if (findGetParameter("industry_select")) {
+            document.getElementById('industry_select').value = findGetParameter("industry_select");
+        }
+        if (findGetParameter("order_select")) {
+            document.getElementById('order_select').value = findGetParameter("order_select");
+        }
+        if (findGetParameter("service_select")) {
+            document.getElementById('service_select').value = findGetParameter("service_select");
+        }
+
+        //Thank you Stackoverflow :))
+        function findGetParameter(parameterName) {
+            var result = null,
+                tmp = [];
+            location.search
+                .substr(1)
+                .split("&")
+                .forEach(function (item) {
+                    tmp = item.split("=");
+                    if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+                });
+            return result;
+        }
+    </script>
+    <script>
+    document.getElementById("nav_browse_contests").style.backgroundColor ="#D2562C"
+    document.getElementById("nav_browse_contests").classList.replace("text-dark","text-white")
+
+    </script>
+{% endblock %}

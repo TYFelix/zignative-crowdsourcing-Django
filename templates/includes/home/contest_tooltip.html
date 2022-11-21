@@ -1,0 +1,9 @@
+<span class='float-left'><i class='far fa-clock'></i> Contest started {{ contest.created_date|timesince }} ago</span> <br>
+{% if contest.get_last_feedback %}
+<span class='float-left'><i class='far fa-clock'></i> Last feedback {{ contest.get_last_feedback.created_date|timesince }} ago</span> <br>
+{% endif %}
+{% if contest.get_feedbacks.count %}
+<span class='float-left'><i class='far fa-comment'></i> {{ contest.get_feedbacks.percentage }}% of active designers recieved feedback</span> <br>
+{% endif %}
+<span class='float-left'><i class='far fa-star'></i> {{ contest.rating_percentage }}% rated or declined designs</span> <br>
+<span class='float-left'><i class='fa fa-tag'></i>  {{ contest.user.profile.get_contest_count }} contests, 0 refund(s)</span> <br>

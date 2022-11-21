@@ -1,0 +1,106 @@
+<style>
+
+    .listing-preview {
+        height: 200px;
+    }
+
+    @media (min-width: 761px) {
+        .listing-preview {
+            width: 200px;
+            }
+        }
+      @media (max-width: 760px) {
+          .listing-preview {
+              width: 100%;
+              height: 25rem;
+          }
+          .img-wrapper {
+            width: 100%;
+          }
+      }
+    @media (min-width: 768px) and (max-width:990px){
+        .listing-preview {
+            width: 200px;
+        }
+        .desc .col-lg-9 {
+            height: 200px;
+        }
+    }
+
+
+</style>
+{% load designer_filters %}
+    <div class="row">
+        <div class="img-wrapper" style="float: left;">
+            <div class="bg-secondary border-primary listing-preview"
+                    style="background-image: url({% if request.user == contest.user %}
+                        {{ contest.entries.last.get_display_image }}
+                    {% else %}{{ contest.get_image }}{% endif %}); background-size: cover; background-position: center; background-repeat: no-repeat;">
+                {% if contest.get_total_price %}
+                    <span class="bg-dark text-white mt-0 py-2 px-2">{{ contest.get_price.currency.symbol }}{{ contest.get_prize|floatformat:-2 }} </span>
+                {% endif %}
+            </div>
+        </div>
+        <div class="desc" style="float:left; width: calc(100% - 230px); margin-left: 10px;">
+            <div class="row">
+                <div class="col-lg-9 col-md-12">
+                    <div class="mt-2">
+                        {% if contest.status == "canceled" %}
+                            <h5 class="font-weight-bold">{{ contest.title }} </h5>
+        
+                        {% else %}
+                            <a href="{% url "home:contest" contest.id %}" class="step-link"><h5
+                                    class="font-weight-bold">{{ contest.title }} </h5></a>
+        
+                        {% endif %}
+                        <p>{{ contest.form_fields.contest_detail|truncatechars:240 }}  </p>
+                        <p>By <a href="{% url "home:public_profile" contest.user %}">{{ contest.user }}</a></p>
+                        <div class="inline-group mb-2">
+        
+                            <span class="badge py-2 px-2 badge-light">{{ contest.category.title }}</span>
+                            <span class="badge py-2 px-2 badge-light">{{ contest.form_fields.contest_industry }}</span>
+                        </div>
+        
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-12">
+                    <div class="text-left mt-2">
+                        {% if contest.status == "canceled" %}
+        
+                            <p><i class="far  text-danger fa-check-circle"></i> Contest canceled</p>
+        
+                        {% else %}
+                            <p><i class="far fa-file"></i> {{ contest.get_entry_count }} designs</p>
+        
+                            {% if contest.status == "completed" and not contest.is_locked %}
+        
+                                <p><i class="far  text-success fa-check-circle"></i> Winner Selected</p>
+                            {% elif contest.is_locked and contest.status == "completed" %}
+                                <p><i class="fa  text-warning fa-lock"></i> Contest Locked</p>
+        
+                            {% else %}
+                                <p><i class="far fa-clock"></i>
+                                   {{ contest.get_timezone|timesince:contest.finish_date }} left</p>
+                            {% endif %}
+                            {% if contest.get_feedbacks.count %}
+                                <p data-placement="bottom" data-html="true" data-toggle="tooltip"
+                                   title="{% include "includes/home/contest_tooltip.html" %}">
+                                    <i class="far fa-comment"></i> {{ contest.get_feedbacks.percentage }}%
+                                    feedback ({{ contest.get_feedbacks.count }}) </p>
+        
+                            {% else %}
+                                <p data-placement="bottom" data-html="true" data-toggle="tooltip"
+                                   title="{% include "includes/home/contest_tooltip.html" %}">
+                                    <i class="far fa-comment"></i> No feedback </p>
+                            {% endif %}
+        
+                        {% endif %}
+                    </div>
+        
+                </div>
+        
+            </div>
+        </div>
+    </div>
+<hr>
+

@@ -1,0 +1,150 @@
+{% load static %}
+{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description"
+          content="Only Custom Professional Results. 100% Money Back Guarantee. Freelance graphic, UX/UI design and web development at Zignative. 962,660 freelance designers compete to create amazing designs for your business. Start Today!">
+
+    <meta name="keywords" content="crowdsource, graphic design, ux/ui design">
+
+    <meta property="og:title" content="Logos, UX/UI, Graphic Design &amp; More. | Zignative">
+    <link href="{% static "dashboard/css/styles.css" %}" rel="stylesheet"/>
+    <link href="{% static "dashboard/css/my_style.css" %}" rel="stylesheet"/>
+    <link rel="stylesheet" href="{% static "dashboard/css/public_profile.css" %}">
+    <link rel="stylesheet" href="{% static "dashboard/css/account.css" %}">
+
+    <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet"
+          crossorigin="anonymous"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static "dashboard/css/notify_dropdown.css" %}">
+
+    <title>{{ user }} | Zignative</title>
+    {% block head %}
+
+    {% endblock %}
+</head>
+
+<body>
+{% include "includes/navbar.html" %}
+{% block body %}
+    <div class="container-fluid mt-3">
+    <div class="row justify-content-center">
+        <div class="col-md-9">
+            <div class="fb-profile-block">
+                <div class="fb-profile-block-thumb cover-container" style="
+                        background:url('{{ user.profile.get_cover_photo }}')
+                        ;background-size: cover;background-position: center"></div>
+                <div class="profile-img">
+                    <a href="#">
+                        <img class="rounded-circle" src="{{ user.profile.get_photo }}" alt="" title="">
+                    </a>
+                </div>
+                <div class="profile-name">
+                    <h2>{{ user }}</h2>
+                </div>
+
+                <div class="fb-profile-block-menu">
+                    <div class="block-menu">
+                        <ul>
+                            <li class="bg-dark "><a class="text-white" href="{% url "home:public_profile" user %}">About</a></li>
+                            {% if user == request.user %}
+                                                        <li><a href="{% url "user:edit_profile"  %}">Edit Profile</a></li>
+
+                            {% endif %}
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="bg-light mt-5 col-md-6 p-2">
+
+
+            <div class="">
+                            <h5>About</h5>
+                            <div class="row">
+                                <div class="col-4 border-right">
+                                    <span class="h1 font-weight-bold">{{ user.contests.count }}</span><br>
+                                    <span class="text-muted">Contests Opened</span>
+                                </div>
+                                <div class="col-4 border-right">
+                                    <span class="h1 font-weight-bold">{{ awards }}</span><br>
+                                    <span class="text-muted">Awarded winners</span>
+                                </div>
+                                <div class="col-4 ">
+                                    <span class="h1 font-weight-bold">{{ reviews}}</span><br>
+                                    <span class="text-muted">Reviews given  </span>
+                                </div>
+                            </div>
+                        </div>
+
+        </div>
+
+    </div>
+        <div class="row justify-content-center">
+            <div class="bg-light mt-5 col-md-6 p-2">
+
+
+                <div class="">
+                                                <h5>Activity</h5>
+
+                    <div class="row">
+                        <div class="col-7 ">
+                            <span class="h1 font-weight-bold">${{ total }}</span><br>
+                            <span class="text-muted">How much did the <b>{{ user }}</b> spend</span>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+</div>
+
+{% endblock %}
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+<script src="{% static "dashboard/js/scripts.js" %}"></script>
+<script src="{% static "dashboard/js/request.js" %}"></script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+
+<script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js" crossorigin="anonymous"></script>
+
+{% block script %}
+
+{% endblock %}
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0MRYY26K08"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-0MRYY26K08');
+
+
+
+</script>
+</body>
+
+</html>

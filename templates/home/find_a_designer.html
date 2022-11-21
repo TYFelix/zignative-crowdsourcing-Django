@@ -1,0 +1,95 @@
+{% extends "customer/layout.html" %}
+{% load static %}
+{% load home_filters %}
+{% block head %}
+    <title> Find a designer| Zignative </title>
+    <script src="https://use.fontawesome.com/5ac93d4ca8.js"></script>
+    <style>
+        .des_im {
+            max-width: 100%;
+            object-fit: contain;
+            max-height: 100%;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <ol class="breadcrumb  mb-4 mt-2">
+            <li class="breadcrumb-item ">Home</li>
+            <li class="breadcrumb-item active">Find a designer</li>
+        </ol>
+        <h3>Find a designer you’ll love</h3>
+        <hr>
+        <div class="row">
+            <div class="col-2  mb-5">
+                <form method="get" id="filter_form">
+                    <input name="q" value="{{ q }}" type="text" class="form-control" placeholder="Search">
+
+                    <h6 class="mt-3">Categories</h6>
+                    <div style="max-height:300px; overflow:auto">
+                        {% for service in services %}
+                            <div class="form-check">
+                                <input {% if service.id|stringformat:"i" in srv %}checked{% endif %}  onclick="handle_filter(this)" class="form-check-input" type="checkbox" value="{{ service.id }}" name="srv"
+                                       >
+                                <label class="form-check-label text-muted" for="defaultCheck1">
+                                    {{ service.title }}
+                                </label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <h6 class="mt-5">Industries</h6>
+                    <div style="max-height:300px; overflow:auto">
+                        {% for industry in industries %}
+                            <div class="form-check">
+                                <input {% if industry in ind %}checked{% endif %} onclick="handle_filter(this)" class="form-check-input" type="checkbox" value="{{ industry }}" name="ind" >
+                                <label class="form-check-label text-muted" for="defaultCheck1">
+                                    {{ industry }}
+                                </label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <h6 class="mt-5">Active</h6>
+                     <div class="form-check">
+                            <input {% if online %}checked{% endif %} onclick="handle_filter(this)" class="form-check-input" type="checkbox" value="online" name="online"
+                                   >
+                            <label class="form-check-label text-muted" for="defaultCheck1">
+                                Get active users
+                            </label>
+                        </div>
+
+                    <h6 class="mt-5">Languages</h6>
+                    <label>
+                        <select onchange="handle_filter(this)" name="lang" class="form-control" id="select_lang">
+                            <option value="">Language</option>
+                            {% for language in languages %}
+                                <option {% if lang == language.0 %}selected{% endif %} value="{{ language.0 }}">{{ language.1 }}</option>
+                            {% endfor %}
+
+
+                        </select>
+                    </label>
+                </form>
+            </div>
+            <div class="col-10">
+                {% if query %}
+                    {% include "includes/home/find/filter.html" %}
+                {% else %}
+                    {% include "includes/home/find/init.html" %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script>
+        document.getElementById("find_nav").classList.add("active")
+    </script>
+    <script>
+     function handle_filter(e){
+         document.getElementById("filter_form").submit()
+     }
+    </script>
+{% endblock %}
+
+

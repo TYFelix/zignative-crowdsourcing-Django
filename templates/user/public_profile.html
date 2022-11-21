@@ -1,0 +1,218 @@
+{% load static %}
+{% load crispy_forms_tags %}
+{% load profile_filters %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description"
+          content="Only Custom Professional Results. 100% Money Back Guarantee. Freelance graphic, UX/UI design and web development at Zignative. 962,660 freelance designers compete to create amazing designs for your business. Start Today!">
+
+    <meta name="keywords" content="crowdsource, graphic design, ux/ui design">
+
+    <meta property="og:title" content="Logos, UX/UI, Graphic Design &amp; More. | Zignative">
+    <link href="{% static "dashboard/css/styles.css" %}" rel="stylesheet"/>
+    <link href="{% static "dashboard/css/my_style.css" %}" rel="stylesheet"/>
+    <link rel="stylesheet" href="{% static "dashboard/css/public_profile.css" %}">
+    <link rel="stylesheet" href="{% static "dashboard/css/account.css" %}">
+
+    <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet"
+          crossorigin="anonymous"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static "dashboard/css/notify_dropdown.css" %}">
+
+    <title>{{ user }} | Zignative</title>
+    {% block head %}
+    
+    {% endblock %}
+</head>
+
+<body>
+{% include "includes/navbar.html" %}
+{% block body %}
+    <div class="container-fluid mt-3">
+    <div class="row justify-content-center">
+        <div class="col-md-9">
+            <div class="fb-profile-block">
+                <div class="fb-profile-block-thumb cover-container" style="
+                        background:url('{{ user.profile.get_cover_photo }}')
+                        ;background-size: cover;background-position: center"></div>
+                <div class="profile-img">
+                    <a href="#">
+                        <img class="rounded-circle" src="{{ user.profile.get_photo }}" alt="" title="">
+                    </a>
+                </div>
+                <div class="profile-name">
+                    <h2>{{ user }}</h2>
+                </div>
+
+                <div class="fb-profile-block-menu">
+                    <div class="block-menu">
+                        <ul>
+                            <li class="bg-dark "><a class="text-white" href="{% url "home:public_profile" user %}">Portfolio</a></li>
+                            <li><a href="{% url "home:profile_about" user %}">About</a></li>
+                            {% if user == request.user %}
+                                                        <li><a href="{% url "user:edit_profile"  %}">Edit Profile</a></li>
+
+                            {% endif %}
+                            {% if request.user != user and request.user.profile.role == "client" %}
+                            <li class="float-right">
+                                <a  class="btn btn-info text-white"  data-toggle="modal" data-target="#contests_modal">
+                                    Invite to work
+                                </a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class=" col-md-9 p-2">
+            {% if  q == 4  %}
+
+            {% endif %}
+            <select onchange="getService(this)" class="custom-select col-3 mt-5" id="service_select">
+
+                    {% if q %}
+                        <option value="0">All Categories</option>
+
+                    {% for service in services %}
+                        {% if service.id == q %}
+
+                        <option selected value="{{ service.id }}">{{ service.title }}</option>
+                            {% else %}
+                            <option value="{{ service.id }}">{{ service.title }}</option>
+                        {% endif %}
+
+                    {% endfor %}
+                    {% else %}
+                        <option selected>All Categories</option>
+                    {% for service in services %}
+                        <option value="{{ service.id }}">{{ service.title }}</option>
+
+                    {% endfor %}
+                    {% endif %}
+
+                </select>
+
+            <div class="row mb-3 p-2">
+
+                {% for work in works %}
+                    <div class="col-lg-3 col-sm-12    d-flex justify-content-center p-1  mt-2">
+
+                        <div class="border col-12 text-center">
+                                        <span class="float-left"><a
+                                                href="{% url "home:entry_detail" work.entry.contest.id work.entry.id %}">#{{ work.entry.id }}</a> </span>
+                            <span class="float-right">From <a
+                                    href="{% url "home:contest" work.entry.contest.id %}"
+                                    class="text-success">{{ work.entry.contest }}</a></span><br><br>
+                            <img style="cursor:pointer" onclick="window.location='{% url 'home:entry_detail' work.entry.contest.id work.entry.id %}'" class="border" src="{{ work.entry.get_image }}" width="150" height="150" alt="">
+                            <br><br>
+
+                            <br><br>
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="contests_modal" tabindex="-1" aria-labelledby="contets_modal_label" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        {% for contest in contests %}
+            <b>{{ contest.category.title }}</b>: {{ contest.title }}
+            {% if contest|is_invited:user %}
+                <button  class="btn float-right btn-primary disabled" disabled>Invited</button>
+            {% else %}
+                <button onclick="handle_invite(this)" cid="{{ contest.id }}" class="btn float-right btn-info">Invite</button>
+            {% endif %}
+            <hr>
+        {% endfor %}
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+<script src="{% static "dashboard/js/scripts.js" %}"></script>
+<script src="{% static "dashboard/js/request.js" %}"></script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+
+<script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js" crossorigin="anonymous"></script>
+
+{% block script %}
+
+{% endblock %}
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0MRYY26K08"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-0MRYY26K08');
+
+
+    function getService(e){
+        window.location = window.location.pathname + "?service=" + e.value
+    }
+</script>
+<script>
+    var request = new Request();
+    function handle_invite(e){
+        var contest_id = e.getAttribute('cid');
+        request.get(`/customer/invite-designer/{{user}}/${contest_id}`)
+        .then(data => {
+            e.innerHTML = "Invited"
+            e.classList.remove("btn-info")
+            e.classList.add("btn-primary")
+            e.classList.add("disabled")
+            e.disabled = true
+
+
+        })
+        .catch(err => console.log(err));
+    }
+
+</script>
+</body>
+
+</html>

@@ -1,0 +1,79 @@
+{% load static %}
+{% load contest_filters %}
+
+    <li class="nav-item dropdown" id="noti-dropdown" >
+    <a onclick="read_nots()" class="nav-link" id="nots_but" href="#"  role="button" data-toggle="dropdown"
+       aria-haspopup="true" aria-expanded="false">
+        <i class="fa fa-bell"></i>
+        <span class="badge badge-info" id="notify_count">{% if  request.user.profile.get_unread_noti_count != 0 %}
+            {{ request.user.profile.get_unread_noti_count }}
+        {% endif %}</span>
+    </a>
+    <ul class="dropdown-menu notify">
+        <li class="head text-light bg-dark">
+            <div class="row">
+                <div class="col-lg-12 col-sm-12 col-12">
+                    <span>Notifications</span>
+                    {#<a href="" class="float-right text-light">Mark all as read</a>#}
+                </div>
+            </div>
+        </li>
+    <div id="notify_list">
+               {% include "includes/home/notify_list_included.html" %}
+    </div>
+
+
+
+
+        <li class="footer bg-dark text-center">
+            <a href="{% url "home:notifications" %}" class="text-light">View All</a>
+        </li>
+    </ul>
+</li>
+
+
+<script>
+
+    var count_url = "{% url "home:check_notifications" %}";
+    var read_noti = "{% url "home:read_notifications" %}";
+    var notify_count = document.getElementById("notify_count")
+
+    setInterval(function () {
+        fetch(count_url)
+  .then(response => response.json())
+  .then(data => {
+      if (data.noti_count != 0){
+          notify_count.innerHTML=data.noti_count
+      }
+  });
+    }, 2000);
+
+
+    const nots_but = document.getElementById("nots_but")
+    nots_but.addEventListener("click",get_nots)
+
+    var list_url = "{% url "home:get_nots_list" %}";
+    var notis_html = document.getElementById("notify_list")
+    function get_nots(e){
+        fetch(list_url)
+  .then(response => response.json())
+  .then(data => {
+      notis_html.innerHTML=data.notis_html
+  });
+
+    }
+
+    function read_nots(){
+        fetch(read_noti).then(response => response.json())
+          .then(data => {
+                console.log(data)
+                notify_count.innerText=''
+          });
+        console.log("tiklandı")
+    }
+
+
+
+
+
+</script>

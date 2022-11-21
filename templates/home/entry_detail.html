@@ -1,0 +1,329 @@
+{% extends "customer/layout.html" %}
+{% load static %}
+{% load contest_filters %}
+{% block head %}
+    <title>{{ entry.contest.user }}'s entry | Zignative Crowdsourcing</title>
+    <script src="https://use.fontawesome.com/5ac93d4ca8.js"></script>
+    <style>
+
+        hr {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            border: 0;
+            border-top: 1px solid #FFFFFF;
+        }
+
+        .blog-comment::before,
+        .blog-comment::after,
+        .blog-comment-form::before,
+        .blog-comment-form::after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        .blog-comment {
+            padding-left: 5%;
+            padding-right: 5%;
+        }
+
+        .blog-comment ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .blog-comment img {
+            opacity: 1;
+            filter: Alpha(opacity=100);
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            -o-border-radius: 4px;
+            border-radius: 4px;
+        }
+
+        .blog-comment img.avatar {
+            position: relative;
+            float: left;
+            margin-left: 0;
+            margin-top: 0;
+            width: 65px;
+            height: 65px;
+        }
+
+        .blog-comment .post-comments {
+            border: 1px solid #eee;
+            margin-bottom: 20px;
+            margin-left: 85px;
+            margin-right: 0px;
+            padding: 5px 10px;
+            position: relative;
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            -o-border-radius: 4px;
+            border-radius: 4px;
+            background: #fff;
+            color: #6b6e80;
+            position: relative;
+        }
+
+        .blog-comment .meta {
+            font-size: 13px;
+            color: #aaaaaa;
+            padding-bottom: 8px;
+            margin-bottom: 10px !important;
+            border-bottom: 1px solid #eee;
+        }
+
+        .blog-comment ul.comments ul {
+            list-style-type: none;
+            padding: 0;
+            margin-left: 85px;
+        }
+
+        .blog-comment-form {
+            padding-left: 15%;
+            padding-right: 15%;
+            padding-top: 40px;
+        }
+
+        .blog-comment h3,
+        .blog-comment-form h3 {
+            margin-bottom: 40px;
+            font-size: 26px;
+            line-height: 30px;
+            font-weight: 800;
+        }
+
+
+    </style>
+{% endblock %}
+
+{% block body %}
+
+    <div class="container-fluid">
+    <ol class="breadcrumb  mb-4 mt-2">
+        <li class="breadcrumb-item ">Contests</li>
+        <li class="breadcrumb-item active">{{ entry.contest.title }}</li>
+    </ol>
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.tags == "error" %}
+                <div class="alert alert-danger " role="alert">
+
+            {% else %}
+                <div class="alert alert-{{ message.tags }} " role="alert">
+
+            {% endif %}
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        {% endfor %}
+    {% endif %}
+
+<div class="row">
+    <div class="col-6 border pl-3 text-center">
+        <h5 class="float-left">#{{ entry.id }} by <a href="{% url "home:public_profile" entry.user %}">{{ entry.user }}</a></h5>
+        {% if request.user == entry.user %}
+             {% if not entry.in_portfolio %}
+             <h5 class="float-right"><a href="{% url "user:remove_or_add_portfolio" entry.id %}" class="btn btn-success btn-sm">Add to portfolio</a></h5>
+               {% else %}
+             <h5 class="float-right"><a href="{% url "user:remove_or_add_portfolio" entry.id %}" class="btn btn-warning text-white btn-sm">Remove from portfolio</a></h5>
+             {% endif %}
+        {% endif %}
+        <br>
+        <img class="border" style="width:100%" src="{{ entry|get_controlled_main:request }}" alt="">
+
+    </div>
+    <div class="col-6 border">
+
+
+        <div class="row">
+
+
+            <a href="{% url "home:contest" entry.contest.id %}" class="step-link"><h5
+                    class="ml-2">{{ entry.contest.title }}</h5></a>
+
+            {% if request.user == entry.contest.user or request.user == entry.user %}
+
+                <div class="col-md-12">
+                    <h6>Feedbacks</h6>
+                    {% if eliminated %}
+                        <div class="alert alert-danger text-center" role="alert">
+                            Your design has been eliminated!
+                        </div>
+                    {% endif %}
+
+                    {% if request.user == entry.contest.user and not entry.is_declined  and not entry.contest.round == "winner_selected" %}
+                        <form typ="main" for_what="{{ entry.id }}" id="feedback_form" action=""
+                              url="{% url "home:add_comment" entry.contest.id entry.id %}" class="d-flex flex-column ">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="feedback_textarea">Leave Feedback</label>
+                                <textarea required class="form-control" id="feedback_textarea" rows="3"></textarea>
+                            </div>
+                            <button class="btn btn-success float-right">Submit</button>
+                        </form>
+
+                    {% endif %}
+                    <div class="blog-comment" id="comment_block">
+
+                        {% if entry.feedbacks.all|length != 0 %}
+                            {% include "includes/contest/comment_list.html" %}
+
+                        {% else %}
+
+                            <div class="col-md-12 border text-center pb-5 pt-5 bg-light mt-5">
+                                There is no feedback to show.
+                            </div>
+
+
+                        {% endif %}
+                    </div>
+
+                </div>
+            {% else %}
+                <div class="col-md-12 border text-center pb-5 pt-5 bg-light mt-5">
+                    Nothing to show.
+                </div>
+            {% endif %}
+
+
+                <div class="col-md-12 mt-5">
+
+                    {% if r %}
+                        <h5>{{ r.writer }}'s Review</h5> <br>
+                        <div class="row p-3">
+
+                            <div class="col-3 ">
+                                <img class="img-rounded" width="65" height="65"
+                                     src="{{ r.writer.profile.get_photo }}" alt="">
+                            </div>
+                            <div class="col-8">
+
+                                <p class="mb-0"><i>"{{ r.content }}"</i></p>
+
+                                <div id="rating" class="mt-1">
+
+                                </div>
+                                <br>
+                                <small class="text-muted"><a href="{% url "home:public_profile" r.writer %}">{{ r.writer }}</a> | reviewed {{ r.created_date|timesince }} ago</small>
+
+                            </div>
+                            <div class="col-1">
+
+                                {% if request.user == entry.contest.user %}
+                                <a href="{% url "home:delete_review" r.id %}"><i class="fa fa-trash"></i></a>
+                                {% endif %}
+
+                            </div>
+                        </div>
+                    {% else %}
+                        {% if request.user == entry.contest.user and entry.user|am_i_winner:entry.contest %}
+                        <form class="d-flex mt-5 flex-column " method="post" onsubmit="return validateForm()"
+                              id="review_form">
+                            {% csrf_token %}
+                            <h5>Leave Review for this entry</h5>
+                            <span>This review will appear on the {{ entry.user }}'s profile</span> <br>
+                            <span class="text-danger" hidden id="warn_rate">Rating must be filled out</span>
+                            <div id="rating"  class="h2">
+
+                            </div>
+
+                            <input type="number" name="rate" id="rate_input" hidden>
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="feedback_textarea">Leave Review</label>
+                                <textarea required class="form-control" id="review" name="review" rows="3"></textarea>
+                            </div>
+                            <button class="btn btn-success float-right">Submit</button>
+                        </form>
+                        {% endif %}
+                    {% endif %}
+
+
+                </div>
+
+
+        </div>
+    </div>
+</div>
+
+</div>
+
+{% endblock %}
+{% block script %}
+    <script src="{% static "dashboard/js/feedback.js" %}"></script>
+    <script src="{% static "dashboard/js/star-rating.js" %}"></script>
+    {% if request.user == entry.contest.user %}
+        <script>
+            document.getElementById("feedback_form").addEventListener("submit", addComment)
+
+        </script>
+
+    {% endif %}
+    <script type="text/javascript">
+        function delete_child_comment(el) {
+            var feedback_id = el.getAttribute("el")
+            {#var content_area=document.getElementById(`c_${feedback_id}`)#}
+            var content = document.getElementById(`ch_${feedback_id}_p`)
+            content.hidden = true
+
+            var edit_form = document.getElementById(`ch_${feedback_id}_f`)
+            edit_form.hidden = false
+
+
+        }
+
+        function delete_comment(el) {
+            var feedback_id = el.getAttribute("el")
+            {#var content_area=document.getElementById(`c_${feedback_id}`)#}
+            var content = document.getElementById(`c_${feedback_id}_p`)
+            content.hidden = true
+
+            var edit_form = document.getElementById(`c_${feedback_id}_f`)
+            edit_form.hidden = false
+
+
+        }
+
+
+
+            {% if r %}
+                var myRater = raterJs({
+                element: document.querySelector("#rating"),
+                readOnly:true,
+                rating:Number({{ r.rate }}),
+                rateCallback: function rateCallback(rating, done) {
+                    this.setRating(rating);
+                    done();
+                    document.getElementById("rate_input").value = rating
+                }
+            });
+
+                {% else %}
+                var myRater = raterJs({
+                element: document.querySelector("#rating"),
+
+                rateCallback: function rateCallback(rating, done) {
+                    this.setRating(rating);
+                    done();
+                    document.getElementById("rate_input").value = rating
+                }
+            });
+
+                function validateForm() {
+
+                if (!document.getElementById("rate_input").value) {
+                    document.getElementById("warn_rate").hidden = false
+                    return false;
+                }
+            }
+                {% endif %}
+
+
+    </script>
+{% endblock %}
+
+

@@ -1,0 +1,92 @@
+{% load home_filters %}
+{% if logo_designers %}
+    <h4 class="ml-3">
+        Logo designers
+        {% if logo_designers.count > 3 %}
+            <a href="?srv={{ logo_id.id }}" class="step-link"><span class="float-right mr-5">See all results <i
+                    class="fa fa-arrow-right"></i></span></a>
+        {% endif %}
+    </h4>
+
+    <div class="row">
+        {% for user in logo_designers|get_first_3 %}
+            <div class="col-3  pl-0 pr-0 shadow  pt-2 m-3">
+                <div class="row m-2">
+                    <div class="col-2">
+                        <a href="{% url "home:public_profile" user %}"><img class="rounded-circle "
+                                                                            width="45" height="45"
+                                                                            src="{{ user.profile.get_photo }}"
+                                                                            alt=""></a>
+                    </div>
+                    <div class="col-9 mt-2">
+                        <a href="{% url "home:public_profile" user %}"><span
+                                class="text-muted ml-3 h5">{{ user }}</span></a>
+                    </div>
+                </div>
+                <a href="{% url "home:public_profile" user %}"><img class="des_im "
+                                                                    src="{{ user.profile.get_last_entry.get_display_image }}"
+                                                                    alt=""></a>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+{% if web_designers %}
+    <h4 class="ml-3 mt-5">
+        Web Page designers
+        {% if web_designers.count > 3 %}
+            <a href="?srv={{ web_id.id }}" class="step-link"><span class="float-right mr-5">See all results <i
+                    class="fa fa-arrow-right"></i></span></a>
+        {% endif %}
+    </h4>
+    <div class="row">
+        {% for user in web_designers %}
+            <div class="col-3  pl-0 pr-0 shadow  pt-2 m-3">
+                <div class="row m-2">
+                    <div class="col-2">
+                        <a href="{% url "home:public_profile" user %}"><img class="rounded-circle "
+                                                                            width="45" height="45"
+                                                                            src="{{ user.profile.get_photo }}"
+                                                                            alt=""></a>
+                    </div>
+                    <div class="col-9 mt-2">
+                        <a href="{% url "home:public_profile" user %}"><span
+                                class="text-muted ml-3 h5">{{ user }}</span></a>
+                    </div>
+                </div>
+                <a href="{% url "home:public_profile" user %}"><img class="des_im "
+                                                                    src="{{ user.profile.get_last_entry.get_display_image }}"
+                                                                    alt=""></a>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+{% if online_designers %}
+    <h4 class="ml-3 mt-5">
+        Designers online now
+        {% if online_designers.count > 3 %}
+            <a href="?online=true" class="step-link"><span class="float-right mr-5">See all results <i
+                    class="fa fa-arrow-right"></i></span></a>
+        {% endif %}
+    </h4>
+    <div class="row">
+        {% for user in online_designers %}
+            <div class="col-3  pl-0 pr-0 shadow  pt-2 m-3">
+                <div class="row m-2">
+                    <div class="col-2">
+                        <a href="{% url "home:public_profile" user %}"><img class="rounded-circle "
+                                                                            width="45" height="45"
+                                                                            src="{{ user.profile.get_photo }}"
+                                                                            alt=""></a>
+                    </div>
+                    <div class="col-9 mt-2">
+                        <a href="{% url "home:public_profile" user %}"><span
+                                class="text-muted ml-3 h5">{{ user }}</span></a>
+                    </div>
+                </div>
+                <a href="{% url "home:public_profile" user %}"><img class="des_im "
+                                                                    src="{{ user.profile.get_last_entry.get_display_image }}"
+                                                                    alt=""></a>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}

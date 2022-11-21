@@ -1,0 +1,246 @@
+{% extends 'customer/layout.html' %}
+{% load static %}
+{% load contest_filters %}
+
+{% block head %}
+    <title>Notifications | Zignative</title>
+
+{% endblock %}
+{% block body %}
+
+    <div class="container mt-5 mb-5">
+    <h3>Notifications ({{ request.user.profile.get_unread_noti_count }})</h3>
+    <div class="row">
+        <div class="col-12 pt-4 ">
+            <ul class="list-group">
+                {% for noti in request.user.notifications.all  reversed %}
+
+                    {% if noti.notify_type == "F" %}
+                        <li style="cursor:pointer"
+                            onclick="window.location='{% url "home:entry_detail" noti.entry.contest.id noti.entry.id %}'"
+                            class="list-group-item {% if noti.is_unread %} border-success {% endif %}d-flex justify-content-between align-items-center">
+                            <img src="{{ noti.entry.contest.user.profile.get_photo }}" width="60" height="60"
+                                 class=" rounded-circle">
+
+                            <p><b>{{ noti.entry.contest.user }}</b> gave feedback to your entry.</p>
+
+                            <span class="badge badge-primary badge-pill">{{ noti.created_date }}</span>
+                        </li>
+                    {% elif noti.notify_type == "FR" %}
+                        <li style="cursor:pointer"
+                            onclick="window.location='{% url "home:entry_detail" noti.entry.contest.id noti.entry.id %}'"
+                            class="list-group-item {% if noti.is_unread %} border-success {% endif %}d-flex justify-content-between align-items-center">
+                            <img src="{{ noti.feedback.user.profile.get_photo }}" width="60" height="60"
+                                 class=" rounded-circle">
+
+                            <p><b>{{ noti.feedback.user }}</b> reply your feedback.</p>
+
+                            <span class="badge badge-primary badge-pill">{{ noti.created_date }}</span>
+                        </li>
+                    {% elif noti.notify_type == "D" %}
+                        <li style="cursor:pointer"
+                            onclick="window.location='{% url "home:entry_detail" noti.entry.contest.id noti.entry.id %}?alert=eliminated'"
+                            class="list-group-item {% if noti.is_unread %} border-success {% endif %}d-flex justify-content-between align-items-center">
+                            <img src="{{ noti.entry.contest.user.profile.get_photo }}" width="60" height="60"
+                                 class=" rounded-circle">
+
+                            <p><b>{{ noti.entry.contest.user }}</b> declined your entry.</p>
+
+                            <span class="badge badge-primary badge-pill">{{ noti.created_date }}</span>
+                        </li>
+                    {% elif noti.notify_type == "RT" %}
+                        <li style="cursor:pointer"
+                            onclick="window.location='{% url "home:entry_detail" noti.entry.contest.id noti.entry.id %}'"
+                            class="list-group-item {% if noti.is_unread %} border-success {% endif %}d-flex justify-content-between align-items-center">
+                            <img src="{{ noti.entry.contest.user.profile.get_photo }}" width="60" height="60"
+                                 class=" rounded-circle">
+
+                            <p><b>{{ noti.entry.contest.user }}</b> rated your entry.</p>
+
+                            <span class="badge badge-primary badge-pill">{{ noti.created_date }}</span>
+                        </li>
+                    {% elif noti.notify_type == "A" %}
+                        <li style="cursor:pointer"
+                            onclick="window.location='{% url "home:contest" noti.contest.id %}?tab=messages'"
+                            class="list-group-item {% if noti.is_unread %} border-success {% endif %}d-flex justify-content-between align-items-center">
+                            <img src="{{ noti.contest.user.profile.get_photo }}" width="60" height="60"
+                                 class=" rounded-circle">
+
+                            <p><b>{{ noti.contest.user }}</b> added a new message in: <b>{{ noti.contest }}</b>
+                            </p>
+
+                            <span class="badge badge-primary badge-pill">{{ noti.created_date }}</span>
+                        </li>
+                     {% elif noti.notify_type == "IV" %}
+                        <li style="cursor:pointer"
+                            onclick="window.location='{% url "home:contest" noti.contest.id %}'"
+                            class="list-group-item {% if noti.is_unread %} border-success {% endif %}d-flex justify-content-between align-items-center">
+                            <img src="{{ noti.contest.user.profile.get_photo }}" width="60" height="60"
+                                 class=" rounded-circle">
+
+                            <p><b>{{ noti.contest.user }}</b> invited you to <b>{{ noti.contest }}</b>
+                            </p>
+
+                            <span class="badge badge-primary badge-pill">{{ noti.created_date }}</span>
+                        </li>
+                     {% elif noti.notify_type == "L" %}
+                        <li style="cursor:pointer"
+                            onclick="window.location='{% url "home:contest" noti.contest.id %}'"
+                            class="list-group-item {% if noti.is_unread %} border-success {% endif %}d-flex justify-content-between align-items-center">
+                            <img src="{% static "images/logo_pp.png" %}" width="60" height="60"
+                                 class=" rounded-circle">
+
+                            <p>Contest <b>({{ noti.contest }})</b>  is locked. Because {{ noti.contest.user }} didn't choose any {% if noti.contest_round == "qualify_end" %}
+                            finalist.
+                                {% elif noti.contest_round == "selecting_winner" %}
+                                winner.
+                            {% endif %}
+                            </p>
+
+                            <span class="badge badge-primary badge-pill">{{ noti.created_date }}</span>
+                        </li>
+                        {% elif noti.notify_type == "I" %}
+                        <li style="cursor:pointer"
+                            onclick="window.open('{% url "customer:invoice" noti.contest.invoice.id %}','blank')"
+                            class="list-group-item {% if noti.is_unread %} border-success {% endif %}d-flex justify-content-between align-items-center">
+                            <img src="{% static "images/logo_pp.png" %}" width="60" height="60"
+                                 class=" rounded-circle">
+
+                            <p>
+                                                            Invoice for Contest <b>({{ noti.contest }})</b>
+
+                            </p>
+
+                            <span class="badge badge-primary badge-pill">{{ noti.created_date }}</span>
+                        </li>
+                    {% elif noti.notify_type == "R" %}
+                        <li style="cursor:pointer" onclick="window.location='{% url "home:contest" noti.contest.id %}'"
+                            class="list-group-item {% if noti.is_unread %} border-success {% endif %}d-flex justify-content-between align-items-center">
+                            <img src="{% static "images/logo_pp.png" %}" width="60" height="60"
+                                 class=" rounded-circle">
+
+                            {% if noti.contest_round == "qualify_end" %}
+
+                                <p>
+                                    Qualify round ended. <b>You need to choose finalists.</b>
+                                </p>
+                                <p>
+                                    <b>Contest:</b> {{ noti.contest|truncatechars:33 }}
+                                </p>
+
+                            {% elif noti.contest_round == "final_round" %}
+                                <p>
+                                    Qualify round ended. <b>{% if request.user|am_i_selected:noti.contest %}
+                                    Congratulations, you are among the finalists.
+                                {% else %}
+                                    Sorry, you are not among the finalists.
+                                {% endif %}</b>
+                                </p>
+                                <p>
+                                    <b>Contest:</b> {{ noti.contest|truncatechars:33 }}
+                                </p>
+
+                            {% elif  noti.contest_round == "selecting_winner" %}
+                                <p>
+                                    Final round ended. <b>You need to choose winner.</b>
+                                </p>
+                                <p>
+                                    <b>Contest:</b> {{ noti.contest|truncatechars:33 }}
+                                </p>
+
+                            {% elif  noti.contest_round == "winner_selected" %}
+                                <p>
+                                    Winner selected. <b>{% if request.user|am_i_winner:noti.contest %}
+                                    Congratulations, you are the winner!
+                                {% else %}
+                                    Sorry, you are not the winner.
+                                {% endif %} </b>
+                                </p>
+                                <p>
+                                    <b>Contest:</b> {{ noti.contest|truncatechars:33 }}
+                                </p>
+                            {% elif  noti.contest.is_locked and noti.contest.status == "completed" %}
+                                <p>
+                                    {% if noti.contest.round == "qualify_end" %}
+                                        {% if request.user == noti.contest.user %}
+                                        Contest locked. The award was shared among the designers. Because you didn't choose a winner.
+                                    {% else %}
+                                        Contest locked.
+                                        <b>You will receive part of the prize for being a designer.</b> Because
+                                        <b>{{ noti.contest.user }}</b> didn't choose any finalist.
+
+                                    {% endif %}
+                                    {% endif %}
+                                    {% elif noti.contest.round == "selecting_winner" %}
+                                        {% if request.user == noti.contest.user %}
+                                        Contest locked. The award was shared among the finalists. Because you didn't choose a winner.
+                                    {% else %}
+                                        {% if request.user|am_i_selected:noti.contest %}
+                                        Contest locked.
+                                        <b>You will receive part of the prize for being a finalist.</b> Because
+                                        <b>{{ noti.contest.user }}</b> didn't choose a winner.
+                                    {% else %}
+                                        Contest locked. The award was shared among the finalists. Because the client didn't choose a winner.
+
+                                    {% endif %}
+                                    {% endif %}
+                                </p>
+
+                                <p>
+                                    &nbsp;<b>Contest:</b> {{ noti.contest|truncatechars:33 }}
+                                </p>
+                            {% endif %}
+
+                            <span class="badge badge-primary badge-pill">{{ noti.created_date }}</span>
+                        </li>
+                    {% endif %}
+
+
+                    <br>
+
+                {% endfor %}
+
+
+            </ul>
+
+
+        </div>
+        <div>
+
+
+        </div>
+
+    </div>
+
+{% endblock %}
+{% block script %}
+    <script>
+        const request = new Request()
+        const csrftoken = getCookie('csrftoken');
+
+        var url = "{% url "home:read_notifications" %}";
+        request.get(url)
+            .then(data => {
+
+                console.log(data)
+
+            })
+            .catch(err => console.log(err));
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    </script>
+{% endblock %}

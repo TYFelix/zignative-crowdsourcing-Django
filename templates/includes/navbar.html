@@ -1,0 +1,125 @@
+{% load static %}
+<head>
+    <style type="text/css">
+        .dropdown-large {
+            padding: 1rem;
+        }
+
+        /* ============ desktop view ============ */
+        @media all and (min-width: 992px) {
+            .dropdown-large {
+                min-width: 768px;
+            }
+        }
+
+        /* ============ desktop view .end// ============ */
+    </style>
+
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function () {
+            /////// Prevent closing from click inside dropdown
+            document.querySelectorAll('.dropdown-menu').forEach(function (element) {
+                element.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                });
+            })
+        });
+        // DOMContentLoaded  end
+    </script>
+</head>
+
+<nav class="navbar fixed-top navbar-expand-lg navbar-light bg-white mt-0">
+    <div class="container">
+        <a class="navbar-brand" href="{% url "home:index" %}"><img height="30"
+                                                                   src="{% static "images/logo.svg" %}"
+                                                                   alt=""></a>
+        <button type="button" class="navbar-toggler" data-toggle="collapse"
+                data-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+
+{#            <ul class="navbar-nav me-auto mb-2 mb-lg-0">#}
+{#                <li class="dropdown show">#}
+{#                    <a class="nav-link my-2 my-sm-0 mr-2 dropdown-toggle" href="#"#}
+{#                       role="button" id="dropdownMenuLink" data-toggle="dropdown"#}
+{#                       aria-haspopup="true" aria-expanded="false">#}
+{#                        Categories#}
+{#                    </a>#}
+{##}
+{#                    <div class="dropdown-menu dropdown-large"#}
+{#                         aria-labelledby="dropdownMenuLink">#}
+{#                        <div class="row g-3">#}
+{#                            <div class="col-sm mb-3">#}
+{#                                <h6 class="title">Logo & Identity</h6>#}
+{#                                <ul class="list-unstyled">#}
+{#                                    <li><a href="#">Logo Design</a></li>#}
+{#                                    <li><a href="#">Business Card Design</a></li>#}
+{#                                    <li><a href="#">Banner Ad Design</a></li>#}
+{#                                </ul>#}
+{#                            </div><!-- end col-3 -->#}
+{#                            <div class="col-sm mb-3">#}
+{#                                <h6 class="title">Web & App Design</h6>#}
+{#                                <ul class="list-unstyled">#}
+{#                                    <li><a href="#">Mobile App Design</a></li>#}
+{#                                    <li><a href="#">Landing Page Design</a></li>#}
+{#                                    <li><a href="#">Social Media Assets Design</a></li>#}
+{#                                    <li><a href="#">Email Template Design</a></li>#}
+{#                                    <li><a href="#">Web Page Design</a></li>#}
+{#                                    <li><a href="#">Wordpress Design</a></li>#}
+{#                                </ul>#}
+{#                            </div><!-- end col-3 -->#}
+{#                            <div class="col-sm mb-3">#}
+{#                                <h6 class="title">Clothing & Merchandise</h6>#}
+{#                                <ul class="list-unstyled">#}
+{#                                    <li><a href="#">Merchandise</a></li>#}
+{#                                    <li><a href="#">T-Shirt Design</a></li>#}
+{#                                </ul>#}
+{#                            </div><!-- end col-3 -->#}
+{#                            <div class="col-sm">#}
+{#                                <h6 class="title">Book & Magazine</h6>#}
+{#                                <ul class="list-unstyled">#}
+{#                                    <li><a href="#">Book Cover Design</a></li>#}
+{#                                    <li><a href="#">Magazine Cover Design</a></li>#}
+{#                                </ul>#}
+{#                            </div><!-- end col-3 -->#}
+{#                        </div><!-- end row -->#}
+{#                    </div>#}
+{#                </li>#}
+{##}
+{##}
+{#                <li class="nav-item">#}
+{#                    <a href="{% url "user:login" %}" id="request_link"#}
+{#                       class="nav-link my-2 my-sm-0 mr-2">How it works</a>#}
+{#                </li>#}
+{##}
+{#                <li class="nav-item">#}
+{#                    <a href="{% url "user:login" %}" id="request_link"#}
+{#                       class="nav-link my-2 my-sm-0 mr-2">Explore</a>#}
+{#                </li>#}
+{##}
+{#                <li class="nav-item">#}
+{#                    <a href="{% url "user:login" %}" id="request_link"#}
+{#                       class="nav-link my-2 my-sm-0 mr-2">Pricing</a>#}
+{#                </li>#}
+{#            </ul>#}
+            <div class="navbar-nav ml-auto">
+                {% if request.user.is_authenticated %}
+                    <a href="{% url "user:logout" %}"
+                       class="nav-link my-2 my-sm-0 mr-2">Logout</a>
+
+                {% else %}
+                    <a href="{% url "user:login" %}" class="nav-link my-2 my-sm-0 mr-2">Log
+                        In</a>
+                    <a href="{% url "user:register" %}"
+                       class="nav-link my-2 my-sm-0 mr-2">Sign Up</a>
+                    <a href="{% url "customer:categories" %}" type="button"
+                       class="btn btn-primary my-2 my-sm-0">Post a Contest</a>
+                {% endif %}
+
+            </div>
+
+        </div>
+    </div>
+</nav>

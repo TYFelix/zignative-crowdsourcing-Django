@@ -1,0 +1,41 @@
+{% load static %}
+{% for anoun in contest.anouns.all reversed %}
+    <div class="col-12 mt-3   border bg-light rounded">
+        <div class="d-flex flex-column comment-section">
+            <div class=" p-2">
+                <div class="d-flex flex-row user-info">
+
+                    {% if anoun.is_general %}
+                        <img class="rounded-circle" src="{% static "images/logo.svg" %}" width="40">
+                        <div class="d-flex flex-column justify-content-start ml-2">
+                        <span class="d-block font-weight-bold name">Zignative</span>
+                    {% else %}
+                        <img class="rounded-circle" src="{{ contest.user.profile.get_photo }}" width="40">
+                        <div class="d-flex flex-column justify-content-start ml-2">
+
+                        <span class="d-block font-weight-bold name"><a href="{% url "home:public_profile" contest.user  %}">{{ contest.user }} </a> </span>
+
+                    {% endif %}
+
+                    <span class="date text-black-50">{{ anoun.created_date }}</span>
+
+
+
+                    </div>
+                    {% if not anoun.is_general and request.user == contest.user %}
+                    <div class="d-flex flex-column justify-content-end ml-2">
+                        <a style="cursor:pointer" onclick="anouns_delete_question(this)"
+                           url="{% url "customer:delete_anouns" anoun.id %}"
+                           class="step-link"><i class="fa fa-trash"></i></a>
+                </div>
+                    {% endif %}
+
+                    </div>
+                    <div class="mt-2">
+                        <p class="">{{ anoun.content }}</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+{% endfor %}

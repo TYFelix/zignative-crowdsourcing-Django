@@ -1,0 +1,82 @@
+{% extends "customer/contest_steps/edit/step_1.html" %}
+{% load static %}
+{% block step %}
+    <div class="col-lg-3 ">
+
+
+            <a onclick="save_as_draft()" class="step-link" href="{% url "customer:edit_contest" contest "step_1" %}"><div class="col-lg-10 mt-2">1. Brief</div></a>
+            <div class="col-lg-10 mt-2 link-arrow" >2. Visual inspiration</div>
+            <a onclick="save_as_draft()" class="step-link" href="{% url "customer:edit_contest" contest "step_3" %}"><div class="col-lg-10 mt-2 " >3. Style</div></a>
+
+    </div>
+    <div class="col-lg-7 ">
+        <h5>Please select up to six logos that you like the style</h5>
+    <span class="text-danger" id="warn_logo" style="visibility: hidden">Please choose at least 6 logos</span>
+        <div class="row mb-3">
+            {% for logo in category.logos.all %}
+                <div id="{{ logo.id }}" class="col-lg-3 logo-element  d-flex justify-content-center mr-2 mt-2">
+                    <img src="{{ logo.get_image }}" width="150" height="150" alt="">
+                </div>
+            {% endfor %}
+
+            <button onclick="control()" class="btn btn-primary float-right btn-lg col-lg-9 btn-block mt-3">Next</button>
+        </div>
+
+
+    </div>
+{% endblock %}
+{% block script %}
+    {{ form_fields|json_script:"form_fields"}}
+
+    {{ contest|json_script:"contest_id" }}
+    <script src="{% static "dashboard/js/start_contest.js" %}"></script>
+    <script>
+         var datas = JSON.parse(localStorage.getItem(contest_id))
+         var steps=datas.filled_steps
+         if (!steps.includes("step_2")){
+             steps.push("step_2")
+         }
+         storageStuff("filled_steps",steps)
+
+
+        if (localStorage.getItem(contest_id)) {
+            const logos = document.getElementsByClassName("logo-element")
+            const datas = JSON.parse(localStorage.getItem(contest_id))
+            if (datas.selected_logos) {
+
+
+                Array.from(logos).forEach(
+                    function (element, index, array) {
+                        if (datas.selected_logos.includes(element.id)) {
+                            element.classList.add("logo-selected")
+                            selected_logos.push(element.id)
+                        }
+                    })
+            }
+        }
+
+        function control(){
+            if(selected_logos.length >= 6){
+                save_as_draft()
+                window.location="{% url "customer:edit_contest" contest "step_3" %}"
+            }else{
+                document.getElementById("warn_logo").style.visibility=""
+
+            }
+        }
+            save_as_draft()
+
+          function save_as_draft() {
+            if (localStorage.getItem(contest_id)) {
+                storageStuff("page","step_3")
+                const contest = JSON.parse(localStorage.getItem(contest_id))
+
+                postData('{% url "customer:draft_contest" contest  %}', {"contest": contest})
+                    .then(data => {
+                        console.log(data);
+                    });
+            } else {
+            }
+        }
+    </script>
+{% endblock %}

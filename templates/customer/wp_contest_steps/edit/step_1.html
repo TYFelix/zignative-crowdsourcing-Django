@@ -1,0 +1,353 @@
+{% extends "customer/layout.html" %}
+{% load static %}
+
+{% block head %}
+    <title>Edit Contest / Zignative Crowdsourcing</title>
+    <style>
+
+    </style>
+{% endblock %}
+{% block body %}
+    <div class="container-fluid">
+    <ol class="breadcrumb  mb-4 mt-2">
+        <li class="breadcrumb-item active">Edit Contest</li>
+    </ol>
+    <h3 class="text-center mb-4">Edit Contest</h3>
+    <div class="row  ">
+
+
+    {% block step %}
+
+        <div class="col-lg-3 ">
+
+        <div class="col-lg-10 mt-2 link-arrow">1. Brief</div>
+
+            <div class="col-lg-10 mt-2 ">
+
+            <a class="step-link" href="{% url "customer:wp_edit_contest" contest "step_2" %}">2. Style</a>
+
+        </div>
+
+
+
+    </div>
+        <div class="col-lg-7 ">
+            <h5>Name & Description</h5>
+                <div class="form-group">
+                    <label for="contest-title">Contest Title</label>
+                    <input required type="text" id="contest_title" onkeyup="setDraft(this)"
+                           class="form-control">
+                </div>
+
+
+                <div class="form-group">
+                    <label for="contest_detail">Tell us about your organization and your target audience
+                        is</label>
+                    <textarea required type="text" id="contest_detail" onkeyup="setDraft(this)"
+                              class="form-control"></textarea>
+                </div>
+                <h5 class="mt-2">Add pages</h5>
+                <div class="form-group">
+                    <label for="contest_detail">What pages do you need for your site?
+                        If you need more than 4 pages designed, please increase your award by $100 per additional page.</label>
+
+                    <br><br>
+                    <div id="page_list">
+
+                    </div>
+
+                    <!-- Button trigger modal -->
+
+                    <a class="btn btn-link " data-toggle="modal" data-target="#exampleModal"><i class="fa fa-file"></i>
+                        Add Page</a>
+
+
+                </div>
+                <br>
+                <h5 class="mt-2">How will you measure the website's success?</h5>
+                <div class="form-group">
+                    <label for="contest_detail">How does a successful website impact your business/organization?
+                        Increase sales? Increase contacts? Increased newsletter signups?</label>
+                    <textarea required type="text" id="measure_success" onkeyup="setDraft(this)"
+                              class="form-control"></textarea>
+                </div>
+                <br>
+                <h5 class="mt-2">Industry</h5>
+                        <div class="form-group">
+                            <label for="exampleFormControlSelect1">Please select your industry:</label>
+                            <select required class="form-control" onchange="setDraft(this)" id="contest_industry">
+                                <option value="">Industry</option>
+                                <option>Accounting</option>
+                                <option>Automotive</option>
+                                <option>Beauty</option>
+                                <option>Construction</option>
+                                <option>Consulting</option>
+                                <option>Dental</option>
+                                <option>Education</option>
+                                <option>Entertainment</option>
+                                <option>Events</option>
+                                <option>Financial</option>
+                                <option>Home & Garden</option>
+                                <option>Insurance</option>
+                                <option>Internet</option>
+                                <option>Legal</option>
+                                <option>Manufacturing & Wholesale</option>
+                                <option>Media</option>
+                                <option>Medical</option>
+                                <option>Miscellaneous</option>
+                                <option>Natural Resources</option>
+                                <option>Non-Profit</option>
+                                <option>Real Estate</option>
+                                <option>Religious</option>
+                                <option>Restaurant</option>
+                                <option>Retail</option>
+                                <option>Service Industries</option>
+                                <option>Sport</option>
+                                <option>Technology</option>
+                                <option>Travel & Hospitality</option>
+
+                            </select>
+                        </div>
+                        <br>
+                <h5 class="mt-2">Do you want to provide any additional info?</h5>
+                <div class="form-group">
+                    <label for="contest_detail">Are there specific design elements you want to see? Is there anything
+                        you do not want to see? Include links to things that inspired you, competitor information, or
+                        any other info. If you need special file formats, please list them here.</label>
+                    <textarea  type="text" id="contest_info" onkeyup="setDraft(this)"
+                              class="form-control"></textarea>
+                </div>
+                <br>
+                <button onclick="nextStep()"   class="btn btn-primary float-right btn-lg mb-5 btn-block">
+                    Next
+                </button>
+
+        </div>
+    {% endblock %}
+</div>
+</div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add Page</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="add_page" action="" class="border-1">
+                        <input id="page_title" name="page_title" required type="text" class="form-control"
+                               placeholder="Title"><br>
+                        <textarea name="page_detail"  type="text" id="page_detail" placeholder="Detail"
+                                  class="form-control"></textarea><br>
+                        <button class="btn btn-success btn-sm col-12" data-dismiss="close">Add</button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" page_in="" id="edit_modal" tabindex="-1" role="dialog" aria-labelledby="edit_modal_label"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="edit_modal_label">Edit Page</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="edit_page" action="" class="border-1">
+                        <input id="page_title" name="page_title" required type="text" class="form-control"
+                               placeholder="Title"><br>
+                        <textarea name="page_detail" required type="text" id="page_detail" placeholder="Detail"
+                                  class="form-control"></textarea><br>
+                        <button class="btn btn-success btn-sm col-12" data-dismiss="close">Add</button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block script %}
+    {{ form_fields|json_script:"form_fields" }}
+
+    {{ contest|json_script:"contest_id" }}
+    <script src="{% static "dashboard/js/start_contest.js" %}"></script>
+    <script>
+        document.onload = fillData()
+        var page_in = 0
+        const datas = JSON.parse(localStorage.getItem(contest_id))
+
+        if (datas !== null) {
+            if ("filled_steps" in datas) {
+                if (datas.filled_steps.includes("step_2") && !datas.filled_steps.includes("step_3")) {
+                    document.getElementById("nondraft").classList.remove("text-muted")
+                    document.getElementById("nondraft").innerHTML = `<a class="step-link" href="{% url "customer:contest_step" contest "step_2" %}">2. Style</a>
+`
+                }
+            } else {
+                datas.filled_steps = ["step_1"]
+                storageStuff("filled_steps", datas.filled_steps)
+            }
+        } else {
+            storageStuff("filled_steps", ["step_1"])
+        }
+
+
+        function verOdunu() {
+            if (localStorage.getItem(contest_id)) {
+                const contest = JSON.parse(localStorage.getItem(contest_id))
+
+                postData('{% comment %}{% url "customer:draft_contest" contest %}{% endcomment %}', {"contest": contest})
+                    .then(data => {
+                        {#console.log(data); // JSON data parsed by `data.json()` call#}
+                    });
+            } else {
+            }
+        }
+
+        verOdunu()
+
+
+        document.getElementById("add_page").addEventListener("submit", (e => {
+            var form = e.target
+            var title = form.page_title.value
+            var detail = form.page_detail.value
+
+            form.page_title.value=""
+            form.page_detail.value=""
+
+            var page = `<div class="row page" id='page_${page_in}'>
+                                <div class="col-10 data" >
+                                    <div>${title}</div>
+                                    <div hidden>${detail}</div>
+                                </div>
+                                <div class="col-2">
+                                    <a href="#" onclick="edit_page(this)" class="mr-4"><i class="fa fa-edit"></i></a>
+                                    <a href="#" onclick="delete_page(this)"><i class="fa fa-trash"></i></a>
+                                </div>
+                            </div>
+                            <hr>`
+
+            var page_list = document.getElementById("page_list")
+            page_list.innerHTML+=page
+            page_in++;
+            $('#exampleModal').modal('hide');
+
+            make_an_array()
+            e.preventDefault();
+        }))
+function save_as_draft() {
+            if (localStorage.getItem(contest_id)) {
+                                storageStuff("page","step_5")
+
+                const contest = JSON.parse(localStorage.getItem(contest_id))
+                postData('{% url "customer:draft_contest" contest  %}', {"contest": contest})
+                    .then(data => {
+                        console.log(data);
+                    });
+            } else {
+            }
+        }
+        function make_an_array(){
+            var pages = document.getElementsByClassName("page")
+
+            var pages_array=[]
+            Array.prototype.forEach.call(pages, function(el) {
+                var page = el.getElementsByClassName("data")[0]
+                var title = page.getElementsByTagName("div")[0].innerHTML
+                var detail = page.getElementsByTagName("div")[1].innerHTML
+                pages_array.push([title,detail])
+
+            })
+            storageStuff("web_pages",pages_array)
+            save_as_draft()
+        }
+
+        if (localStorage.getItem(contest_id)) {
+            var web_pages = JSON.parse(localStorage.getItem(contest_id)).web_pages
+            if(web_pages){
+                web_pages.forEach((web_page)=>{
+                    var page = `<div class="row page" id="page_${page_in}">
+                                <div class="col-10 data" >
+                                    <div>${web_page[0]}</div>
+                                    <div hidden>${web_page[1]}</div>
+                                </div>
+                                <div class="col-2">
+                                    <a href="#" onclick="edit_page(this)" class="mr-4"><i class="fa fa-edit"></i></a>
+                                    <a href="#" onclick="delete_page(this)"><i class="fa fa-trash"></i></a>
+                                </div>
+                            </div>
+                            <hr>`
+
+                    var page_list = document.getElementById("page_list")
+                    page_list.innerHTML+=page
+                    page_in++;
+                })
+            }
+        }
+
+        function delete_page(e){
+            var page = e.parentElement.parentElement
+
+
+            page.nextSibling.nextSibling.remove()
+            page.remove()
+            make_an_array()
+        }
+
+        function edit_page(e){
+            var page = e.parentElement.parentElement
+            var data = page.getElementsByClassName("data")[0]
+            var title = data.getElementsByTagName("div")[0].innerHTML
+            var detail = data.getElementsByTagName("div")[1].innerHTML
+
+            var title_input = document.getElementById("edit_page").elements[0]
+            var detail_input = document.getElementById("edit_page").elements[1]
+
+            title_input.value = title
+            detail_input.value = detail
+
+
+
+            $('#edit_modal').modal('show');
+            $('#edit_modal').attr('page_in',page.id)
+        }
+
+        document.getElementById("edit_page").addEventListener("submit", (e => {
+            var form = e.target
+            var title = form.page_title.value
+            var detail = form.page_detail.value
+
+            form.page_title.value=""
+            form.page_detail.value=""
+
+            var page = document.getElementById($('#edit_modal').attr("page_in"))
+
+            var data = page.getElementsByClassName("data")[0]
+            data.getElementsByTagName("div")[0].innerHTML = title
+            data.getElementsByTagName("div")[1].innerHTML = detail
+
+            $('#edit_modal').modal('hide');
+
+            make_an_array()
+            e.preventDefault();
+        }))
+
+         function nextStep() {
+            save_as_draft()
+            window.location="{% url "customer:wp_edit_contest" contest "step_2" %}"
+
+        }
+    </script>
+
+{% endblock %}

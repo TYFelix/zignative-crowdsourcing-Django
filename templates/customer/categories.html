@@ -1,0 +1,58 @@
+{% extends "customer/layout.html" %}
+{% load static %}
+{% block head %}
+    <title>Categories / Zignative Crowdsourcing</title>
+{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <ol class="breadcrumb  mb-4 mt-2">
+            <li class="breadcrumb-item ">Contests</li>
+            <li class="breadcrumb-item active">Categories</li>
+        </ol>
+        <div class="container">
+            <h3 class="jumbotron-heading text-center">What do you need designed?</h3>
+            <div class="row d-flex justify-content-center">
+                <div class="input-group col-lg-7 mb-3   rounded">
+                    <input type="search" id="searchbar" onkeyup="liveSearch()" class="form-control rounded" placeholder="Search what you need to design"
+                           aria-label="Search"
+                           aria-describedby="search-addon"/>
+                    <span class="input-group-text border-0" id="search-addon">
+                <i class="fas fa-search"></i>
+                </span>
+                </div>
+                {% for main_category in main_categories %}
+                <div class="col-lg-6">
+                    <div class="row category-group mt-4">
+                        <div class="mt-2 mb-1 col-lg-10"><h6 >{{ main_category }} </h6></div>
+                        {% for sub_category in main_category.sub_categories.all %}
+                            <div class="col-lg-10  mt-1 category-item"><a href="
+                        {% url "customer:create_contest" sub_category.id %}
+
+                        ">{{ sub_category.title }}</a>
+                            {% if sub_category.get_min_price %}
+                                <span class="float-right">{{ sub_category.get_min_price.currency.symbol }}{{ sub_category.get_min_price_total|floatformat:-2  }}</span>
+
+                            {% endif %}
+                            </div>
+                        {% endfor %}
+
+
+                    </div>
+                </div>
+                {% endfor %}
+
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static "dashboard/js/categories.js" %}"></script>
+    <script>
+    document.getElementById("nav_categories").style.backgroundColor ="#D2562C"
+    document.getElementById("nav_categories").classList.replace("text-dark","text-white")
+
+    </script>
+{% endblock %}

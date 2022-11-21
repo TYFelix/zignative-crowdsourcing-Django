@@ -1,0 +1,72 @@
+{% load contest_filters %}
+{% if request.user.profile.role == "designer" %}
+    <div class="alert alert-info mt-2 mb-2" role="alert">
+        <i class="fas fa-clock"></i>
+        {% if contest.round == "qualify" %}
+            You have <b>{{ contest.get_timezone|timesince:contest.finish_date }}</b> left to
+            <a href="" class="step-link">submit design concepts</a>.
+        {% elif contest.round == "qualify_end" %}
+            <b>{{ contest.user }}</b> has <b>{{ contest.get_timezone|timesince:contest.finish_date }}</b> left to choose
+            the finalists.
+        {% elif contest.round == "final_round" %}
+            {% if request.user|am_i_selected:contest %}
+                Congratulations, you are among the finalists. You have
+                <b>{{ contest.get_timezone|timesince:contest.finish_date }}</b> to upload your final work.
+            {% else %}
+                <b>{{ contest.get_timezone|timesince:contest.finish_date }}</b> left until the end of the round.
+
+            {% endif %}
+        {% elif contest.round == "selecting_winner" and not contest.is_locked %}
+            <b>{{ contest.user }}</b> has <b>{{ contest.get_timezone|timesince:contest.finish_date }}</b> left to choose
+            the winner.
+        {% elif contest.round == "winner_selected" %}
+
+            {% if  request.user|am_i_winner:contest %}
+                Congratulations, you are the winner. Please upload your work as editable files from the "files" tab.
+            {% else %}
+                Winner Selected !
+
+            {% endif %}
+
+        {% elif contest.is_locked and contest.status == "completed" %}
+            {% if request.user|am_i_selected:contest %}
+                Contest locked.
+                <b>You will receive part of the prize for being a finalist.</b> Because <b>{{ noti.contest.user }}</b>
+                did not choose a winner.
+            {% else %}
+                Contest locked. The award was shared among the finalists. Because the client did not choose a winner.
+            {% endif %}
+        {% elif contest.is_locked %}
+            Contest locked.
+        {% else %}
+            <b>{{ contest.get_timezone|timesince:contest.finish_date }}</b> left until the end of the round.
+        {% endif %}
+
+    </div>
+{% elif contest.round == "winner_selected" %}
+
+    <div class="alert alert-info mt-2 mb-2" role="alert">
+        <i class="fas fa-clock"></i>
+        Winner Selected !
+    </div>
+
+{% else %}
+    <div class="alert alert-info mt-2 mb-2" role="alert">
+        <i class="fas fa-clock"></i>
+        {% if contest.round == "qualify_end" %}
+
+            <b>You</b> have <b>{{ contest.get_timezone|timesince:contest.finish_date }}</b> left to choose up to 5
+            finalists.
+
+        {% elif contest.round == "selecting_winner" and not contest.is_locked  %}
+            <b>You</b> have <b>{{ contest.get_timezone|timesince:contest.finish_date }}</b> left to choose
+            the winner.
+        {% elif contest.is_locked %}
+            Contest locked.
+        {% else %}
+
+            <b>{{ contest.get_timezone|timesince:contest.finish_date }}</b> left until the end of the round.
+
+        {% endif %}
+    </div>
+{% endif %}

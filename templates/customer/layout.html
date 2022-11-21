@@ -1,0 +1,315 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description"
+          content="Only Custom Professional Results. 100% Money Back Guarantee. Freelance graphic, UX/UI design and web development at Zignative. 962,660 freelance designers compete to create amazing designs for your business. Start Today!">
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <meta name="keywords" content="crowdsource, graphic design, ux/ui design">
+
+    <meta property="og:title" content="Logos, UX/UI, Graphic Design &amp; More. | Zignative">
+    <link href="{% static "dashboard/css/styles.css" %}" rel="stylesheet"/>
+    <link href="{% static "dashboard/css/my_style.css" %}" rel="stylesheet"/>
+
+    <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet"
+          crossorigin="anonymous"/>
+    {% block fa %}
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js" crossorigin="anonymous"></script>
+
+    {% endblock %}
+    <link rel="stylesheet" href="{% static "dashboard/css/notify_dropdown.css" %}">
+    <style>
+
+    </style>
+    {% block head %}
+
+    {% endblock %}
+</head>
+{% if  request.user.profile.is_see_alert %}
+    <div class="alert alert-info mb-0" role="alert">
+        Not sure where to start? <a href="#" class="alert-link"><u>Let us guide you.</u></a><a type="button"
+                                                                                               class="close"
+                                                                                               data-dismiss="alert"
+                                                                                               aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </a>
+    </div>
+    <body class="sb-nav">
+{% else %}
+    <body class="sb-nav-fixed">
+
+{% endif %}
+
+
+<nav class="sb-topnav navbar navbar-expand py-0 navbar-dark bg-dark">
+    <button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" href="#">
+        <i class="fas fa-bars text-white"></i>
+    </button>
+    {% if request.user.profile.role == "client" %}
+        <a class="navbar-brand" href="{% url "customer:index" %}"><img
+                src="{% static "dashboard/images/logo.png" %}"/></a>
+    {% else %}
+        <a class="navbar-brand" href="{% url "designer:index" %}"><img
+                src="{% static "dashboard/images/logo.png" %}"/></a>
+
+    {% endif %}
+
+    <ul class="navbar-nav d-none d-xl-block d-lg-block d-md-block">
+        <li class="nav-item">
+            <a class="nav-link" href="#" role="button">How it works</a>
+        </li>
+    </ul>
+    <ul class="navbar-nav d-none d-xl-block d-lg-block d-md-block">
+        <li class="nav-item">
+            <a class="nav-link" href="#" role="button">Pricing</a>
+        </li>
+    </ul>
+
+
+
+    <ul class="navbar-nav ml-auto">
+        {% comment %} <li class="nav-item">
+            <a class="nav-link" href="{% url "home:submit_request" %}" role="button">Submit a Request</a>
+        </li>  {% endcomment %}
+        {% comment %} {% if not SETTINGS_MODE == "production" %}
+            <li class="nav-item">
+                <a class="nav-link" href="#" role="button"><i class="fas fa-envelope text-white fa-fw"></i></a>
+            </li>
+        {% endif %} {% endcomment %}
+
+        {% include "home/notifiy-list.html" %}
+
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" id="userDropdown" href="#" role="button" data-toggle="dropdown"
+               aria-haspopup="true" aria-expanded="false">
+               {{user}} 
+               {% comment %} <i class="fas text-white fa-user fa-fw"></i> {% endcomment %}
+            </a>
+
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                <a class="dropdown-item" href="{% url "user:account"  %}">Account</a>
+                <a class="dropdown-item" href="{% url "home:wallet" %}">Earnings</a>
+                <a class="dropdown-item" href="{% url "user:signed_ndas" %}">NDAs</a>
+                <a class="dropdown-item" href="{% url "user:logout" %}">Logout</a>
+            </div>
+        </li>
+    </ul>
+
+</nav>
+<div id="layoutSidenav">
+    <div id="layoutSidenav_nav">
+        <nav class="sb-sidenav accordion bg-light" id="sidenavAccordion">
+            <div class="sb-sidenav-menu">
+                <div class="nav">
+                    <div id="mobile-area" class="d-sm-none">
+                        <a class="nav-link d-block d-sm-none"> How it Works</a>
+
+                        <a class="nav-link d-block d-sm-none"> Pricing</a>
+
+                        <div class="hr"><hr></div>
+
+                    </div>
+
+                    {% comment %} <a class="nav-link  btn " href="#" data-toggle="collapse" data-target="#collapseLayouts"
+                       aria-expanded="false" aria-controls="collapseLayouts">
+                        <div class="sb-nav-link-icon">
+                            <img src="{% static "dashboard/images/description.svg" %}" alt="" srcset="">
+                        </div>
+                        Contests
+                        <div class="sb-sidenav-collapse-arrow">
+                            <i class="fas fa-angle-down"></i>
+                        </div>
+                    </a> {% endcomment %}
+                    <div class="collapse show" id="collapseLayouts" aria-labelledby="headingOne"
+                         data-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav">
+                            {% block nav %}
+                                {% if request.user.profile.role == "designer" %}
+                                    <a id="nav_your_work" class="nav menu-link text-dark " href="{% url "designer:index" %}">Your Work</a>
+                                    <a id="nav_projects" class="nav menu-link text-dark" href="#">Projects</a>
+                                    <a id="nav_browse_contests" class="nav menu-link text-dark"
+                                       href="{% url "designer:browse_contests" %}">Browse contests</a>
+                                {% else %}
+                                    <a class="nav menu-link text-dark nav_link" id="nav_your_contests" href="{% url "customer:index" %}"><svg
+                                        xmlns="http://www.w3.org/2000/svg" width="24" height="21.998" viewBox="0 0 24 21.998">
+                                        <g id="noun_Home_1515279" transform="translate(-25.996 -27.995)">
+                                            <path id="Path_40" data-name="Path 40"
+                                                d="M49.628,37.221l-11-9a1,1,0,0,0-1.27,0l-11,9a1,1,0,0,0,1.27,1.55L29,37.65v9.343a3,3,0,0,0,3,3h12a3,3,0,0,0,3-3V37.65l1.365,1.12a1,1,0,1,0,1.27-1.55ZM36,47.993v-5a1,1,0,0,1,1-1h2a1,1,0,0,1,1,1v5Zm9-1a1,1,0,0,1-1,1h-2v-5a3,3,0,0,0-3-3H37a3,3,0,0,0-3,3v5H32a1,1,0,0,1-1-1V36l7-5.709,7,5.709Z"
+                                                fill="currentColor" />
+                                        </g>
+                                    </svg> <span class="nav_name">Projects</span>
+                                </a>
+
+
+                                        {% comment %} <a href="./dashboard.html" class="nav_link active side_projects">> </a> {% endcomment %}
+                            <a class="nav menu-link text-dark nav_link"
+                                href="{% url "customer:categories" %}" id="nav_categories"><svg
+                                id="Group_11" data-name="Group 11" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                viewBox="0 0 24 24">
+                                <path id="Path_31" data-name="Path 31"
+                                    d="M16.787,6.9l-.9-.9H6.9L6,6.9v8.989l.9.9h8.989l.9-.9Zm-1.8,8.09H7.8V7.8h7.191Z"
+                                    transform="translate(-6 -5.371)" fill="currentColor" />
+                                <path id="Path_32" data-name="Path 32"
+                                    d="M6.9,13l-.9.9v8.989l.9.9h8.989l.9-.9V13.9l-.9-.9Zm8.09,8.989H7.8V14.8h7.191Z"
+                                    transform="translate(-6 0.213)" fill="currentColor" />
+                                <path id="Path_33" data-name="Path 33"
+                                    d="M13,13.9v8.989l.9.9h8.989l.9-.9V13.9l-.9-.9H13.9Zm1.8.9h7.191v7.191H14.8Z"
+                                    transform="translate(-0.416 0.213)" fill="currentColor" />
+                                <path id="Path_34" data-name="Path 34"
+                                    d="M24.695,11.043,19.3,5.65H18.043L12.65,11.043V12.3l5.393,5.393H19.3L24.695,12.3Zm-6.022,4.746-4.117-4.117,4.117-4.117,4.117,4.117Z"
+                                    transform="translate(-0.695 -5.65)" fill="currentColor" />
+                            </svg> <span class="nav_name">Categories</span> </a></a>
+                                    <a class="nav menu-link text-dark nav_link" id="nav_browse_contests"
+                                       href="{% url "customer:browse_contests" %}">
+                                       <svg xmlns="http://www.w3.org/2000/svg" width="26.627" height="24.878"
+                                       viewBox="0 0 26.627 24.878">
+                                       <g id="noun_champion_3202483" transform="translate(-11.2 -7.458)">
+                                           <g id="Group_130" data-name="Group 130" transform="translate(11.2 7.458)">
+                                               <path id="Path_193" data-name="Path 193"
+                                                   d="M34.91,25.034h-2.5v-1.3a.838.838,0,0,0-.858-.834H17.479a.838.838,0,0,0-.858.834v1.3h-2.5A2.874,2.874,0,0,0,11.2,27.869V29.7a4.56,4.56,0,0,0,2.985,4.269l3.706,1.434a7.872,7.872,0,0,0,3.637,2.968v3.668a2.938,2.938,0,0,0-2.848,2.9v2a.838.838,0,0,0,.858.834h9.985a.838.838,0,0,0,.858-.834V44.91a2.938,2.938,0,0,0-2.848-2.9V38.341a7.675,7.675,0,0,0,3.637-2.968l3.672-1.434a4.56,4.56,0,0,0,2.985-4.269V27.836A2.868,2.868,0,0,0,34.91,25.034ZM14.837,32.4a2.9,2.9,0,0,1-1.887-2.7V27.869a1.2,1.2,0,0,1,1.2-1.167h2.471v4.535A7.571,7.571,0,0,0,16.9,33.2ZM28.631,44.91v1.2H20.4v-1.2a1.249,1.249,0,0,1,1.27-1.234h5.7A1.249,1.249,0,0,1,28.631,44.91Zm-2.848-2.9H23.244v-3.2a8.143,8.143,0,0,0,1.27.1,7.825,7.825,0,0,0,1.27-.1Zm-1.27-4.769a6.109,6.109,0,0,1-6.176-6v-6.67H30.69v6.67A6.109,6.109,0,0,1,24.514,37.24Zm11.6-7.57a2.9,2.9,0,0,1-1.887,2.7l-2.059.8a7.321,7.321,0,0,0,.275-1.934V26.7h2.5a1.2,1.2,0,0,1,1.2,1.167v1.8Z"
+                                                   transform="translate(-11.2 -22.9)" fill="currentColor" />
+                                           </g>
+                                       </g>
+                                   </svg> <span class="nav_name">Contests</span> </a>
+{#                                    <a class="nav menu-link text-dark"#}
+{#                                       href="{% url "customer:teams" %}" id="nav_teams">Teams</a>#}
+                                    <a href="{% url "home:find_a_designer" %}" class="nav menu-link text-dark nav_link" id="find_nav"><svg
+                                        xmlns="http://www.w3.org/2000/svg" width="24" height="20" viewBox="0 0 24 20">
+                                        <g id="noun_people_1646651" transform="translate(-11.657 -168.81)">
+                                            <g id="Group_23" data-name="Group 23" transform="translate(11.657 168.81)">
+                                                <g id="Group_16" data-name="Group 16" transform="translate(3.391)">
+                                                    <g id="Group_15" data-name="Group 15">
+                                                        <path id="Path_36" data-name="Path 36"
+                                                            d="M213.045,176.544a3.642,3.642,0,0,1-.433-.028l.228.031a3.281,3.281,0,0,1-.774-.211l.2.085a3.384,3.384,0,0,1-.529-.285c-.043-.028-.083-.057-.122-.085-.117-.083.185.151.026.02a2.959,2.959,0,0,1-.222-.2c-.071-.071-.137-.145-.2-.222-.134-.162.1.142.02.026l-.085-.122a3.384,3.384,0,0,1-.285-.529l.085.2a3.22,3.22,0,0,1-.211-.774c.011.077.02.151.031.228a8.485,8.485,0,0,1-.028-1.141,8.984,8.984,0,0,1,.028-1.141c-.011.077-.02.151-.031.228a3.28,3.28,0,0,1,.211-.774l-.085.2a3.384,3.384,0,0,1,.285-.529c.028-.043.057-.083.085-.122.083-.117-.151.185-.02.026a2.962,2.962,0,0,1,.2-.222c.071-.071.145-.137.222-.2.162-.134-.142.1-.026.02l.122-.085a3.384,3.384,0,0,1,.529-.285l-.2.085a3.22,3.22,0,0,1,.774-.211l-.228.031a3.385,3.385,0,0,1,.865,0l-.228-.031a3.281,3.281,0,0,1,.774.211l-.2-.085a3.384,3.384,0,0,1,.529.285c.043.028.083.057.122.085.117.083-.185-.151-.026-.02a2.962,2.962,0,0,1,.222.2c.071.071.137.145.2.222.134.162-.1-.142-.02-.026l.085.122a3.383,3.383,0,0,1,.285.529l-.085-.2a3.22,3.22,0,0,1,.211.774c-.011-.077-.02-.151-.031-.228a8.482,8.482,0,0,1,.028,1.141,8.981,8.981,0,0,1-.028,1.141c.011-.077.02-.151.031-.228a3.281,3.281,0,0,1-.211.774l.085-.2a3.383,3.383,0,0,1-.285.529c-.028.043-.057.083-.085.122-.083.117.151-.185.02-.026a2.966,2.966,0,0,1-.2.222c-.071.071-.145.137-.222.2-.162.134.142-.1.026-.02l-.122.085a3.384,3.384,0,0,1-.529.285l.2-.085a3.221,3.221,0,0,1-.774.211l.228-.031a3.126,3.126,0,0,1-.433.028.854.854,0,0,0,0,1.708,4.024,4.024,0,0,0,4.011-4.011c0-.461,0-.922,0-1.383a4.115,4.115,0,0,0-1-2.676,4.008,4.008,0,0,0-7,2.306,14.945,14.945,0,0,0-.017,1.6,4.124,4.124,0,0,0,.683,2.388,4.034,4.034,0,0,0,2.514,1.694,4.342,4.342,0,0,0,.814.085.854.854,0,1,0,0-1.708Z"
+                                                            transform="translate(-209.024 -168.81)" fill="currentColor" />
+                                                    </g>
+                                                </g>
+                                                <g id="Group_18" data-name="Group 18" transform="translate(0 11.191)">
+                                                    <g id="Group_17" data-name="Group 17">
+                                                        <path id="Path_37" data-name="Path 37"
+                                                            d="M102.953,549.672v4.1l.854-.854H92.353c-.527,0-1.059-.014-1.586,0h-.023l.854.854v-3.735a6.166,6.166,0,0,1,.026-.76c-.011.077-.02.151-.031.228a3.02,3.02,0,0,1,.2-.737l-.085.2a2.987,2.987,0,0,1,.27-.5c.028-.043.06-.08.088-.122-.162.239-.063.08-.017.026s.117-.131.179-.194.128-.12.2-.176c.162-.134-.139.1-.026.017.04-.029.083-.06.125-.085a3.4,3.4,0,0,1,.5-.27l-.2.085a3.13,3.13,0,0,1,.817-.222l-.228.031a8.161,8.161,0,0,1,.988-.026h5.622a10.023,10.023,0,0,1,1.17.023l-.228-.031a3.166,3.166,0,0,1,.8.219l-.2-.085a3.375,3.375,0,0,1,.5.27,1.035,1.035,0,0,1,.128.091l-.1-.077c.023.017.046.037.068.057.065.057.128.114.188.174s.117.125.174.191.088.162-.028-.037c.023.037.051.071.074.105a3.055,3.055,0,0,1,.268.492l-.085-.2a3.1,3.1,0,0,1,.211.763c-.011-.077-.02-.151-.031-.228a3.224,3.224,0,0,1,.028.407.854.854,0,0,0,1.708,0,3.859,3.859,0,0,0-2.152-3.444,4.022,4.022,0,0,0-1.716-.4H94.576c-.316,0-.632-.014-.948.006a4.022,4.022,0,0,0-3.165,1.842,3.81,3.81,0,0,0-.572,1.816c-.009.159-.006.322-.006.481v3.8a.866.866,0,0,0,.854.854h11.455c.529,0,1.056.011,1.586,0h.023a.866.866,0,0,0,.854-.854v-4.1a.851.851,0,1,0-1.7,0Z"
+                                                            transform="translate(-89.884 -545.827)" fill="currentColor" />
+                                                    </g>
+                                                </g>
+                                                <g id="Group_20" data-name="Group 20" transform="translate(13.31 1.258)">
+                                                    <g id="Group_19" data-name="Group 19">
+                                                        <path id="Path_38" data-name="Path 38"
+                                                            d="M561.267,220.182a3.032,3.032,0,0,1-.393-.026l.228.031a3.012,3.012,0,0,1-.737-.2l.2.085a2.968,2.968,0,0,1-.5-.268c-.017-.011-.12-.065-.122-.085,0,.023.191.154.054.04-.071-.06-.139-.122-.208-.188a2.624,2.624,0,0,1-.188-.208c-.046-.054-.105-.165.04.054-.029-.043-.06-.08-.085-.122a2.973,2.973,0,0,1-.268-.5l.085.2a3.149,3.149,0,0,1-.2-.737c.011.077.02.151.031.228a8.124,8.124,0,0,1-.026-1.053,8.669,8.669,0,0,1,.026-1.053c-.011.077-.02.151-.031.228a3.016,3.016,0,0,1,.2-.737l-.085.2a2.973,2.973,0,0,1,.268-.5c.011-.017.065-.12.085-.122-.023,0-.154.191-.04.054.06-.071.122-.139.188-.208a2.63,2.63,0,0,1,.208-.188c.054-.046.165-.105-.054.04.043-.028.08-.06.122-.085a2.969,2.969,0,0,1,.5-.268l-.2.085a3.145,3.145,0,0,1,.737-.2l-.228.031a3.024,3.024,0,0,1,.786,0l-.228-.031a3.013,3.013,0,0,1,.737.2l-.2-.085a2.972,2.972,0,0,1,.5.268c.017.011.12.065.122.085,0-.023-.191-.154-.054-.04.071.06.139.122.208.188a2.636,2.636,0,0,1,.188.208c.046.054.105.165-.04-.054.028.043.06.08.085.122a2.973,2.973,0,0,1,.268.5l-.085-.2a3.143,3.143,0,0,1,.2.737c-.011-.077-.02-.151-.031-.228a8.125,8.125,0,0,1,.026,1.053,8.656,8.656,0,0,1-.026,1.053c.011-.077.02-.151.031-.228a3.013,3.013,0,0,1-.2.737l.085-.2a2.973,2.973,0,0,1-.268.5c-.011.017-.065.12-.085.122.023,0,.154-.191.04-.054-.06.071-.122.139-.188.208a2.619,2.619,0,0,1-.208.188c-.054.046-.165.105.054-.04-.043.028-.08.06-.122.085a2.971,2.971,0,0,1-.5.268l.2-.085a3.144,3.144,0,0,1-.737.2l.228-.031q-.2.021-.393.026a.854.854,0,0,0,0,1.708,3.8,3.8,0,0,0,3.789-3.789c0-.43,0-.857,0-1.287a3.9,3.9,0,0,0-.948-2.531,3.785,3.785,0,0,0-6.613,2.18,13.667,13.667,0,0,0-.017,1.489,3.883,3.883,0,0,0,.655,2.266,3.819,3.819,0,0,0,2.36,1.588,4.157,4.157,0,0,0,.774.083.854.854,0,1,0,0-1.708Z"
+                                                            transform="translate(-557.466 -212.991)" fill="currentColor" />
+                                                    </g>
+                                                </g>
+                                                <g id="Group_22" data-name="Group 22" transform="translate(11.99 11.678)">
+                                                    <g id="Group_21" data-name="Group 21">
+                                                        <path id="Path_39" data-name="Path 39"
+                                                            d="M521.382,566.563v3.812l.854-.854h-9.223l.854.854V568.31c0-.7.014-1.4,0-2.106a3.861,3.861,0,0,0-1.329-2.841l-.376,1.426a3.261,3.261,0,0,1,.655-.171l-.228.031a7.531,7.531,0,0,1,.948-.026h5.223a8.716,8.716,0,0,1,1.056.023l-.228-.031a2.71,2.71,0,0,1,.7.188l-.2-.085a2.9,2.9,0,0,1,.464.245c.043.029.083.057.122.085.114.08-.168-.14-.057-.043.065.057.131.114.194.174s.12.125.176.191.105.165-.043-.057c.028.043.06.08.085.122a2.88,2.88,0,0,1,.248.461l-.085-.2a2.968,2.968,0,0,1,.194.7c-.011-.077-.02-.151-.031-.228a2.75,2.75,0,0,1,.031.4.854.854,0,1,0,1.708,0,3.636,3.636,0,0,0-.649-2.078,3.781,3.781,0,0,0-1.8-1.369,5.337,5.337,0,0,0-1.862-.2h-4.822a6.323,6.323,0,0,0-2.252.228.887.887,0,0,0-.6.6.846.846,0,0,0,.219.831,3.255,3.255,0,0,1,.25.233c.04.043.077.083.114.128.145.168-.085-.125,0-.006a3.3,3.3,0,0,1,.342.6l-.085-.2a3.124,3.124,0,0,1,.211.766c-.011-.077-.02-.151-.031-.228a13.221,13.221,0,0,1,.028,1.645v2.867a.866.866,0,0,0,.854.854h9.223a.866.866,0,0,0,.854-.854v-3.812a.853.853,0,1,0-1.705,0Z"
+                                                            transform="translate(-511.08 -562.914)" fill="currentColor" />
+                                                    </g>
+                                                </g>
+                                            </g>
+                                        </g>
+                                    </svg> <span class="nav_name">Find a designer</span> </a>
+
+                            {% comment %} <ul class="navbar-nav d-none d-xl-block d-lg-block d-md-block">
+                                <li class="nav-item" id="find_nav">
+                                    <a class="nav-link " href="{% url "home:find_a_designer" %}" role="button">Find a designer</a>
+                                </li>
+                            </ul> {% endcomment %}
+                            {% comment %} <ul class="navbar-nav d-none d-xl-block d-lg-block d-md-block">
+                                <li class="nav-item" id="discover_nav">
+                                    <a class="nav-link " href="{% url "home:discover" %}" role="button">Discover</a>
+                                </li>
+                            </ul> {% endcomment %}
+                            <a href="{% url "home:discover" %}" class="nav menu-link text-dark nav_link"><svg
+                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                <g id="noun_navigate_925526" transform="translate(-19.5 -19.5)">
+                                    <path id="Path_35" data-name="Path 35"
+                                        d="M31.5,43.5a12,12,0,1,1,12-12A12.017,12.017,0,0,1,31.5,43.5Zm0-22.326A10.326,10.326,0,1,0,41.826,31.5,10.338,10.338,0,0,0,31.5,21.174Zm5.079,5.888a.8.8,0,0,0-.642-.67.747.747,0,0,0-.642.14l-6.419,1.73a.892.892,0,0,0-.614.642L26.5,35.435a.743.743,0,0,0-.084.335.834.834,0,0,0,.363.7.941.941,0,0,0,.474.14.859.859,0,0,0,.363-.084l6.53-1.758h0a.9.9,0,0,0,.614-.614l1.73-6.5A.826.826,0,0,0,36.579,27.063Zm-3.321,6.2-4.8,1.284,1.284-4.828,4.8-1.284ZM22.57,32.337H20.337a.837.837,0,1,1,0-1.674H22.57a.837.837,0,1,1,0,1.674Zm20.093,0H40.43a.837.837,0,0,1,0-1.674h2.233a.822.822,0,0,1,.837.837A.84.84,0,0,1,42.663,32.337ZM31.5,23.407a.822.822,0,0,1-.837-.837V20.337a.837.837,0,1,1,1.674,0V22.57A.822.822,0,0,1,31.5,23.407Zm0,20.093a.822.822,0,0,1-.837-.837V40.43a.837.837,0,1,1,1.674,0v2.233A.84.84,0,0,1,31.5,43.5Z"
+                                        fill="currentColor" />
+                                </g>
+                            </svg> <span class="nav_name">Discover</span></a>
+
+                                {% endif %}
+                            {% endblock %}
+                        </nav>
+                    </div>
+
+
+                </div>
+            </div>
+            {% comment %} <div class="sb-sidenav-footer">
+                <div class="small">Logged in as:</div>
+                {{ request.user }}
+            </div> {% endcomment %}
+        </nav>
+    </div>
+    <div id="layoutSidenav_content">
+        <main>
+            {% block body %}
+
+            {% endblock %}
+        </main>
+        {% block footer_area %}
+            <footer class="py-4 bg-light mt-auto">
+                <div class="container-fluid">
+                    <div class="d-flex align-items-center justify-content-between small">
+                        <div class="text-muted">Copyright &copy; Zignative Crowdsourcing
+                            <script type="text/javascript">
+                                var dt = new Date();
+                                document.write(dt.getFullYear());
+                            </script>
+                        </div>
+                        <div>
+                            <a href="{% url "home:privacy" %}">Privacy Policy</a>
+                            &middot;
+                            <a href="{% url "home:terms" %}">Terms of Use</a>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+
+        {% endblock %}
+
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+<script src="{% static "dashboard/js/scripts.js" %}"></script>
+<script src="{% static "dashboard/js/request.js" %}"></script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+
+<script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js" crossorigin="anonymous"></script>
+
+{% block script %}
+
+{% endblock %}
+
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip({});
+    });
+</script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0MRYY26K08"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-0MRYY26K08');
+</script>
+</body>
+
+</html>

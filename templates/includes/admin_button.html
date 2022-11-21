@@ -1,0 +1,18 @@
+{% if contest.status != "completed" %}
+{% if contest.is_locked %}
+    {% if contest.is_splittable %}
+        {% if contest.round == "qualify_end"  %}
+    <a href="{% url "customer:split_prize_to_designers" contest.id %}?on=admin"  style="background:#417690; color:white; padding:5px; border-radius:5px; cursor:pointer;">Split prize to designers</a>
+    {% elif contest.round == "selecting_winner" %}
+    <a href="{% url "customer:split_prize" contest.id %}?on=admin"  style="background:#417690; color:white; padding:5px; border-radius:5px; cursor:pointer;">Split prize to finalists.</a>
+    {% endif %}
+    {% else %}
+        Prize is not splittable.
+    {% endif %}
+ {% else %}
+    Contest is not locked.
+{% endif %}
+    {% else %}
+    <span style="color:#005cbf">The prize was shared.</span>
+    {{ contest.get_shared_prize }}
+{% endif %}

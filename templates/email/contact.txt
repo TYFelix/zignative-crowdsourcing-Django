@@ -1,0 +1,7 @@
+Your request has reached us successfully,
+
+Your email: {{ contact.email }},
+
+Request Subject: {{ contact.subject}}
+Request Description: {{ contact.description }}
+Request Created Date: {{ contact.created_date }}

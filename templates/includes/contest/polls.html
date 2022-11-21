@@ -1,0 +1,34 @@
+<div class="container ">
+    <div class="row">
+        {% if request.user == contest.user %}
+        <div class="col-12 col-sm-12"><h3>Your Polls <a href="{% url "customer:start_poll" contest.id %}"
+                                                        class="btn btn-success float-right">Create new poll</a></h3>
+        </div>
+            {% else %}
+            <div class="col-12 col-sm-12"><h3>Polls for this contest</h3>
+        </div>
+        {% endif %}
+
+
+    </div>
+    <div class="row mt-5">
+        <ul class="list-group col-12">
+            {% for poll in contest.polls.all %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span><a class="step-link" href="{% url "customer:poll_detail" poll.uid %}">{{ poll.title }}</a> <br>
+                    <small class="text-muted">{{ poll.created_date }} | Votes (0)</small>
+                </span>
+                {% if request.user == contest.user %}
+                <span>
+                    <a href="{% url "customer:edit_poll" poll.id %}" class="btn btn-info btn-sm"><i class="fa fa-edit mr-2"></i>Edit</a>
+                <a href="{% url "customer:delete_poll" poll.id %}" onclick="return confirm('Are you sure?')"><i class="fa fa-trash text-danger ml-4"></i></a>
+                </span>
+                {% endif %}
+            </li>
+            {% endfor %}
+
+
+        </ul>
+
+    </div>
+</div>

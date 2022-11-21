@@ -1,0 +1,3 @@
+Welcome to Zignative,
+We're excited to have you get started. First, you need to confirm your account.
+Verification link: {{ verify_link }}

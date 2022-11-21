@@ -1,0 +1,178 @@
+{% extends "customer/layout.html" %}
+{% load static %}
+{% block head %}
+    <title>Wallet | Zignative </title>
+{% endblock %}
+
+{% block body %}
+
+    <div class="container-fluid">
+    <ol class="breadcrumb  mb-4 mt-2">
+        <li class="breadcrumb-item ">Wallet</li>
+
+    </ol>
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.tags == "error" %}
+                <div class="alert alert-danger " role="alert">
+
+            {% else %}
+                <div class="alert alert-{{ message.tags }} " role="alert">
+
+            {% endif %}
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        {% endfor %}
+    {% endif %}
+
+</div>
+    <h1 class="ml-5">Your Earnings</h1>
+    <div class="container">
+
+
+        <div class="row">
+            <div class="col-9  mt-2 " style="margin: auto">
+                <div class="text-center">
+                    <h4><img width="80" height="80" src="{% static "dashboard/images/wallet.svg" %}" alt=""></h4>
+                    <p class="mt-4">
+
+                        {% if request.user.wallet %}
+                            {% if request.user.wallet.balance > 200 %}
+                            <a href="" id="all-link" class="step-link">
+                            Balance: <span class="border  p-2">${{ request.user.wallet.balance }}</span>
+                                </a>
+                                {% else %}
+                                <p href="" id="all-link" class="step-link">
+                            Balance: <span class="border  p-2">${{ request.user.wallet.balance }}</span>
+                                </p>
+                            {% endif %}
+
+                        {% else %}
+                            <p href="" id="all-link" class="step-link">
+                            Balance: <span class="border  p-2">$0</span>
+                            </p>
+                        {% endif %}
+
+
+                    <form method="POST" action="{% url "home:create_payout_request" request.user %}">
+                        {% csrf_token %}
+                        {% if request.user.wallet.balance > 199 %}
+                            <div class="col-4 mb-2 " style="margin: auto">
+                                <div class="input-group number-spinner">
+
+                                    <input id="request-inp" name="request-inp" type="number" class="form-control text-center" min="200"
+                                           max="{{ request.user.wallet.balance }}" style="margin: auto" value="200">
+
+
+                                </div>
+                            </div>
+                        {% else %}
+                            <p>Your earnings balance is below $200 which is the minimum to request a payout</p>
+
+                        {% endif %}
+
+                        {% if request.user.wallet.balance > 199 %}
+                            <button class="btn btn-dark">Request Payout</button>
+                        {% else %}
+                            <button disabled class="btn btn-dark">Request Payout</button>
+
+                        {% endif %}
+                    </form>
+                </div>
+                <br> <br>
+
+
+            </div>
+        </div>
+        <div class="row">
+            <h2>Earnings</h2>
+            <div class="col-12  mt-3" style="margin: auto; max-height: 300px; overflow-y: auto;">
+                {% if request.user.earnings.all.count > 0 %}
+                                {% for earning in request.user.earnings.all reversed %}
+                <div class="row">
+                    <div class="col-10">
+                        <div class="row">
+                            <div class="col-2">
+                                <img src="{{ earning.contest.user.profile.get_photo }}" class="img-responsive rounded-circle"
+                                     width="75" height="75" alt="">
+                            </div>
+                            <div class="col-10 pt-1">
+                                <p>{{ earning.contest.user }}'s contest:  {{ earning.contest.title }}</p>
+                                <span class="text-muted">{{ earning.created_date }}</span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-2">
+                        <p class="text-success h5" style="margin-top:15px; ">+ ${{ earning.get_earning }}</p>
+                    </div>
+                </div>
+                <hr>
+                {% endfor %}
+                {% else %}
+                                            Nothing to show
+
+                {% endif %}
+
+
+
+            </div>
+
+
+        </div>
+        <div class="row mt-5">
+            <h2>Invites</h2>
+            <div class="col-12  mt-3" style="margin: auto; max-height: 300px; overflow-y: auto;">
+                {% if request.user.referrers.all.count > 0 %}
+                    {% for referal in request.user.referrers.all reversed    %}
+                    <div class="row">
+                        <div class="col-10">
+                            <div class="row">
+                                <div class="col-2">
+                                    <img src="{{ referal.referred.profile.get_photo }}"
+                                         class="img-responsive rounded-circle" width="75" height="75" alt="">
+                                </div>
+                                <div class="col-10 pt-1">
+                                    <p>{{ referal.referred }} registered with your invite link</p>
+                                    <span class="text-muted">{{ referal.created_date }}</span>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="col-2"><a href="{% url "home:public_profile" referal.referred %}" class="btn btn-light"
+                                              style="margin-top:15px">Profile</a></div>
+                    </div>
+                    <hr>
+                {% endfor %}
+                    {% else %}
+                        Nothing to show
+                {% endif %}
+
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+{% endblock %}
+
+{% block script %}
+    <script>
+        document.getElementById('all-link').addEventListener('click', event => {
+            var inp = document.getElementById('request-inp')
+            var balance = {{ request.user.wallet.balance }}
+                inp.value = balance
+            event.preventDefault()
+        })
+
+    </script>
+{% endblock %}

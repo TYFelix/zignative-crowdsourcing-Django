@@ -1,0 +1,88 @@
+{% load static %}
+<div class="container border">
+    <div class="row">
+        <div class="col-12">
+            <br>
+            {% if contest.user == request.user and contest.round == "qualify" %}
+                        <a href="{% url "customer:sm_edit_contest" contest.id "step_1" %}" class="step-link"><span><i class="fas fa-edit"></i>  Edit Brief</span></a>
+            {% endif %}
+            <br><br>
+
+
+            <h5 class="text-muted">Target Audience</h5>
+            <p>{{ contest.form_fields.contest_detail }}</p>
+            <br>
+
+
+
+
+            {% if contest.form_fields.contest_info %}
+            <h5 class="text-muted">Additional info</h5>
+                <p>{{ contest.form_fields.contest_info }}</p>
+            <br>
+            {% endif %}
+
+
+            <h5 class="text-muted">Industry</h5>
+            <p>{{ contest.form_fields.contest_industry }}</p>
+            <br><br>
+        </div>
+    </div>
+    <div class="row">
+
+        <div class="col-12">
+
+                <h5 class="text-muted">Attachments</h5>
+
+            {% for attachment in contest.attachments.all %}
+            <div class="border mt-4 mb-4">
+              <div class="row m-1 ">
+
+                   <div class="col-2 p-3">
+
+                      <img src="{{attachment.get_image}}" class="img-responsive border pre-im" width="120" height="120" alt="">
+
+                  </div>
+                  <div class="col-10 pt-3 pb-3 pl-3">
+                      <div class="border p-3" style="max-height:150px;height:100%;overflow-y:auto">
+
+
+
+
+                          {{ attachment.content }}
+
+                      </div>
+                  </div>
+
+
+              </div>
+            </div>
+
+            {% endfor %}
+
+
+        </div>
+    </div>
+<h4 class="text-muted">Selected Fonts</h4>
+<ul>
+   {% for font in contest.form_fields.selected_fonts %}
+    <li>{% if font == "sans_serif" %}Sans-Serif{% endif %}
+    {% if font == "serif" %}Serif{% endif %}
+    {% if font == "block_serif" %}Block Serif{% endif %}
+    {% if font == "script" %}Script{% endif %}
+    {% if font == "mono" %}Mono{% endif %}
+    {% if font == "no_preference" %}No Preference{% endif %} </li>
+    {% endfor %}
+</ul>
+
+<h4 class="text-muted">Which social networks will you use?</h4>
+<ul>
+   {% for socialmedia in contest.form_fields.selected_socialmedia %}
+        <li>{{ socialmedia }}</li>
+    {% endfor %}
+</ul>
+    <br>
+</div>
+
+
+

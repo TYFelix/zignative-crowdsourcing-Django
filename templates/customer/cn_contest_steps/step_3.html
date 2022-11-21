@@ -1,0 +1,299 @@
+{% extends "customer/cn_contest_steps/step_1.html" %}
+{% load static %}
+{% block step %}
+    <div class="col-lg-3 ">
+
+    <div class="col-lg-10 mt-2 "><a class="step-link" href="{% url "customer:contest_step" contest "step_1" %}">1.
+        Brief</a></div>
+    <div class="col-lg-10 mt-2  "><a class="step-link" href="{% url "customer:contest_step" contest "step_2" %}">2.
+    Style</a></div>
+
+    <div class="col-lg-10 mt-2 link-arrow">3. Prize & Upgrades</div>
+    {% if "step_4" in form_fields.filled_steps %}
+        <div class="col-lg-10 mt-2 ">
+        <a class="step-link" href="{% url "customer:contest_step" contest "step_4" %}">4. Payment</a>
+    {% else %}
+        <div class="col-lg-10 mt-2 text-muted">
+
+        4. Payment
+    {% endif %}
+</div>
+
+
+</div>
+    <div class="col-lg-7 ">
+        <h5 class="text-muted">Contest Packages</h5>
+        {% for plan in category.prices.all %}
+            <div class="row price_plan plan-div mt-3" onclick="pricePlanClick(this)">
+                <div class="col-lg-3  pt-3 pb-3 col-md-3 col-3 ">
+                    <label>
+                        <input id="{{ plan.id }}" class="plan_check" type="checkbox">
+                    </label>
+                    <span>{{ plan.title }}</span>
+                </div>
+                <div class="col-lg-7 pt-3 pb-3 col-md-7 col-7 ">
+                    <span class="align-middle">{{ plan.detail }}</span>
+                </div>
+                <div class="col-lg-2 pt-3 pb-3 col-md-3 col-2 ">
+                    <span class="align-middle float-right">{{ plan.currency.symbol }}{{ plan.contest_price|floatformat:-2 }}</span>
+
+                </div>
+
+            </div>
+        {% endfor %}
+        <br>
+        
+        
+
+{##}
+{#        {% if contest_object.discount.discount %}#}
+{#            {% if contest_object.discount.last == 0 %}#}
+{#                <span class="text-success">You will not pay any additional fees to these prices because of the discount code.</span>#}
+{#            {% else %}#}
+{#                     These prices are the prices that the designers will see. The fee you will pay is#}
+{#                    <span id="fee-text"><del>25%</del>#}
+{#                    <span class="text-success"> {{ contest_object.discount.percentage }}%</span></span> more than the contest prize.#}
+{#            {% endif %}#}
+{#        {% else %}#}
+{#            These prices are the prices that the designers will see. The fee you will pay is#}
+{#            <span id="fee-text">{{ contest_object.discount.percentage }}%</span> more than the contest prize.#}
+{#        {% endif %}#}
+
+        <br><br>
+        <h5 class="text-muted">Optional Features</h5>
+
+
+        <div class="row price_plan feature-div mt-3" id="is_private" onclick="featurePlanClick(this)">
+            <div class="col-lg-3  pt-3 pb-3 col-md-3 col-3 ">
+                <label>
+                    <input id="durla" class="feature_check" type="checkbox">
+                </label>
+                <span>Private contest</span>
+            </div>
+            <div class="col-lg-7 pt-3 pb-3 col-md-7 col-7 ">
+                <span class="align-middle">Hide your contest from Google and competitors. Only registered designers will see your contest. Designers must agree with the <u>NDA</u>.</span>
+            </div>
+            <div class="col-lg-2 pt-3 pb-3 col-md-3 col-2 ">
+                {% if discount.free_private %}
+                <span class="align-middle float-right" id="hidden-price"><del>$50</del> FREE</span>
+                    {% else %}
+                <span class="align-middle float-right" id="private-price">$50</span>
+                {% endif %}
+
+            </div>
+
+        </div>
+        <div class="row price_plan feature-div mt-3" id="is_hidden" onclick="featurePlanClick(this)">
+            <div class="col-lg-3  pt-3 pb-3 col-md-3 col-3 ">
+                <label>
+                    <input id="durla" class="feature_check" type="checkbox">
+                </label>
+                <span>Hidden designs</span>
+            </div>
+            <div class="col-lg-7 pt-3 pb-3 col-md-7 col-7 ">
+                <span class="align-middle">Hide designs from other designs.</span>
+            </div>
+            <div class="col-lg-2 pt-3 pb-3 col-md-3 col-2 ">
+                {% if discount.free_hidden %}
+                <span class="align-middle float-right" id="hidden-price"><del>$59</del> FREE</span>
+                 {% else %}
+                    <span class="align-middle float-right" id="hidden-price">$59</span>
+                {% endif %}
+
+
+            </div>
+
+        </div>
+        <div class="row price_plan feature-div mt-3" id="is_guaranteed" onclick="featurePlanClick(this)">
+            <div class="col-lg-3  pt-3 pb-3 col-md-3 col-3 ">
+                <label>
+                    <input id="durla" class="feature_check" type="checkbox">
+                </label>
+                <span>Guaranteed</span>
+            </div>
+            <div class="col-lg-7 pt-3 pb-3 col-md-7 col-7 ">
+                <span class="align-middle">
+                Commit to pay designers and get up to 30% more designs. This waives your right to a refund.
+                </span>
+            </div>
+            <div class="col-lg-2 pt-3 pb-3 col-md-3 col-2 ">
+                <span class="align-middle float-right ">Recommended</span>
+
+            </div>
+
+        </div>
+        <div class="mt-5 justify-content-center row">
+            <form class="pt-2 pl-2 pr-2"   method="post" id="discount-form" action="{% url "customer:apply_discount" contest %}">
+                {% csrf_token %}
+                <div class="input-group">
+                    {% if is_applied %}
+                    <input type="text" id="discount-name" value="{{ discount.code }}"  disabled name="code" class="form-control is-valid mb-2 mr-sm-2"  placeholder="Discount Code">
+                    <button type="submit" class="btn btn-success mb-2" id="apply-button" disabled>Applied</button>
+
+                    {% else %}
+
+                    <input type="text" id="discount-name"  name="code" class="form-control mb-2 mr-sm-2"  placeholder="Discount Code">
+                    <button type="submit" class="btn btn-success mb-2" id="apply-button">Apply</button>
+                    {% endif %}
+
+
+                </div>
+                {% if is_applied %}
+                     <div class="mt-0 valid-feedback" id="discount-feedback" style="display:inline">
+                    Discount code applied successfully
+                    </div>
+                    {% else %}
+                    <div class="mt-0" id="discount-feedback" style="display:inline">
+
+                    </div>
+                {% endif %}
+
+
+
+
+
+            </form>
+
+        </div>
+        <button onclick="nextStep()" class="btn btn-primary float-right mt-4 btn-lg btn-block">Next</button>
+
+
+    </div>
+{% endblock %}
+{% block script %}
+    {{ form_fields|json_script:"form_fields" }}
+
+    {{ contest|json_script:"contest_id" }}
+    <script src="{% static "dashboard/js/start_contest.js" %}"></script>
+    <script>
+
+        var datas = JSON.parse(localStorage.getItem(contest_id))
+        var steps = datas.filled_steps
+        if (!steps.includes("step_3")) {
+            steps.push("step_3")
+        }
+        storageStuff("filled_steps", steps)
+        if (localStorage.getItem(contest_id)) {
+            const plans = document.getElementsByClassName("plan-div")
+            const data = JSON.parse(localStorage.getItem(contest_id))
+
+            Array.from(plans).forEach(
+                function (element, index, array) {
+                    if (data.price_plan === element.getElementsByClassName("plan_check")[0].id) {
+                        element.click()
+                    }
+                })
+            if (data.is_private !== undefined) {
+                if (data.is_private) {
+                    document.getElementById("is_private").click()
+                }
+            }
+            if (data.is_hidden !== undefined) {
+                if (data.is_hidden) {
+                    document.getElementById("is_hidden").click()
+                }
+            }
+            if (data.is_hidden !== undefined) {
+                if (data.is_hidden) {
+                    document.getElementById("is_guaranteed").click()
+                }
+            }
+
+        }
+
+        function save_as_draft() {
+            if (localStorage.getItem(contest_id)) {
+                storageStuff("page", "step_3")
+
+                const contest = JSON.parse(localStorage.getItem(contest_id))
+                postData('{% url "customer:draft_contest" contest  %}', {"contest": contest})
+                    .then(data => {
+                        console.log(data);
+                    });
+            } else {
+            }
+        }
+
+        function nextStep() {
+            save_as_draft()
+            window.location = "{% url "customer:contest_step" contest "step_4" %}"
+
+        }
+
+        save_as_draft()
+
+        document.getElementById("discount-form").addEventListener("submit", apply_discount)
+        var discountInp = document.getElementsByName("code")[0]
+        var feedback = document.getElementById("discount-feedback")
+        var apply_button = document.getElementById('apply-button')
+
+        function apply_discount(e){
+            var href = e.target.getAttribute('action')
+            var code = e.target.elements.code.value
+
+            postData(href, {"code": code})
+                    .then(data => {
+                        if(data.not_found){
+                            console.log("Invalid or expired code")
+                            discountInp.classList.add('is-invalid')
+                            feedback.classList.add('invalid-feedback')
+                            feedback.innerHTML = 'Invalid or expired code'
+
+                        }else if(data.not_yet){
+                            discountInp.classList.add('is-invalid')
+                            feedback.classList.add('invalid-feedback')
+                            feedback.innerHTML = `This code is not valid yet. Please wait for the start date`
+                        }
+                        else if(data.not_in){
+                            discountInp.classList.add('is-invalid')
+                            feedback.classList.add('invalid-feedback')
+                            feedback.innerHTML = `This code is not valid for you.`
+                        }
+                        else if(data.enough){
+                            discountInp.classList.add('is-invalid')
+                            feedback.classList.add('invalid-feedback')
+                            feedback.innerHTML = `You have exceeded the usage limit of this code.`
+                        }
+
+                        else{
+                            console.log("Discount code applied successfully")
+                            discountInp.classList.remove('is-invalid')
+                            discountInp.classList.add('is-valid')
+                            feedback.classList.remove('invalid-feedback')
+                            feedback.classList.add('valid-feedback')
+                            feedback.innerHTML = 'Discount code applied successfully'
+                            apply_button.innerText = "Applied"
+                            apply_button.disabled = true
+                            discountInp.disabled = true
+
+                            var private_price = document.getElementById('private-price')
+                            var hidden_price = document.getElementById('hidden-price')
+                            if (data.free_private){
+                                var price1 = private_price.innerHTML
+                                private_price.innerHTML = `<del>${price1}</del> FREE`
+                            }
+                            if (data.free_hidden){
+                                var price2 = hidden_price.innerHTML
+                                hidden_price.innerHTML = `<del>${price2}</del> FREE`
+                            }
+                            if(data.modify_fee != 25){
+                                var fee_text = document.getElementById('fee-text')
+                                var whole_help_text = document.getElementById('whole-help-text')
+
+                                if(data.modify_fee == 0){
+                                    whole_help_text.innerHTML = `<span class="text-success">You will not pay any additional fees to these prices because of the discount code.</span>`
+                                }else{
+                                    var fee = fee_text.innerHTML;
+                                    fee_text.innerHTML = `<del>25%</del> <span class="text-success">${data.modify_fee}%</span>`
+                                }
+
+                            }
+
+                        }
+                    });
+
+            e.preventDefault();
+        }
+
+    </script>
+{% endblock %}

@@ -1,0 +1,672 @@
+{% extends 'home/layout.html' %}
+{% load static %}
+{% load home_filters %}
+{% block head %}
+    <style>
+        .wrapper {
+            width: 100%;
+            position: relative;
+            background-color: #fff;
+        }
+
+        .wrapper:after {
+            padding-top: 42.85714285714287%;
+            display: block;
+            content: '';
+        }
+
+        .wrapper .column {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 14.2857142857142857%;
+            float: left;
+            padding: 6px;
+            box-sizing: border-box;
+        }
+
+        .wrapper .column .inner {
+            width: 100%;
+            position: relative;
+        }
+
+        .wrapper .column .inner:after {
+            padding-top: 100%;
+            /* ratio 1:1 */
+            display: block;
+            content: '';
+        }
+
+        .wrapper .column .inner:before {
+            content: ' ';
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            -webkit-transition: 300ms ease-in-out;
+            transition: 300ms ease-in-out;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .wrapper .column .inner:hover:before {
+            background-color: rgba(0, 0, 0, 0);
+        }
+
+        .wrapper .column:nth-child(1) {
+            width: 28.5714285714285714%;
+        }
+
+        .wrapper .column:nth-child(2) {
+            left: 28.5714285714285714%;
+        }
+
+        .wrapper .column:nth-child(3) {
+            left: 28.5714285714285714%;
+            top: 50%;
+            -webkit-transform: translateY(-50%);
+            transform: translateY(-50%);
+        }
+
+        .wrapper .column:nth-child(4) {
+            width: 28.5714285714285714%;
+            left: 42.85714285714286%;
+            top: 0;
+        }
+
+        .wrapper .column:nth-child(4) .inner:after {
+            padding-top: 48.7%;
+        }
+
+        .wrapper .column:nth-child(5) {
+            left: 71.42857142857143%;
+            top: 0;
+        }
+
+        .wrapper .column:nth-child(6) {
+            left: auto;
+            right: 0;
+            top: 0;
+        }
+
+        .wrapper .column:nth-child(7) {
+            left: 71.42857142857143%;
+            top: 50%;
+            -webkit-transform: translateY(-50%);
+            transform: translateY(-50%);
+        }
+
+        .wrapper .column:nth-child(8) {
+            left: auto;
+            right: 0;
+            top: 50%;
+            -webkit-transform: translateY(-50%);
+            transform: translateY(-50%);
+        }
+
+        .wrapper .column:nth-child(9) {
+            width: 28.5714285714285714%;
+            top: auto;
+            left: 0;
+            bottom: 0;
+        }
+
+        .wrapper .column:nth-child(9) .inner:after {
+            padding-top: 48.7%;
+        }
+
+        .wrapper .column:nth-child(10) {
+            left: 28.5714285714285714%;
+            top: auto;
+            bottom: 0;
+        }
+
+        .wrapper .column:nth-child(11) {
+            left: 42.85714285714286%;
+            top: auto;
+            bottom: 0;
+            width: 28.5714285714285714%;
+        }
+
+        .wrapper .column:nth-child(12) {
+            left: auto;
+            top: auto;
+            bottom: 0;
+            right: 0;
+            width: 28.5714285714285714%;
+        }
+
+        .wrapper .column:nth-child(12) .inner:after {
+            padding-top: 48.7%;
+        }
+
+        /* BEAUTY */
+        body,
+        html {
+            background-color: #fff;
+            padding: 0;
+        }
+
+        .wrapper .column .inner {
+            background-size: cover;
+            background-position: center;
+        }
+
+        .wrapper .column:nth-child(1) .inner {
+            background-image: url('https://igcdn-photos-b-a.akamaihd.net/hphotos-ak-xfa1/t51.2885-15/11055800_1556880671238497_1776548525_n.jpg');
+        }
+
+        .wrapper .column:nth-child(2) .inner {
+            background-image: url('https://igcdn-photos-h-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-15/11055816_932624596782983_529466754_n.jpg');
+        }
+
+        .wrapper .column:nth-child(3) .inner {
+            background-image: url('https://igcdn-photos-g-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-15/11008257_1569363026647030_933015336_n.jpg');
+        }
+
+        .wrapper .column:nth-child(4) .inner {
+            background-image: url('https://igcdn-photos-e-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-15/11056045_436886419818172_768672462_n.jpg');
+        }
+
+        .wrapper .column:nth-child(5) .inner {
+            background-image: url('https://igcdn-photos-g-a.akamaihd.net/hphotos-ak-xfa1/t51.2885-15/11049260_1374759412847590_258656935_n.jpg');
+        }
+
+        .wrapper .column:nth-child(6) .inner {
+            background-image: url('https://igcdn-photos-d-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-15/11005276_1414641038838035_1026684390_n.jpg');
+        }
+
+        .wrapper .column:nth-child(7) .inner {
+            background-image: url('https://igcdn-photos-a-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-15/11032879_730451393737672_1900382729_n.jpg');
+        }
+
+        .wrapper .column:nth-child(8) .inner {
+            background-image: url('https://igcdn-photos-h-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-15/11008309_1069768239717639_19410808_n.jpg');
+        }
+
+        .wrapper .column:nth-child(9) .inner {
+            background-image: url('https://static.pexels.com/photos/30627/pexels-photo-30627.jpg');
+        }
+
+        .wrapper .column:nth-child(10) .inner {
+            background-image: url('https://static.pexels.com/photos/448714/pexels-photo-448714.jpeg');
+        }
+
+        .wrapper .column:nth-child(11) .inner {
+            background-image: url('https://igcdn-photos-h-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-15/10903752_533893980082103_132962602_n.jpg');
+        }
+
+        .wrapper .column:nth-child(12) .inner {
+            background-image: url('https://igcdn-photos-f-a.akamaihd.net/hphotos-ak-xap1/t51.2885-15/10483464_355418301328333_1012884493_n.jpg');
+        }
+
+        .wrapper .column:nth-child(13) .inner {
+            background-image: url('https://igcdn-photos-d-a.akamaihd.net/hphotos-ak-xap1/t51.2885-15/10483455_592335754230795_537719826_n.jpg');
+        }
+
+        /*-- testimonial Section CSS --*/
+        #testimonial {
+            padding: 30px 0 20px;
+            color: #fff;
+            background-color: grey;
+        }
+
+        #testimonial h2 {
+            color: #fff;
+            font-size: 26px;
+            text-align: center;
+        }
+
+        #testimonial .client-design {
+            width: 80px;
+            height: 80px;
+            overflow: hidden;
+            border: 3px solid #fff;
+            margin: 0 auto;
+            position: absolute;
+            left: 0;
+        }
+
+        #testimonial .carousel-content {
+            padding: 20px 0 20px 100px;
+            width: 70%;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        #testimonial h3 {
+            font-size: 17px;
+            color: #fff;
+            margin-bottom: 30px;
+            text-align: right;
+        }
+
+        #testimonial p {
+            font-size: 1rem;
+        }
+
+        #testimonial .client-img img {
+            width: 100%;
+        }
+
+        #testimonial .carousel-control-prev,
+        #testimonial .carousel-control-next {
+            font-size: 36px;
+        }
+
+        @media (max-width: 576px) {
+            #testimonial .carousel-content {
+                padding: 20px 0 20px 0;
+                width: 100%;
+            }
+
+            #testimonial .client-img {
+                margin: 20px auto;
+                position: static;
+            }
+
+            #testimonial h3, #testimonial p {
+                text-align: center;
+            }
+        }
+
+        /*-- End Testimonial Section CSS --*/
+
+        /*-- Start Animated hero background --*/
+
+
+    </style>
+    <title>Logos, UX/UI, Graphic Design &amp; More. | Zignative</title>
+
+{% endblock %}
+{% block body %}
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="position-relative overflow-hidden">
+                <div class="row  justify-content-center mt-3">
+                    <div class="alert alert-{{ message.tags }} col-7   " role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Design inspired from https://www.hotjar.com/ -->
+        <div class="jumbotron bg-dark mb-0">
+        <div class="container text-center text-lg-left">
+                <div class="row">
+                    <div class="col-lg-7">
+                        <h1 class="display-4 text-light">Get the perfect design
+                            every time</h1>
+                        <p class="lead text-white">Join 100+ businesses, agencies, and nonprofits that leverage
+                            zignative to grow their
+                            businesses through high-quality custom design and software development.</p>
+                        <span class="text-center d-inline-block">
+                     <a href="{% url "customer:categories" %}" class="btn btn-primary btn-lg w-100" role="button">Start Your Contest</a>
+                     </span>
+                    </div>
+                    <div class="col-lg-5 align-items-center d-none d-lg-block">
+                        <img src="https://dummyimage.com/1200x800/949494/fff.png" alt="" class="img-fluid">
+                        <p class="text-right text-muted">by <u>goopanic</u></p>
+                    </div>
+                </div>
+        </div>
+    </div>
+        <div class="container pb-3 pt-5">
+            <h2 class="display-5 fw-bold lh-1 mb-3 text-center">Creating a contest is fast and free.
+            </h2>
+            <p class="lead text-center">Join the thousands of entrepreneurs who are launching their contests every week
+                and
+                harnessing the awesome power of crowdsourcing.</p>
+
+            <div class="row">
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="card h-100">
+                        <img src="{% static "images/services/Logo Design.svg" %}" class="card-img-top mt-3" height="100"
+                             alt="Logo Design Contest Service">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Logo design</h5>
+                            <p class="card-text">One unique logo designed to create a great brand.</p>
+                            <p class="text-muted">from $299</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="card h-100">
+                        <img src="{% static "images/services/Business Card Design.svg" %}" class="card-img-top mt-3"
+                             height="100" alt="Logo Design Contest Service">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Business card</h5>
+                            <p class="card-text">One unique business card designed to impress.</p>
+                            <p class="text-muted">from $299</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="card h-100">
+                        <img src="{% static "images/services/Web page design.svg" %}" class="card-img-top mt-3"
+                             height="100"
+                             alt="Logo Design Contest Service">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Web page design</h5>
+                            <p class="card-text">Beautiful web design that connects with visitors.</p>
+                            <p class="text-muted">from $899</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="card h-100">
+                        <img src="{% static "images/services/App design.svg" %}" class="card-img-top mt-3" height="100"
+                             alt="Logo Design Contest Service">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">App design</h5>
+                            <p class="card-text">Interface design for one mobile app that will impress.</p>
+                            <p class="text-muted">from $899</p>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row row-cols-1 row-cols-sm-1 g-4">
+                <div class="col-12 text-center">
+                    <a href="{% url "customer:categories" %}" type="button" class="btn btn-outline-primary">View all services</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!--
+    <div class="container py-3">
+        <h2 class="display-5 fw-bold lh-1 mb-3 mt-5 text-center">The only challenge is picking the winner
+        </h2>
+        <p class="lead text-center">Join the millions of people harnessing the zignative.com platform to do amazing
+            things.</p>
+        <div class="wrapper">
+            <div class="column">
+                <div class="inner"></div>
+            </div>
+            <div class="column">
+                <div class="inner"></div>
+            </div>
+            <div class="column">
+                <div class="inner"></div>
+            </div>
+            <div class="column">
+                <div class="inner"></div>
+            </div>
+            <div class="column">
+                <div class="inner"></div>
+            </div>
+            <div class="column">
+                <div class="inner"></div>
+            </div>
+            <div class="column">
+                <div class="inner"></div>
+            </div>
+            <div class="column">
+                <div class="inner"></div>
+            </div>
+            <div class="column">
+                <div class="inner"></div>
+            </div>
+            <div class="column">
+                <div class="inner"></div>
+            </div>
+            <div class="column">
+                <div class="inner"></div>
+            </div>
+            <div class="column">
+                <div class="inner"></div>
+            </div>
+        </div>
+        <div class="row row-cols-1 row-cols-sm-1 g-4 mt-4">
+            <div class="col-12 text-center">
+                <button type="button" class="btn btn-outline-primary">View more entries</button>
+            </div>
+        </div>
+    </div>
+    -->
+
+    <div class="col-xxl-8 mx-auto my-5 ">
+        <div class="jumbotron">
+            <div class="container">
+            <h2 class="display-5 fw-bold lh-1 mb-4 text-center">Build a brand your customers love
+            </h2>
+            <div class="row row-cols-1 row-cols-sm-1 g-4">
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 text-center border-0 bg-transparent">
+                        <img src="{% static "images/entries-illustration.svg" %}" class="card-img-top mt-3" height="160"
+                             alt="Logo Design Contest Service">
+                        <div class="card-body">
+                            <h5 class="card-title">Hundreds of Amazing Entries</h5>
+                            <p class="card-text">You get hundreds of brilliant ideas, and you only need to pay for
+                                one.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 text-center border-0 bg-transparent">
+                        <img src="{% static "images/satisfaction-illustration.svg" %}" class="card-img-top mt-3"
+                             height="160" alt="Logo Design Contest Service">
+                        <div class="card-body">
+                            <h5 class="card-title">100% Satisfaction</h5>
+                            <p class="card-text">You request changes and revisions and only pay when you're
+                                satisfied.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 text-center border-0 bg-transparent">
+                        <img src="{% static "images/money-back-illustration.svg" %}" class="card-img-top mt-3"
+                             height="160" alt="Logo Design Contest Service">
+                        <div class="card-body">
+                            <h5 class="card-title">Money Back Guarantee</h5>
+                            <p class="card-text">It's risk-free with a money back guarantee!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+    <div class="col-xxl-8 mx-auto my-5 ">
+        <div class="container fluid">
+            <h3 class="jumbotron-heading text-center">Open Contests</h3>
+            <p class="lead text-center">Browse through our contests to get an idea of the amazing things we can create
+                for you.</p>
+        &nbsp;
+
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link {% if filter == "in_progress" %}active{% endif %}" id="home-tab"
+                       href="?filter=in_progress" aria-selected="true">In Progress</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link step-link {% if filter == "completed" %}active{% endif %}" id="completed-tab"
+                       href="?filter=completed"
+                       aria-selected="false">Completed</a>
+                </li>
+
+            </ul>
+
+
+            <div class="tab-content mt-3  " id="myTabContent">
+
+                <form>
+                    <div class="form-row align-items-center">
+                        <div class="col-auto my-1">
+                            <select class="custom-select mr-sm-2" id="service_select">
+                                <option selected>All Categories</option>
+                                {% for service in services %}
+                                    <option value="{{ service.id }}">{{ service.title }}</option>
+
+                                {% endfor %}
+
+                            </select>
+                        </div>
+                        <div class="col-auto my-1">
+                            <select class="custom-select mr-sm-2" id="industry_select">
+                                <option selected>All Industries</option>
+                                <option>Accounting</option>
+                                <option>Automotive</option>
+                                <option>Beauty</option>
+                                <option>Construction</option>
+                                <option>Consulting</option>
+                                <option>Dental</option>
+                                <option>Education</option>
+                                <option>Entertainment</option>
+                                <option>Events</option>
+                                <option>Financial</option>
+                                <option>Home & Garden</option>
+                                <option>Insurance</option>
+                                <option>Internet</option>
+                                <option>Legal</option>
+                                <option>Manufacturing & Wholesale</option>
+                                <option>Media</option>
+                                <option>Medical</option>
+                                <option>Miscellaneous</option>
+                                <option>Natural Resources</option>
+                                <option>Non-Profit</option>
+                                <option>Real Estate</option>
+                                <option>Religious</option>
+                                <option>Restaurant</option>
+                                <option>Retail</option>
+                                <option>Service Industries</option>
+                                <option>Sport</option>
+                                <option>Technology</option>
+                                <option>Travel & Hospitality</option>
+                            </select>
+                        </div>
+
+                        <div class="col-auto sm-auto mr-3">
+                            <select class="custom-select mr-sm-2" id="order_select">
+                                <option selected value="old_0">Newest first</option>
+                                <option value="old_1">Oldest first</option>
+                                <option value="prize_0">Highest prize first</option>
+                                <option value="prize_1">Lowest prize first</option>
+                                <option value="time_1">Most time left first</option>
+                                <option value="time_0">Least time left first</option>
+                                <option value="entry_0">Most entries first</option>
+                                <option value="entry_1">Least entries first</option>
+
+                            </select>
+                        </div>
+
+                    </div>
+                </form>
+
+
+                {% include "includes/home/contest_list.html" %}
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Testimonials Section -->
+    <section id="testimonial">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="section-title">
+                        <h2>Client Testimonials</h2>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div id="testimonialCarousel" class="carousel slide" data-ride="carousel">
+                        <!-- Slide Indicators -->
+                        <ol class="carousel-indicators">
+                            <li data-target="#testimonialCarousel" data-slide-to="0" class="active"></li>
+                            <li data-target="#testimonialCarousel" data-slide-to="1"></li>
+                            <li data-target="#testimonialCarousel" data-slide-to="2"></li>
+                        </ol>
+                        <div class="carousel-inner" role="listbox">
+                            <!-- Slide 1 -->
+                            <div class="carousel-item active">
+                                <div class="carousel-content">
+                                    <div class="client-design"><img src="images/user-img-1.jpg" alt="Testimonial Slider"/>
+                                    </div>
+                                    <p>I started a logo design contest for my law firm. I was impressed by the quality of the service and I recommend zignative for logo design service.</p>
+                                    <h3><span>-</span> Ion A.<span>-</span></h3>
+                                </div>
+                            </div>
+                            <!-- Slide 2 -->
+                            <div class="carousel-item">
+                                <div class="carousel-content">
+                                    <div class="client-design"><img src="images/user-img-2.jpg" alt="Testimonial Slider"/>
+                                    </div>
+                                    <p>It is a long established fact that a reader will be distracted by the readable
+                                        content of a page when looking at its layout. There are many variations of
+                                        passages of Lorem Ipsum available. Lorem Ipsum is simply dummy text of the
+                                        printing and typesetting industry</p>
+                                    <h3><span>-</span> Mukesh Kumar <span>-</span></h3>
+                                </div>
+                            </div>
+                            <!-- Slide 3 -->
+                            <div class="carousel-item">
+                                <div class="carousel-content">
+                                    <div class="client-design"><img src="images/user-img-3.jpg" alt="Testimonial Slider"/>
+                                    </div>
+                                    <p>There are many variations of passages of Lorem Ipsum available, but the majority
+                                        have suffered alteration in some form. There are many variations of passages of
+                                        Lorem Ipsum available. Lorem Ipsum is simply dummy text of the printing and
+                                        typesetting industry</p>
+                                    <h3><span>-</span> Rajnish Kumar <span>-</span></h3>
+                                </div>
+                            </div>
+                            <!-- Slider pre and next arrow -->
+                            <a class="carousel-control-prev text-white" href="#testimonialCarousel" role="button"
+                               data-slide="prev">
+                                <i class="fas fa-chevron-left"></i>
+                            </a>
+                            <a class="carousel-control-next text-white" href="#testimonialCarousel" role="button"
+                               data-slide="next">
+                                <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End testimonials Section -->
+
+{% endblock %}
+{% block scripts %}
+    <script src="{% static "dashboard/js/request.js" %}"></script>
+    <script src="{% static "dashboard/js/index_contests.js" %}"></script>
+    <script>
+        if (findGetParameter("industry_select")) {
+            document.getElementById('industry_select').value = findGetParameter("industry_select");
+        }
+        if (findGetParameter("order_select")) {
+            document.getElementById('order_select').value = findGetParameter("order_select");
+        }
+        if (findGetParameter("service_select")) {
+            document.getElementById('service_select').value = findGetParameter("service_select");
+        }
+
+        //Thank you Stackoverflow :))
+        function findGetParameter(parameterName) {
+            var result = null,
+                tmp = [];
+            location.search
+                .substr(1)
+                .split("&")
+                .forEach(function (item) {
+                    tmp = item.split("=");
+                    if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+                });
+            return result;
+        }
+    </script>
+{% endblock %}

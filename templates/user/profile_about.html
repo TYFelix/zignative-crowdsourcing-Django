@@ -1,0 +1,237 @@
+{% extends "user/public_profile.html" %}
+{% load static %}
+{% load profile_filters %}
+{% block head %}
+    <style>
+    .tag-border{
+         border-radius: 5px; border:solid 2px rgba(0,0,0,0.40)
+    }
+    </style>
+{% endblock %}
+{% block body %}
+    <div class="container-fluid mt-3">
+        <div class="row justify-content-center">
+            <div class="col-md-9">
+                <div class="fb-profile-block">
+                    <div class="fb-profile-block-thumb cover-container" style="
+                            background:url('{{ user.profile.get_cover_photo }}')
+                            ;background-size: cover;background-position: center"></div>
+                    <div class="profile-img">
+                        <a href="#">
+                            <img class="rounded-circle" src="{{ user.profile.get_photo }}" alt="" title="">
+                        </a>
+                    </div>
+                    <div class="profile-name">
+                        <h2>{{ user }}</h2>
+                    </div>
+
+                    <div class="fb-profile-block-menu">
+                        <div class="block-menu">
+                            <ul>
+                                <li><a href="{% url "home:public_profile" user %}">Portfolio</a></li>
+                                <li class="bg-dark "><a class="text-white" href="{% url "home:profile_about" user %}">About</a>
+                                </li>
+                                {% if user == request.user %}
+                                                        <li><a href="{% url "user:edit_profile"  %}">Edit Profile</a></li>
+
+                                {% endif %}
+                            {% if request.user != user and request.user.profile.role == "client" %}
+                            <li class="float-right">
+                                <a  class="btn btn-info text-white"  data-toggle="modal" data-target="#contests_modal">
+                                    Invite to work
+                                </a>
+                            </li>
+                            {% endif %}
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-9">
+                <div class="row">
+                    <div class="col-lg-3 col-sm-12 p-5 text-dark">
+                        <h3 class="ml-5 col-sm-12">About</h3>
+                    </div>
+                    <div class="col-lg-9  mt-5 bg-light p-5">
+                    <h5>Reviews </h5>
+                        <div id="rating_bio">
+
+
+                        </div>
+                        <br>
+
+                        {{ average }} stars - {{ user.reviews.count }} reviews
+                        <br><br>
+                                                <h5>Bio</h5>
+
+                        <div>
+                            <p>{{ user.profile.bio | linebreaks }}</p>
+                        </div>
+
+                        <div class="mt-3">
+                            <h5>Experience</h5>
+                            <div class="row">
+                                <div class="col-4 border-right">
+                                    <span class="h1 font-weight-bold">{{ contests_won }}</span><br>
+                                    <span class="text-muted">Contests Won</span>
+                                </div>
+                                <div class="col-4 border-right">
+                                    <span class="h1 font-weight-bold">{{ runner_up }}</span><br>
+                                    <span class="text-muted">Runner up (finalist)</span>
+                                </div>
+                                <div class="col-4 ">
+                                    <span class="h1 font-weight-bold">0</span><br>
+                                    <span class="text-muted">1-to-1 Projects </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <h5>Activity</h5>
+                            <div class="row">
+                                <div class="col-6">
+                                    <span class="h1 font-weight-bold">${{ total }}</span><br>
+                                    <span class="text-muted">How much did the <b>{{ user }} </b>earn.</span>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="mt-5">
+                           {% if user.tags %}
+                           <h5>Skills </h5>
+                           {% endif %}
+                            {% for tag in user.tags.all %}
+                                 <span class="badge badge-secondary p-1">{{ tag.service.title }}</span>
+                            {% endfor %}
+
+
+                        </div>
+                        <div class="mt-3">
+                            {% if user.profile.get_languages_display %}
+                            <h5>Languages </h5>
+                            {{  user.profile.get_languages_display }}
+                            {% endif %}
+
+
+
+                        </div>
+
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-lg-3 col-sm-12  p-5 text-dark">
+                        <h3 class="ml-5">Reviews</h3>
+                    </div>
+                    <div class="col-lg-9  col-sm-12 mt-5 bg-light p-5">
+
+                        {% for review in user.reviews.all %}
+                        <div class="row col-6 mt-2 p-3">
+                            <div class="col-3 mt-4">
+                                <img class="img-rounded" width="65" height="65"
+                                     src="{{ review.writer.profile.get_photo }}" alt="">
+                            </div>
+                            <div class="col-9">
+
+                                <p class="mb-0"><i>"{{ review.content }}"</i></p>
+                                <footer class="blockquote-footer">{{ review.writer }}</footer>
+                                <div  id="rating_{{ review.id }}">
+
+
+
+                                </div>
+
+
+                                <small class="text-muted">reviewed {{ review.created_date|timesince }} ago</small> <br>
+                                <small class="text-muted">for
+                                    <a class="step-link" href="{% url "home:entry_detail" review.entry.contest.id review.entry.id %}">{{ review.entry.contest }}</a>
+                                </small>
+                            </div>
+                        </div>
+                            <hr>
+                        {% endfor %}
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+<div class="modal fade" id="contests_modal" tabindex="-1" aria-labelledby="contets_modal_label" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        {% for contest in contests %}
+            <b>{{ contest.category.title }}</b>: {{ contest.title }}
+            {% if contest|is_invited:user %}
+                <button  class="btn float-right btn-primary disabled" disabled>Invited</button>
+            {% else %}
+                <button onclick="handle_invite(this)" cid="{{ contest.id }}" class="btn float-right btn-info">Invite</button>
+            {% endif %}
+            <hr>
+        {% endfor %}
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block script %}
+        <script src="{% static "dashboard/js/star-rating.js" %}"></script>
+
+<script>
+        var myRater_bio = raterJs({
+                element: document.querySelector("#rating_bio"),
+                readOnly:true,
+                rating:Number({{ average_int }}),
+                rateCallback: function rateCallback(rating, done) {
+                    this.setRating(rating);
+                    done();
+
+                }});
+        {% for review in user.reviews.all %}
+            var myRater_{{ forloop.counter }} = raterJs({
+                element: document.querySelector("#rating_{{ review.id }}"),
+                readOnly:true,
+                rating:Number({{ review.rate }}),
+                rateCallback: function rateCallback(rating, done) {
+                    this.setRating(rating);
+                    done();
+
+                }});
+        {% endfor %}
+    </script>
+  <script>
+    var request = new Request();
+    function handle_invite(e){
+        var contest_id = e.getAttribute('cid');
+        request.get(`/customer/invite-designer/{{user}}/${contest_id}`)
+        .then(data => {
+            e.innerHTML = "Invited"
+            e.classList.remove("btn-info")
+            e.classList.add("btn-primary")
+            e.classList.add("disabled")
+            e.disabled = true
+
+
+        })
+        .catch(err => console.log(err));
+    }
+
+</script>
+{% endblock %}

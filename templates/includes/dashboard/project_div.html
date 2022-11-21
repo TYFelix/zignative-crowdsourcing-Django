@@ -1,0 +1,92 @@
+{% load customer_filters %}
+{% if not contest.is_temp %}
+<li class="d-flex justify-content-between mt-4 " >
+    <div class="d-flex flex-row align-items-center ">
+        <div class="bg-secondary "
+             style=" width: 80px; height: 80px ;background-image: url({% if request.user == contest.user %}
+                 {{ contest.entries.last.get_display_image }}
+             {% else %}{{ contest.get_image }}{% endif %}); background-size: 80px 80px ;">
+            {% if contest.get_total_price %}
+            <span class=" bg-white border mt-0">{{ contest.get_price.currency.symbol}}{{ contest.get_prize|floatformat:-2 }} </span>
+            {% endif %}
+        </div>
+        <div class="ml-2">
+        {% if contest.status == "canceled" or not contest.is_paid %}
+            <h5 class="mb-0 ml-2">{{ contest.title }}</h5>
+                   {% else %}
+ <a class="step-link" href="{% url "home:contest" contest.id %}"><h5 class="mb-0 ml-2">{{ contest.title }}</h5></a>
+        {% endif %}
+            <div class="d-flex flex-row mt-1 text-black-50 date-time">
+                <p><span class="ml-2">{{ contest.category.title }}</span></p>
+
+            </div>
+            <div class="d-flex flex-row  text-black-50 date-time">
+            {% if contest.status == "canceled" %}
+                    <p><small class="ml-2 border p-1 border-danger">Canceled</small></p>
+                {% elif contest.status == "completed" and not contest.is_locked %}
+                                    <p><small class="ml-2 border p-1 border-success">Completed</small></p>
+                {% elif  contest.is_locked %}
+                                    <p><small class="ml-2 border p-1 border-warning">Locked</small></p>
+                {% else %}
+                {% if contest.is_draft %}
+                    <p><small class="ml-2 border p-1 border-primary">Draft</small></p>
+                {% elif not contest.is_paid %}
+                    <p><small class="ml-2 border p-1 border-info">Unpaid</small></p>
+
+
+                {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="d-flex flex-row align-items-center">
+        <div class="d-flex flex-column mr-2">
+            {% if contest.status == "canceled" %}
+                <button class="btn btn-outline-danger disabled"
+                    >Constest canceled
+            </button>
+                {% elif contest.status == "completed" and not contest.is_locked %}
+                <button class="btn btn-outline-success disabled"
+                    >Winner Selected
+                {% elif contest.is_locked %}
+                <button class="btn btn-outline-warning disabled"
+                    >Contest Locked
+            </button>
+            {% else %}
+                  {% if contest.is_draft %}
+            <button class="btn btn-outline-secondary"
+                    onclick="window.location='{% url "customer:contest_step" contest.id contest.form_fields.page %}'">Complete design brief
+            </button>
+                {% elif not contest.is_paid %}
+                <button class="btn btn-outline-info"
+                    onclick="window.location='{% url "customer:contest_step" contest.id "step_5" %}'">Complete Payment
+                </button>
+                {% else %}
+                <p><i class="far fa-clock"></i> {{ contest.get_timezone|timesince:contest.finish_date }} left</p>
+                <p><i class="fas fa-sticky-note"></i> {{ contest.get_entry_count }} entry</p>
+                {% if contest.get_feedbacks.count %}
+                    <p data-placement="bottom" data-html="true" data-toggle="tooltip" title="{% include "includes/home/contest_tooltip.html" %}" >
+                        <i class="far fa-comment" ></i> {{ contest.get_feedbacks.percentage }}%
+                        feedback ({{ contest.get_feedbacks.count }}) </p>
+
+                    {% else %}
+                    <p data-placement="bottom" data-html="true" data-toggle="tooltip" title="{% include "includes/home/contest_tooltip.html" %}" >
+                        <i class="far fa-comment" ></i> No feedback </p>
+                {% endif %}
+
+            {% endif %}
+            {% endif %}
+
+        </div>
+        <div class="d-flex flex-column mr-2">
+            {% if contest|is_deletable %}
+                      <a url="{% url "customer:delete_contest" contest.id %}" style="cursor:pointer" onclick="are_u_sure_for_delete(this)"
+               class="step-link"><i class="fa fa-trash"></i></a>
+            {% endif %}
+
+        </div>
+    </div>
+
+</li>
+    <hr>
+{% endif %}

@@ -1,0 +1,335 @@
+{% extends "customer/layout.html" %}
+{% load static %}
+
+{% block head %}
+    <title>Create {{ contest_object.category.title }} Contest / Zignative Crowdsourcing</title>
+    <style>
+
+    </style>
+    {% block fa %}
+        <script src="https://kit.fontawesome.com/de7fd70cb4.js" crossorigin="anonymous"></script>
+    {% endblock %}
+{% endblock %}
+{% block body %}
+    <div class="container-fluid">
+    <ol class="breadcrumb  mb-4 mt-2">
+        <li class="breadcrumb-item "><a href="{% url "customer:categories" %}" class="step-link">Categories</a></li>
+        <li class="breadcrumb-item active">Create {{ contest_object.category.title }} Contest</li>
+    </ol>
+    <h3 class="text-center mb-4">Create {{ contest_object.category.title }} Contest</h3>
+    <div class="row  ">
+
+
+    {% block step %}
+
+        <div class="col-lg-3 ">
+
+        <div class="col-lg-10 mt-2 link-arrow">1. Brief</div>
+        {% if "step_2" in form_fields.filled_steps %}
+            <div class="col-lg-10 mt-2 ">
+
+            <a class="step-link" href="{% url "customer:contest_step" contest "step_2" %}">2. Style</a>
+        {% else %}
+            <div class="col-lg-10 mt-2 text-muted" id="nondraft">
+            2. Style
+        {% endif %}</div>
+        {% if "step_3" in form_fields.filled_steps %}
+            <div class="col-lg-10 mt-2 ">
+
+            <a class="step-link" href="{% url "customer:contest_step" contest "step_3" %}">3. Prize & Upgrades</a>
+        {% else %}
+            <div class="col-lg-10 mt-2 text-muted">
+            3. Prize & Upgrades
+        {% endif %}</div>
+        {% if "step_4" in form_fields.filled_steps %}
+            <div class="col-lg-10 mt-2 ">
+            <a class="step-link" href="{% url "customer:contest_step" contest "step_4" %}">4. Payment </a>
+        {% else %}
+            <div class="col-lg-10 mt-2 text-muted">
+
+            4. Payment
+        {% endif %}</div>
+
+
+    </div>
+        <div class="col-lg-7 ">
+            <h5>Name & Description</h5>
+            <form action="{% url "customer:contest_step" contest "step_2" %}" class="mt-2 mb-2">
+                <div class="form-group">
+                    <label for="contest-title">Contest Title</label>
+                    <input required type="text" id="contest_title" onkeyup="setDraft(this)"
+                           class="form-control">
+                </div>
+
+
+                <div class="form-group">
+                    <label for="contest_detail">Tell us about your organization and your target audience
+                        is</label>
+                    <textarea required type="text" id="contest_detail" onkeyup="setDraft(this)"
+                              class="form-control"></textarea>
+                </div>
+
+                <br>
+                <h5 class="mt-2">Which category describes your mobile app?</h5>
+                <div class="form-group">
+                    <label for="exampleFormControlSelect1">Please select your industry:</label>
+                    <select required class="form-control" onchange="setDraft(this)" id="category">
+                        <option value="">Category</option>
+                        <option value="game">Game</option>
+                        <option value="social">Social</option>
+                        <option value="chat">Chat</option>
+                        <option value="productivity">Productivity</option>
+                        <option value="financial">Financial</option>
+                        <option value="news">News</option>
+                        <option value="media">Media</option>
+                        <option value="shopping">Shopping</option>
+                        <option value="utility">Utility</option>
+                        <option value="travel">Travel</option>
+                        <option value="health">Health</option>
+                        <option value="food">Food</option>
+                        <option value="other">Other</option>
+
+
+                    </select>
+
+                </div>
+                <br>
+                <h5 class="mt-3">Which platform will your app run on?</h5>
+                <span class="" id="">Select all that apply.</span>
+                <span class="text-danger" id="warn_logo" style="visibility: hidden">Please choose at least 1 social network</span>
+                <div class="row mb-3 justify-content-center">
+
+                    <div id="iOS"
+                         class="col-lg-3 logo-element platforms  pt-4 d-flex justify-content-center mr-2 mt-2">
+                        <div style="width:150px; height:150px" class="text-center">
+                            <h3 style="font-family: Arial, Helvetica, sans-serif;"><b><i
+                                    class="fa fa-apple fa-3x"></i></b></h3>
+                            <h4 class="text-muted">iOS</h4>
+                        </div>
+                    </div>
+                    <div id="Android"
+                         class="col-lg-3 logo-element platforms  pt-4 d-flex justify-content-center mr-2 mt-2">
+                        <div style="width:150px; height:150px" class="text-center">
+                            <h3 style="font-family: Arial, Helvetica, sans-serif;"><b><i
+                                    class="fa fa-android fa-3x"></i></b></h3>
+                            <h4 class="text-muted">Android</h4>
+                        </div>
+                    </div>
+                    <div id="Windows"
+                         class="col-lg-3 logo-element platforms  pt-4 d-flex justify-content-center mr-2 mt-2">
+                        <div style="width:150px; height:150px" class="text-center">
+                            <h3 style="font-family: Arial, Helvetica, sans-serif;"><i class="fa fa-windows fa-3x"></i>
+                            </h3>
+                            <h4 class="text-muted">Windows</h4>
+                        </div>
+                    </div>
+
+                    <div id="Other"
+                         class="col-lg-3 logo-element platforms  pt-5 d-flex justify-content-center mr-2 mt-2">
+                        <div style="width:150px; height:150px" class="text-center">
+                            <h3 style="font-family: Arial, Helvetica, sans-serif;"><i class="fa fa-question fa-2x"></i>
+                            </h3>
+                            <h4 class="text-muted">Other</h4>
+                        </div>
+                    </div>
+
+
+                </div>
+                <br>
+
+                <h5 class="mt-3">Which screen sizes will your app support?</h5>
+                <span class="" id="">Select all that apply.</span>
+                <span class="text-danger" id="warn_logo1" style="visibility: hidden">Please choose at least 1 social network</span>
+                <div class="row mb-3 justify-content-center">
+
+                    <div id="Phone"
+                         class="col-lg-3 logo-element1 screen_sizes  pt-4 d-flex justify-content-center mr-2 mt-2">
+                        <div style="width:150px; height:150px" class="text-center">
+                            <h3 style="font-family: Arial, Helvetica, sans-serif;"><i
+                                    class="fa fa-mobile fa-3x"></i></h3>
+                            <h4 class="text-muted">Phone</h4>
+                        </div>
+                    </div>
+
+                    <div id="Tablet"
+                         class="col-lg-3 logo-element1 screen_sizes  pt-4 d-flex justify-content-center mr-2 mt-2">
+                        <div style="width:150px; height:150px" class="text-center">
+                            <h3 style="font-family: Arial, Helvetica, sans-serif;"><b><i
+                                    class="fa fa-tablet fa-3x"></i></b></h3>
+                            <h4 class="text-muted">Tablet</h4>
+                        </div>
+                    </div>
+                    <div id="TV/Desktop"
+                         class="col-lg-3 logo-element1 screen_sizes  pt-4 d-flex justify-content-center mr-2 mt-2">
+                        <div style="width:150px; height:150px" class="text-center">
+                            <h3 style="font-family: Arial, Helvetica, sans-serif;"><b><i
+                                    class="fa fa-tv fa-3x"></i></b></h3>
+                            <h4 class="text-muted">TV/Desktop</h4>
+                        </div>
+                    </div><div id="Wearable"
+                         class="col-lg-3 logo-element1 screen_sizes  pt-4 d-flex justify-content-center mr-2 mt-2">
+                        <div style="width:150px; height:150px" class="text-center">
+                            <h3 style="font-family: Arial, Helvetica, sans-serif;"><img src="{% static "dashboard/images/watch.png" %}" width="100" height="100"></h3>
+                            <h4 class="text-muted">Wearable</h4>
+                        </div>
+                    </div>
+
+                    <div id="Other"
+                         class="col-lg-3 logo-element1 screen_sizes  pt-5 d-flex justify-content-center mr-2 mt-2">
+                        <div style="width:150px; height:150px" class="text-wearable">
+                            <h3 style="font-family: Arial, Helvetica, sans-serif;"><i class="fa fa-question fa-2x"></i>
+                            </h3>
+                            <h4 class="text-muted">Other</h4>
+                        </div>
+                    </div>
+
+
+                </div>
+                <br>
+
+                <h5 class="mt-2">Industry</h5>
+                <div class="form-group">
+                    <label for="exampleFormControlSelect1">Please select your industry:</label>
+                    <select required class="form-control" onchange="setDraft(this)" id="contest_industry">
+                        <option value="">Industry</option>
+                        <option>Accounting</option>
+                        <option>Automotive</option>
+                        <option>Beauty</option>
+                        <option>Construction</option>
+                        <option>Consulting</option>
+                        <option>Dental</option>
+                        <option>Education</option>
+                        <option>Entertainment</option>
+                        <option>Events</option>
+                        <option>Financial</option>
+                        <option>Home & Garden</option>
+                        <option>Insurance</option>
+                        <option>Internet</option>
+                        <option>Legal</option>
+                        <option>Manufacturing & Wholesale</option>
+                        <option>Media</option>
+                        <option>Medical</option>
+                        <option>Miscellaneous</option>
+                        <option>Natural Resources</option>
+                        <option>Non-Profit</option>
+                        <option>Real Estate</option>
+                        <option>Religious</option>
+                        <option>Restaurant</option>
+                        <option>Retail</option>
+                        <option>Service Industries</option>
+                        <option>Sport</option>
+                        <option>Technology</option>
+                        <option>Travel & Hospitality</option>
+
+                    </select>
+                </div>
+                <br>
+                <h5 class="mt-2">Do you want to provide any additional info?</h5>
+                <div class="form-group">
+                    <label for="contest_detail">Are there specific design elements you want to see? Is there anything
+                        you do not want to see? Include links to things that inspired you, competitor information, or
+                        any other info. If you need special file formats, please list them here.</label>
+                    <textarea  type="text" id="contest_info" onkeyup="setDraft(this)"
+                              class="form-control"></textarea>
+                </div>
+                <br>
+                <button type="submit" class="btn btn-primary float-right btn-lg mb-5 btn-block">
+                    Next
+                </button>
+
+            </form>
+        </div>
+    {% endblock %}
+</div>
+</div>
+
+
+
+{% endblock %}
+
+{% block script %}
+    {{ form_fields|json_script:"form_fields" }}
+
+    {{ contest|json_script:"contest_id" }}
+    <script src="{% static "dashboard/js/start_contest.js" %}"></script>
+    <script>
+        document.onload = fillData()
+        var page_in = 0
+        const datas = JSON.parse(localStorage.getItem(contest_id))
+
+        if (datas !== null) {
+            if ("filled_steps" in datas) {
+                if (datas.filled_steps.includes("step_2") && !datas.filled_steps.includes("step_3")) {
+                    document.getElementById("nondraft").classList.remove("text-muted")
+                    document.getElementById("nondraft").innerHTML = `<a class="step-link" href="{% url "customer:contest_step" contest "step_2" %}">2. Style</a>
+`
+                }
+            } else {
+                datas.filled_steps = ["step_1"]
+                storageStuff("filled_steps", datas.filled_steps)
+            }
+        } else {
+            storageStuff("filled_steps", ["step_1"])
+        }
+
+        function verOdunu() {
+            if (localStorage.getItem(contest_id)) {
+                const contest = JSON.parse(localStorage.getItem(contest_id))
+
+                postData('{% comment %}{% url "customer:draft_contest" contest %}{% endcomment %}', {"contest": contest})
+                    .then(data => {
+                        {#console.log(data); // JSON data parsed by `data.json()` call#}
+                    });
+            } else {
+            }
+        }
+
+        verOdunu()
+        if (localStorage.getItem(contest_id)) {
+            const logos = document.getElementsByClassName("logo-element")
+            const datas = JSON.parse(localStorage.getItem(contest_id))
+            if (datas.selected_platforms) {
+
+
+                Array.from(logos).forEach(
+                    function (element, index, array) {
+                        if (datas.selected_platforms.includes(element.id)) {
+                            element.classList.add("logo-selected")
+                            selected_logos.push(element.id)
+                        }
+                    })
+            }
+        }if (localStorage.getItem(contest_id)) {
+            const logos = document.getElementsByClassName("logo-element1")
+            const datas = JSON.parse(localStorage.getItem(contest_id))
+            if (datas.selected_screen_sizes) {
+
+
+                Array.from(logos).forEach(
+                    function (element, index, array) {
+                        if (datas.selected_screen_sizes.includes(element.id)) {
+                            element.classList.add("logo-selected")
+                            selected_sizes.push(element.id)
+                            console.log(selected_sizes)
+                        }
+                    })
+            }
+        }
+
+        function save_as_draft() {
+            if (localStorage.getItem(contest_id)) {
+                storageStuff("page", "step_5")
+
+                const contest = JSON.parse(localStorage.getItem(contest_id))
+                postData('{% url "customer:draft_contest" contest  %}', {"contest": contest})
+                    .then(data => {
+                        console.log(data);
+                    });
+            } else {
+            }
+        }
+
+
+    </script>
+
+{% endblock %}

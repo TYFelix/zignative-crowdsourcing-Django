@@ -1,0 +1,216 @@
+{% load static %}
+{% load contest_filters %}
+<div class="tab-pane fade " id="pills-all" role="tabpanel" aria-labelledby="pills-all-tab">
+
+    <div class="row ml-4">
+
+        {% for entry in entries|in_status:"all" %}
+
+            <div class="col-2 border mr-4 mt-4">
+                {% if request.user == contest.user and not entry.is_declined and contest.round == "qualify_end" and not contest.is_splittable %}
+
+                    <a user="{{ entry.user }}" onclick="finalize(this)" entry_id="{{ entry.id }}"
+                       class="step-link text-success " style="cursor:pointer">
+                        <span><i class="fa fa-plus-square mt-2 float-right"></i></span>
+                    </a>
+                {% endif %}
+
+                <p><span class="text-muted">#{{ entry.id }} by</span> <a href="{% url "home:public_profile" entry.user %}">{{ entry.user }} </a>
+                    {% if contest.round == "final_round" or contest.round == "selecting_winner" %}
+                        {% if entry|is_finalist:contest %}
+                            <span class="float-right text-success  ">
+{#                                Finalist#}
+
+                                {% if request.user == contest.user and not entry.is_declined and contest.round == "selecting_winner" and entry|is_finalist:contest %}
+
+                                    {% if not contest.is_splittable %}
+                                    <input user="{{ entry.user }}" onclick="select_winner(this)" entry_id="{{ entry.id }}"
+                                           style="cursor:pointer" type="radio" id="age{{ entry.id }}" name="age" value="{{ entry.id }}">
+                                    {% endif %}
+
+                                {% endif %}
+                        </span>
+
+                        {% endif %}
+                        {% elif  contest.round == "winner_selected" and entry|is_winner:contest %}
+                        <span class="float-right text-success  ">
+                            Winner
+                        </span>
+                    {% endif %}
+
+
+                </p>
+
+
+                <a  href="{% url "home:entry_detail" contest.id entry.id %}">
+                    <img class="entry_image" height="250" src="{{ entry|get_controlled_image:request }}" alt="">
+                </a>
+                {% if request.user == contest.user and request.user.profile.role == "client" %}
+                    <div contest_id="{{ contest.id }}" rating="{{ entry.rate }}" entry_id="{{ entry.id }}"
+                         id="rater_{{ entry.id }}_1" class="entry_rate1"></div>
+
+                    {% if contest.round == "final_round" %}
+                        {% if entry|is_finalist:contest %}
+                            <a onclick="decline_entry(this)" href="#" id="{{ entry.id }}" contest_id="{{ contest.id }}"
+                               class="float-right  {% if not entry.is_declined %}text-danger{% endif %}  decline_button"><i
+                                    class="far fa-thumbs-{% if entry.is_declined %}up{% else %}down{% endif %}"></i></a>
+                        {% endif %}
+                    {% else %}
+                        <a onclick="decline_entry(this)" href="#" id="{{ entry.id }}" contest_id="{{ contest.id }}"
+                           class="float-right  {% if not entry.is_declined %}text-danger{% endif %}  decline_button"><i
+                                class="far fa-thumbs-{% if entry.is_declined %}up{% else %}down{% endif %}"></i></a>
+                    {% endif %}
+                {% else %}
+                    <div readonly="true" contest_id="{{ contest.id }}" rating="{{ entry.rate }}"
+                         entry_id="{{ entry.id }}" id="rater_{{ entry.id }}_1" class="entry_rate1"></div>
+                     {% if entry|is_entry_deletable:request.user %}
+                     <a url="{% url "designer:delete_entry" entry.id %}" onclick="are_u_sure_for_delete(this)" style="cursor:pointer" class="float-right step-link"><i class="fa fa-trash"></i></a>
+                     {% endif %}
+                {% endif %}
+
+            </div>
+        {% endfor %}
+
+    </div>
+
+</div>
+<div class="tab-pane fade show active" id="pills-active" role="tabpanel" aria-labelledby="pills-active-tab">
+    <div class="row ml-4">
+
+        {% for entry in entries|in_status:"active" %}
+            <div class="col-2 border mr-4 mt-4">
+                {% if request.user == contest.user and not entry.is_declined and contest.round == "qualify_end" and not contest.is_splittable %}
+
+                    <a user="{{ entry.user }}" onclick="finalize(this)" entry_id="{{ entry.id }}"
+                       class="step-link text-success " style="cursor:pointer">
+                        <span><i class="fa fa-plus-square mt-2 float-right"></i></span>
+                    </a>
+                {% endif %}
+
+                <p><span class="text-muted">#{{ entry.id }} by</span> <a href="{% url "home:public_profile" entry.user %}">{{ entry.user }} </a>
+                    {% if contest.round == "final_round" or contest.round == "selecting_winner" %}
+                        {% if entry|is_finalist:contest %}
+                            <span class="float-right text-success  ">
+{#                                Finalist#}
+
+                                {% if request.user == contest.user and not entry.is_declined and contest.round == "selecting_winner" and entry|is_finalist:contest %}
+
+                                   {% if not contest.is_splittable %}
+                                    <input user="{{ entry.user }}" onclick="select_winner(this)" entry_id="{{ entry.id }}"
+                                           style="cursor:pointer" type="radio" id="age{{ entry.id }}" name="age" value="{{ entry.id }}">
+                                   {% endif %}
+
+                                {% endif %}
+                        </span>
+
+                        {% endif %}
+                        {% elif  contest.round == "winner_selected" and entry|is_winner:contest %}
+                        <span class="float-right text-success  ">
+                            Winner
+                        </span>
+                    {% endif %}
+
+
+                </p>
+                <a  href="{% url "home:entry_detail" contest.id entry.id %}">
+                    <img class="entry_image" height="250" src="{{ entry|get_controlled_image:request }}" alt="">
+                </a>
+
+                {% if request.user == contest.user and request.user.profile.role == "client" %}
+                    <div contest_id="{{ contest.id }}" rating="{{ entry.rate }}" entry_id="{{ entry.id }}"
+                         id="rater_{{ entry.id }}_2" class="entry_rate2"></div>
+
+                    <a onclick="decline_entry(this)" href="#" id="{{ entry.id }}" contest_id="{{ contest.id }}"
+                       class="float-right text-danger decline_button"><i class="far fa-thumbs-down"></i></a>
+                {% else %}
+                    <div readonly="true" contest_id="{{ contest.id }}" rating="{{ entry.rate }}"
+                         entry_id="{{ entry.id }}" id="rater_{{ entry.id }}_2" class="entry_rate2"></div>
+                        {% if entry|is_entry_deletable:request.user %}
+                     <a url="{% url "designer:delete_entry" entry.id %}" onclick="are_u_sure_for_delete(this)" style="cursor:pointer" class="float-right step-link"><i class="fa fa-trash"></i></a>
+                     {% endif %}
+                {% endif %}
+            </div>
+        {% endfor %}
+
+
+    </div>
+</div>
+<div class="tab-pane fade" id="pills-rated" role="tabpanel" aria-labelledby="pills-rated-tab">
+    <div class="row ml-4">
+        {% for entry in entries|in_status:"rated" %}
+            <div class="col-2 border mr-4 mt-4">
+                <p><span class="text-muted">#{{ entry.id }} by</span> <a href="{% url "home:public_profile" entry.user %}">{{ entry.user }} </a> </p>
+<a  href="{% url "home:entry_detail" contest.id entry.id %}">
+                    <img class="entry_image" height="250" src="{{ entry|get_controlled_image:request }}" alt="">
+                </a>
+                {% if request.user == contest.user and request.user.profile.role == "client" %}
+                    <div contest_id="{{ contest.id }}" rating="{{ entry.rate }}" entry_id="{{ entry.id }}"
+                         id="rater_{{ entry.id }}_3" class="entry_rate3"></div>
+
+                    <a onclick="decline_entry(this)" href="#" id="{{ entry.id }}" contest_id="{{ contest.id }}"
+                       class="float-right text-danger decline_button"><i class="far fa-thumbs-down"></i></a>
+                {% else %}
+                    <div readonly="true" contest_id="{{ contest.id }}" rating="{{ entry.rate }}"
+                         entry_id="{{ entry.id }}" id="rater_{{ entry.id }}_3" class="entry_rate3"></div>
+                    {% if entry|is_entry_deletable:request.user %}
+                     <a url="{% url "designer:delete_entry" entry.id %}" onclick="are_u_sure_for_delete(this)" style="cursor:pointer" class="float-right step-link"><i class="fa fa-trash"></i></a>
+                     {% endif %}
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+</div>
+<div class="tab-pane fade" id="pills-declined" role="tabpanel" aria-labelledby="pills-declined-tab">
+    <div class="row ml-4">
+
+        {% for entry in entries|in_status:"declined" %}
+            <div class="col-2 border mr-4 mt-4">
+                <p><span class="text-muted">#{{ entry.id }} by</span> <a href="{% url "home:public_profile" entry.user %}">{{ entry.user }} </a> </p>
+<a  href="{% url "home:entry_detail" contest.id entry.id %}">
+                    <img class="entry_image" height="250" src="{{ entry|get_controlled_image:request }}" alt="">
+                </a>
+                {% if request.user == contest.user and request.user.profile.role == "client" %}
+                    <div contest_id="{{ contest.id }}" rating="{{ entry.rate }}" entry_id="{{ entry.id }}"
+                         id="rater_{{ entry.id }}_4" class="entry_rate4"></div>
+
+                    {% if contest.round == "final_round" %}
+                        {% if entry|is_finalist:contest %}
+                            <a onclick="decline_entry(this)" href="#" id="{{ entry.id }}" contest_id="{{ contest.id }}"
+                               class="float-right  {% if not entry.is_declined %}text-danger{% endif %}  decline_button"><i
+                                    class="far fa-thumbs-{% if entry.is_declined %}up{% else %}down{% endif %}"></i></a>
+                        {% endif %}
+                    {% else %}
+                        <a onclick="decline_entry(this)" href="#" id="{{ entry.id }}" contest_id="{{ contest.id }}"
+                           class="float-right  {% if not entry.is_declined %}text-danger{% endif %}  decline_button"><i
+                                class="far fa-thumbs-{% if entry.is_declined %}up{% else %}down{% endif %}"></i></a>
+                    {% endif %}
+
+                {% else %}
+                    <div readonly="true" contest_id="{{ contest.id }}" rating="{{ entry.rate }}"
+                         entry_id="{{ entry.id }}" id="rater_{{ entry.id }}_4" class="entry_rate4"></div>
+                    {% if entry|is_entry_deletable:request.user %}
+                     <a url="{% url "designer:delete_entry" entry.id %}" onclick="are_u_sure_for_delete(this)" style="cursor:pointer" class="float-right step-link"><i class="fa fa-trash"></i></a>
+                     {% endif %}
+                {% endif %}
+            </div>
+        {% endfor %}
+
+
+    </div>
+</div>
+<div class="tab-pane fade" id="pills-withdraw" role="tabpanel" aria-labelledby="pills-withdraw-tab">
+    <div class="row ml-4">
+
+        {% for entry in entries|get_withdraw:request %}
+            <div class="col-2 border mr-4 mt-4">
+                <p><span class="text-muted">#{{ entry.id }} by</span> <a href="{% url "home:public_profile" entry.user %}">{{ entry.user }} </a> </p>
+                <img class="entry_image" height="250" src="{{ entry|get_controlled_image:request }}" alt="">
+
+                <span class="text-danger">Canceled</span>
+            </div>
+        {% endfor %}
+
+
+    </div>
+</div>
+<br><br><br><br><br><br>

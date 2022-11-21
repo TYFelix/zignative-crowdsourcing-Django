@@ -1,0 +1,376 @@
+{% extends "customer/layout.html" %}
+{% load static %}
+
+{% block fa %}
+    <script src="https://kit.fontawesome.com/de7fd70cb4.js" crossorigin="anonymous"></script>
+{% endblock %}
+{% block head %}
+    <title>Create {{ contest_object.category.title }} Contest / Zignative Crowdsourcing</title>
+    <style>
+
+    </style>
+{% endblock %}
+{% block body %}
+    <div class="container-fluid">
+    <ol class="breadcrumb  mb-4 mt-2">
+        <li class="breadcrumb-item "><a href="{% url "customer:categories" %}" class="step-link">Categories</a></li>
+        <li class="breadcrumb-item active">Create {{ contest_object.category.title }} Contest</li>
+    </ol>
+    <h3 class="text-center mb-4">Create {{ contest_object.category.title }} Contest</h3>
+    <div class="row  ">
+
+
+    {% block step %}
+
+        <div class="col-lg-3 ">
+
+        <div class="col-lg-10 mt-2 link-arrow">1. Brief</div>
+        {% if "step_2" in form_fields.filled_steps %}
+            <div class="col-lg-10 mt-2 ">
+
+            <a class="step-link" href="{% url "customer:contest_step" contest "step_2" %}">2. Style</a>
+        {% else %}
+            <div class="col-lg-10 mt-2 text-muted" id="nondraft">
+            2. Style
+        {% endif %}</div>
+        {% if "step_3" in form_fields.filled_steps %}
+            <div class="col-lg-10 mt-2 ">
+
+            <a class="step-link" href="{% url "customer:contest_step" contest "step_3" %}">3. Prize & Upgrades</a>
+        {% else %}
+            <div class="col-lg-10 mt-2 text-muted">
+            3. Prize & Upgrades
+        {% endif %}</div>
+        {% if "step_4" in form_fields.filled_steps %}
+            <div class="col-lg-10 mt-2 ">
+            <a class="step-link" href="{% url "customer:contest_step" contest "step_4" %}">4. Payment </a>
+        {% else %}
+            <div class="col-lg-10 mt-2 text-muted">
+
+            4. Payment
+        {% endif %}</div>
+
+
+    </div>
+        <div class="col-lg-7 ">
+            <h5>Name & Description</h5>
+            <form action="{% url "customer:contest_step" contest "step_2" %}" class="mt-2 mb-2">
+                <div class="form-group">
+                    <label for="contest-title">Contest Title</label>
+                    <input required type="text" id="contest_title" onkeyup="setDraft(this)"
+                           class="form-control">
+                </div>
+
+
+                <div class="form-group">
+                    <label for="contest_detail">Tell us about your organization and your target audience
+                        is</label>
+                    <textarea required type="text" id="contest_detail" onkeyup="setDraft(this)"
+                              class="form-control"></textarea>
+                </div>
+
+                <h5 class="mt-2">Current Website</h5>
+                <div class="form-group">
+                    <label for="contest_detail">Do you currently have a website? If so, enter the URL here.</label>
+                    <input  type="text" id="current_website" onkeyup="setDraft(this)"
+                           class="form-control">
+                </div>
+                <br>
+
+                <h5 class="mt-3">Do you require a specific URL?</h5>
+                <span class="" id="">Do you want only names for which a specific URL is available?
+                    We can not guarantee that the domain name will remain available in the time your project remains open,
+                    so you should be sure to check prior to awarding a winning name.
+                    Select all that apply.</span>
+                <span class="text-danger" id="warn_logo" style="visibility: hidden">Please choose at least 1 social network</span>
+                <div class="row mb-3 justify-content-center">
+
+                    <div id=".com"
+                         class="col-lg-3 logo-element urls  pt-3 d-flex justify-content-center mr-2 mt-2">
+                        <div style="width:150px; height:150px" class="text-center">
+                            <h4 class="text-muted mt-5">.com</h4>
+                        </div>
+                    </div>
+                    <div id=".org"
+                         class="col-lg-3 logo-element urls  pt-3 d-flex justify-content-center mr-2 mt-2">
+                        <div style="width:150px; height:150px" class="text-center">
+                            <h4 class="text-muted mt-5">.org</h4>
+                        </div>
+                    </div>
+                    <div id=".net"
+                         class="col-lg-3 logo-element urls  pt-3 d-flex justify-content-center mr-2 mt-2">
+                        <div style="width:150px; height:150px" class="text-center">
+                            <h4 class="text-muted mt-5">.net</h4>
+                        </div>
+                    </div>
+                    <div id=".ai"
+                         class="col-lg-3 logo-element urls  pt-3 d-flex justify-content-center mr-2 mt-2">
+                        <div style="width:150px; height:150px" class="text-center">
+                            <h4 class="text-muted mt-5">.ai</h4>
+                        </div>
+                    </div>
+                    <div id=".io"
+                         class="col-lg-3 logo-element urls  pt-3 d-flex justify-content-center mr-2 mt-2">
+                        <div style="width:150px; height:150px" class="text-center">
+                            <h4 class="text-muted mt-5">.io</h4>
+                        </div>
+                    </div>
+                    <div id=".co"
+                         class="col-lg-3 logo-element urls  pt-3 d-flex justify-content-center mr-2 mt-2">
+                        <div style="width:150px; height:150px" class="text-center">
+                            <h4 class="text-muted mt-5">.co</h4>
+                        </div>
+                    </div>
+                    <div id=".biz"
+                         class="col-lg-3 logo-element urls  pt-3 d-flex justify-content-center mr-2 mt-2">
+                        <div style="width:150px; height:150px" class="text-center">
+                            <h4 class="text-muted mt-5">.biz</h4>
+                        </div>
+                    </div>
+                    <div id=".tv"
+                         class="col-lg-3 logo-element urls  pt-3 d-flex justify-content-center mr-2 mt-2">
+                        <div style="width:150px; height:150px" class="text-center">
+                            <h4 class="text-muted mt-5">.tv</h4>
+                        </div>
+                    </div>
+                    <div id=".us"
+                         class="col-lg-3 logo-element urls  pt-3 d-flex justify-content-center mr-2 mt-2">
+                        <div style="width:150px; height:150px" class="text-center">
+                            <h4 class="text-muted mt-5">.us</h4>
+                        </div>
+                    </div>
+                    <div id=".in"
+                         class="col-lg-3 logo-element urls  pt-3 d-flex justify-content-center mr-2 mt-2">
+                        <div style="width:150px; height:150px" class="text-center">
+                            <h4 class="text-muted mt-5">.in</h4>
+                        </div>
+                    </div>
+                    <div id=".me"
+                         class="col-lg-3 logo-element urls  pt-3 d-flex justify-content-center mr-2 mt-2">
+                        <div style="width:150px; height:150px" class="text-center">
+                            <h4 class="text-muted mt-5">.me</h4>
+                        </div>
+                    </div>
+                    <div id=".info"
+                         class="col-lg-3 logo-element urls  pt-3 d-flex justify-content-center mr-2 mt-2">
+                        <div style="width:150px; height:150px" class="text-center">
+                            <h4 class="text-muted mt-5">.info</h4>
+                        </div>
+                    </div>
+
+
+
+                </div>
+                <br>
+
+                <h5 class="mt-2">Who is your audience?</h5>
+
+                <div class="form-group">
+                    <label for="contest_detail">Describe important demographic info about your audience, such as age, gender, location, income, occupation, industry, education, lifestyle, values and interests.</label>
+                    <textarea required type="text" id="audience" onkeyup="setDraft(this)"
+                              class="form-control"></textarea>
+                </div>
+                <br>
+                <h5 class="mt-2">Competitors</h5>
+
+                <div class="form-group">
+                    <label for="contest_detail">List the names of 3 (or more) of your competitors, one per line. Please include a URL to their websites, if available.</label>
+                    <textarea required type="text" id="competitors" onkeyup="setDraft(this)"
+                              class="form-control"></textarea>
+                </div>
+                <br>
+                <h5 class="mt-2">Are there any words creatives should NOT use?</h5>
+
+                <div class="form-group">
+                    <label for="contest_detail">Do you like "funny", but hate "silly"? Want "definite", but not "absolute"? Let the namers know.</label>
+                    <textarea required type="text" id="not_use" onkeyup="setDraft(this)"
+                              class="form-control"></textarea>
+                </div>
+                <br>
+                <h5 class="mt-2">Describe your company's tone and voice.</h5>
+
+                <div class="form-group">
+                    <label for="contest_detail">Is your brand funny or serious? Are you targetting Millennials or older customers? These details will help with brainstorming.</label>
+                    <textarea required type="text" id="tone_and_voice" onkeyup="setDraft(this)"
+                              class="form-control"></textarea>
+                </div>
+                <br>
+                <h5 class="mt-2">Industry</h5>
+                <div class="form-group">
+                    <label for="exampleFormControlSelect1">Please select your industry:</label>
+                    <select required class="form-control" onchange="setDraft(this)" id="contest_industry">
+                        <option value="">Industry</option>
+                        <option>Accounting</option>
+                        <option>Automotive</option>
+                        <option>Beauty</option>
+                        <option>Construction</option>
+                        <option>Consulting</option>
+                        <option>Dental</option>
+                        <option>Education</option>
+                        <option>Entertainment</option>
+                        <option>Events</option>
+                        <option>Financial</option>
+                        <option>Home & Garden</option>
+                        <option>Insurance</option>
+                        <option>Internet</option>
+                        <option>Legal</option>
+                        <option>Manufacturing & Wholesale</option>
+                        <option>Media</option>
+                        <option>Medical</option>
+                        <option>Miscellaneous</option>
+                        <option>Natural Resources</option>
+                        <option>Non-Profit</option>
+                        <option>Real Estate</option>
+                        <option>Religious</option>
+                        <option>Restaurant</option>
+                        <option>Retail</option>
+                        <option>Service Industries</option>
+                        <option>Sport</option>
+                        <option>Technology</option>
+                        <option>Travel & Hospitality</option>
+
+                    </select>
+                </div>
+                <br>
+                <h5 class="mt-2">Do you want to provide any additional info?</h5>
+                <div class="form-group">
+                    <label for="contest_detail">Are there specific design elements you want to see? Is there anything
+                        you do not want to see? Include links to things that inspired you, competitor information, or
+                        any other info. If you need special file formats, please list them here.</label>
+                    <textarea  type="text" id="contest_info" onkeyup="setDraft(this)"
+                              class="form-control"></textarea>
+                </div>
+                <br>
+                <button type="submit" class="btn btn-primary float-right btn-lg mb-5 btn-block">
+                    Next
+                </button>
+
+            </form>
+        </div>
+    {% endblock %}
+</div>
+</div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add Page</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="add_page" action="" class="border-1">
+                        <input id="page_title" name="page_title" required type="text" class="form-control"
+                               placeholder="Title"><br>
+                        <textarea name="page_detail" required type="text" id="page_detail" placeholder="Detail"
+                                  class="form-control"></textarea><br>
+                        <button class="btn btn-success btn-sm col-12" data-dismiss="close">Add</button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" page_in="" id="edit_modal" tabindex="-1" role="dialog" aria-labelledby="edit_modal_label"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="edit_modal_label">Edit Page</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="edit_page" action="" class="border-1">
+                        <input id="page_title" name="page_title" required type="text" class="form-control"
+                               placeholder="Title"><br>
+                        <textarea name="page_detail" required type="text" id="page_detail" placeholder="Detail"
+                                  class="form-control"></textarea><br>
+                        <button class="btn btn-success btn-sm col-12" data-dismiss="close">Add</button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block script %}
+    {{ form_fields|json_script:"form_fields" }}
+
+    {{ contest|json_script:"contest_id" }}
+    <script src="{% static "dashboard/js/start_contest.js" %}"></script>
+    <script>
+        document.onload = fillData()
+        var page_in = 0
+        const datas = JSON.parse(localStorage.getItem(contest_id))
+
+        if (datas !== null) {
+            if ("filled_steps" in datas) {
+                if (datas.filled_steps.includes("step_2") && !datas.filled_steps.includes("step_3")) {
+                    document.getElementById("nondraft").classList.remove("text-muted")
+                    document.getElementById("nondraft").innerHTML = `<a class="step-link" href="{% url "customer:contest_step" contest "step_2" %}">2. Style</a>
+`
+                }
+            } else {
+                datas.filled_steps = ["step_1"]
+                storageStuff("filled_steps", datas.filled_steps)
+            }
+        } else {
+            storageStuff("filled_steps", ["step_1"])
+        }
+
+
+        function verOdunu() {
+            if (localStorage.getItem(contest_id)) {
+                const contest = JSON.parse(localStorage.getItem(contest_id))
+
+                postData('{% comment %}{% url "customer:draft_contest" contest %}{% endcomment %}', {"contest": contest})
+                    .then(data => {
+                        {#console.log(data); // JSON data parsed by `data.json()` call#}
+                    });
+            } else {
+            }
+        }
+
+        verOdunu()
+
+        if (localStorage.getItem(contest_id)) {
+            const logos = document.getElementsByClassName("logo-element")
+            const datas = JSON.parse(localStorage.getItem(contest_id))
+            if (datas.selected_urls) {
+
+
+                Array.from(logos).forEach(
+                    function (element, index, array) {
+                        if (datas.selected_urls.includes(element.id)) {
+                            element.classList.add("logo-selected")
+                            selected_logos.push(element.id)
+                        }
+                    })
+            }
+        }
+
+        function save_as_draft() {
+            if (localStorage.getItem(contest_id)) {
+                storageStuff("page", "step_5")
+
+                const contest = JSON.parse(localStorage.getItem(contest_id))
+                postData('{% url "customer:draft_contest" contest  %}', {"contest": contest})
+                    .then(data => {
+                        console.log(data);
+                    });
+            } else {
+            }
+        }
+
+
+    </script>
+
+{% endblock %}

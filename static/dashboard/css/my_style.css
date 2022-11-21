@@ -1,0 +1,106 @@
+/* .menu-link:hover{
+    background-color: #e07e5d;
+} */
+.menu-link:link {
+    text-decoration: none;
+}
+
+.step-link:link{
+	text-decoration: none;
+}
+.step-link{
+	color: inherit;
+}
+
+.link-arrow {
+	 cursor: pointer;
+	 display: inline-block;
+	 height: 40px;
+     border-radius: 10px 0px 0px 10px;
+	 position: relative;
+	 line-height: 2.5em;
+	 padding-left: 1em;
+	 padding-right: 2em;
+	 background: #D5EAF9;
+	 color: black;
+}
+ .link-arrow:after {
+	 border-left: 20px solid #D5EAF9;
+}
+ .link-arrow:after {
+	 content: "";
+	 position: absolute;
+	 border-bottom: 20px solid transparent;
+	 border-top: 20px solid transparent;
+	 height: 0px;
+	 width: 0px;
+	 margin-right: -20px;
+	 right: 0;
+}
+ .link-arrow:hover, .link-arrow:active {
+	 background: #2B94E1;
+	 color: white;
+
+}
+ .link-arrow:hover:after, .link-arrow:active:after {
+	 border-left: 20px solid #2B94E1;
+}
+ .link-arrow a:link {
+
+     text-decoration: none;
+ }
+
+.logo-selected{
+	border: 2px solid;
+	border-color: #2B94E1;
+	
+}
+.logo-element,.logo-element1{
+	cursor: pointer;
+}
+.enough-element{
+	cursor: not-allowed;
+}
+
+.price_plan{
+	border-radius:10px;
+	background: #D5EAF9;
+	cursor: pointer
+}
+
+.price_plan_h{
+	border-radius:10px;
+	background-color: #2B94E1;
+	color: white;
+	cursor: pointer;
+}
+
+.price_plan:hover{
+	background-color: #2B94E1;
+	color: white;
+	transition: 0.4s;
+}
+
+.entry_image{
+	width:100%;
+}
+
+.rate_checked{
+	color:orange;
+}
+
+.fixedContainer {
+
+    position: fixed;
+
+
+
+	bottom: 0;
+
+}
+
+.tooltip-inner {
+    max-width: 350px;
+    /* If max-width does not work, try using width instead */
+}
+

@@ -1,0 +1,104 @@
+{% load static %}
+{% load contest_filters %}
+<h3>Hello, there is a notification for you.</h3> <br>
+{% if noti.notify_type == "F" %}
+
+    {{ noti.entry.contest.user }} gave feedback to your entry.
+    <a href="{{ domain }}{% url "home:entry_detail" noti.entry.contest.id noti.entry.id %}">"{{ domain }}{% url "home:entry_detail" noti.entry.contest.id noti.entry.id %}"</a>
+{% elif noti.notify_type == "FR" %}
+
+    {{ noti.feedback.user }} reply your feedback.
+    <a href="{{ domain }}{% url "home:entry_detail" noti.entry.contest.id noti.entry.id %}">"{{ domain }}{% url "home:entry_detail" noti.entry.contest.id noti.entry.id %}"</a>
+
+{% elif noti.notify_type == "D" %}
+
+
+                    {{ noti.entry.contest.user }} declined your entry.
+        <a href="{{ domain }}{% url "home:entry_detail" noti.entry.contest.id noti.entry.id %}">"{{ domain }}{% url "home:entry_detail" noti.entry.contest.id noti.entry.id %}"</a>
+
+{% elif noti.notify_type == "RT" %}
+
+
+                    {{ noti.entry.contest.user }} rated your entry.
+            <a href="{{ domain }}{% url "home:entry_detail" noti.entry.contest.id noti.entry.id %}">"{{ domain }}{% url "home:entry_detail" noti.entry.contest.id noti.entry.id %}"</a>
+
+{% elif noti.notify_type == "L" %}
+
+                    Contest ({{ noti.contest }}) is locked. Because {{ noti.contest.user }} didn't choose
+                    any {% if noti.contest_round == "qualify_end" %}
+                    finalist.
+                {% elif noti.contest_round == "selecting_winner" %}
+                    winner.
+                {% endif %}
+
+            <a href="{{ domain }}{% url "home:contest" noti.contest.id %}">"{{ domain }}{% url "home:contest" noti.contest.id %}"</a>
+
+{% elif noti.notify_type == "A" %}
+
+    <b>{{ noti.contest.user }}</b> added a new message in: <b>{{ noti.contest }}</b>
+    <a href="{{ domain }}{% url "home:contest" noti.contest.id %}">"{{ domain }}{% url "home:contest" noti.contest.id %}"</a>
+{% elif noti.notify_type == "IV" %}
+
+    <b>{{ noti.contest.user }}</b> invited you to <b>{{ noti.contest }}</b>
+    <a href="{{ domain }}{% url "home:contest" noti.contest.id %}">"{{ domain }}{% url "home:contest" noti.contest.id %}"</a>
+{% elif noti.notify_type == "R" %}
+
+
+                <strong>Contest:</strong> {{ noti.contest }} <br>
+
+                    {% if noti.contest_round == "qualify_end" %}
+                        Qualify round ended. <strong>You need to choose finalists.</strong>
+                    {% elif noti.contest_round == "final_round" %}
+                        Qualify round ended.
+                        <strong>
+                            {% if request.user|am_i_selected:noti.contest %}
+                                Congratulations, you are among the finalists.
+                            {% else %}
+                                Sorry, you are not among the finalists.
+                            {% endif %}
+                        </strong>
+                    {% elif noti.contest_round == "selecting_winner" %}
+                        Final round ended. <strong>You need to choose winner.</strong>
+                    {% elif noti.contest_round == "winner_selected" %}
+                        Winner selected. <strong>
+                        {% if request.user|am_i_winner:noti.contest %}
+                            Congratulations, you are the winner!
+                        {% else %}
+                            Sorry, you are not the winner.
+                        {% endif %}
+                    </strong>
+                    {% elif noti.contest.is_locked and noti.contest.status == "completed" %}
+                        {% if noti.contest.round == "selecting_winner" %}
+                            {% if request.user == noti.contest.user %}
+                                Contest locked. The award was shared among the finalists. Because you didn't
+                                choose a winner.
+                            {% else %}
+                                {% if request.user|am_i_selected:noti.contest %}
+                                    Contest locked.
+                                    <b>You will receive part of the prize for being a finalist.</b> Because
+                                    <b>{{ noti.contest.user }}</b> did not choose a winner.
+                                {% else %}
+                                    Contest locked. The award was shared among the finalists. Because the client
+                                    did
+                                    not
+                                    choose a winner.
+                                {% endif %}
+                            {% endif %}
+                        {% elif noti.contest.round == "qualify_end" %}
+                            {% if request.user == noti.contest.user %}
+                                Contest locked. The award was shared among the designers. Because you didn't
+                                choose any finalist.
+                            {% else %}
+
+                                Contest locked.
+                                <b>You will receive part of the prize for being a designer.</b> Because
+                                <b>{{ noti.contest.user }}</b> did not choose any finalist.
+
+                            {% endif %}
+                        {% endif %}
+
+                    {% endif %}
+
+            <a href="{{ domain }}{% url "home:contest" noti.contest.id %}">"{{ domain }}{% url "home:contest" noti.contest.id %}"</a>
+
+{% endif %}

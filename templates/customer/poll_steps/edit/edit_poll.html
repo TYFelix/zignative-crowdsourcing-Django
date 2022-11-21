@@ -1,0 +1,104 @@
+{% extends "customer/layout.html" %}
+{% load static %}
+{% load contest_filters %}
+{% block head %}
+    <title>Edit Poll  | Zignative </title>
+    <script src="https://use.fontawesome.com/5ac93d4ca8.js"></script>
+    <style>
+
+    </style>
+{% endblock %}
+
+{% block body %}
+
+    <div class="container-fluid">
+    <ol class="breadcrumb  mb-4 mt-2">
+        <li class="breadcrumb-item ">
+            {% if request.user.profile.role == "designer" %}
+                <a href="{% url "designer:browse_contests" %}" class="step-link">Contests</a>
+            {% else %}
+                <a href="{% url "customer:browse_contests" %}" class="step-link">Contests</a>
+            {% endif %}
+        </li>
+        <li class="breadcrumb-item active">
+            <a href="{% url "home:contest" contest.id %}" class="step-link">{{ contest.title }}</a>
+
+        </li>
+        <li class="breadcrumb-item active">Edit Poll</li>
+    </ol>
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.tags == "error" %}
+                <div class="alert alert-danger " role="alert">
+
+            {% else %}
+                <div class="alert alert-{{ message.tags }} " role="alert">
+
+            {% endif %}
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        {% endfor %}
+    {% endif %}
+
+    <div id="poll_step_1" >
+        <h3>1. Select Design for your poll</h3>
+
+    <div class="row m-3 p-3">
+        {% for foo in range %}
+          <div class="inline-block bg-dark m-2">
+          <img src="" style="visibility:hidden;" id="entry_place_{{ forloop.counter  }}"  width="160" height="160" class="" alt="">
+          </div>
+
+
+
+        {% endfor %}
+
+
+    </div>
+    <div class="row ml-5">
+    <button disabled class="btn btn-dark " id="step-2-button">Save and Continue</button>
+    <button class="btn btn-light border ml-2">Cancel</button>
+    </div >
+
+
+    <div class="row justify-content-center mt-5 ml-2">
+    <div class="col-12 row">
+         {% for work in works %}
+        <div onclick="entryClick(this)" id="{{ work.id }}" class="col-lg-2 col-sm-12 logo-element m-1 d-flex justify-content-center">
+            <span class="mr-1">#{{ work.id }} </span>
+            <img src="{{ work.get_image }}" width="200" height="200" alt="">
+        </div>
+    {% endfor %}
+    </div>
+
+
+    </div>
+    </div>
+    <div id="poll_step_2" hidden>
+    {% include "customer/poll_steps/edit/poll_step_2.html" %}
+    </div>
+
+
+
+</div>
+
+{% endblock %}
+
+{% block script %}
+
+    <script src="{% static "dashboard/js/start-poll.js" %}"></script>
+
+    <script>
+    const clicked_objects = [
+        {% for obj in poll.entries.all %}
+            {{ obj.entry.id }},
+        {% endfor %}
+    ]
+    for (var i = 0;i<clicked_objects.length;i++){
+        document.getElementById(clicked_objects[i]).click();
+    }
+    </script>
+{% endblock %}

@@ -1,0 +1,58 @@
+-------------------------------- SPRINT 1 ----------------------------------
+08 February 2021:
+-I created the project.
+-I started two applications as "user" and "home".
+-I congfigured url files.
+-I created homepage and actions.
+
+09 February 2021:
+-I design the register page
+-I design register form
+-I programmed the form control
+-I created Profile model and configured admin
+-I created register action
+
+16 February 2021:
+-Login page designed
+-Login action programmed
+-'I forgot my password' created
+-I temporarily used an e-mail address to send mail (testmest5398@gmail.com)
+
+-------------------------------- SPRINT 1 END --------------------------------
+
+-------------------------------- SPRINT 2 ------------------------------------
+25 February 2021:
+-I created a "customer" app for the customer panel.
+-I designed dashboard layout.
+-I created url files for customer app
+
+
+28 February 2021:
+-I designed "Your Projects" page and actions.
+
+1 March 2021:
+-I designed "Categories" page.
+-I coded live search for "Categories" page with JavaScript
+
+2 March 2021:
+-Categories and Services models was created.
+-I created "start contest" action.
+-I designed first 2 step of "create logo contest" page
+
+3 March 2021:
+-I designed 3th and 4th step of the "create logo contest" page
+-I created "contest" model.
+-I started to coding drafting part.
+
+4 March 2021:
+-I coded drafting in Javascript side.
+-I coded drafting in Python side.
+-I combined the user and profile tables in the admin panel.
+-------------------------------- SPRINT 2 END --------------------------------
+
+-------------------------------- SPRINT 3 ------------------------------------
+18 March 2021:
+-Contest view was created
+-Designs can submitable now
+-------------------------------- SPRINT 3 END ------------------------------------
+

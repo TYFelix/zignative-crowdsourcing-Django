@@ -1,0 +1,82 @@
+<hr/>
+<ul class="comments mb-3">
+    {% for feedback in entry.get_main_feedbacks  reversed %}
+        <li class="clearfix" id="feedback_{{ feedback.id }}">
+            <img src="{{ feedback.user.profile.get_photo }}" class="avatar" alt="">
+            <div class="post-comments">
+
+                <p class="meta">
+                    {% if request.user == feedback.user %}
+                        {% if feedback.is_editable %}
+                        <a style="cursor:pointer" onclick="delete_comment(this)" el="{{ feedback.id }}"
+                           class="step-link"
+                           url="{% url "home:delete_comment" feedback.id %}">
+                            <i class="fa fa-edit"> </i>
+                        </a>
+                        {% endif %}
+                    {% endif %}
+
+                    {{ feedback.created_date }} <a href="{% url "home:public_profile" feedback.user %}">{{ feedback.user }}</a> says : <i class="pull-right">
+                    <a href="#" for="feedback_{{ feedback.id }}" onclick="getReplyForm(this)"><small>Reply</small></a>
+                </i>
+                </p>
+                <p id="c_{{ feedback.id }}">
+                <p id="c_{{ feedback.id }}_p">{{ feedback.content }}</p>
+                <form action="{% url "home:edit_comment" feedback.id %}" hidden method="post"
+                      id="c_{{ feedback.id }}_f">
+                    {% csrf_token %}
+                    <textarea class="form-control" name="content" id="" cols="30">{{ feedback.content }}</textarea>
+                    <button type="submit" class="btn btn-success col-lg-12 mt-2 ">Submit</button>
+                </form>
+
+                </p>
+                <form typ="child" for="{{ feedback.id }}" class="reply_form"
+                      url="{% url "home:add_comment" entry.contest.id entry.id %}" hidden>
+                    {% csrf_token %}
+                    <input required type="text" class="form-control" placeholder="Reply">
+                </form>
+
+            </div>
+            {% if feedback.any_children %}
+                <ul class="comments">
+                    {% for children in feedback.get_childrens reversed %}
+                        <li class="clearfix">
+                            <img src="{{ children.user.profile.get_photo }}" class="avatar" alt="">
+                            <div class="post-comments">
+                                <p class="meta">
+                                    {% if request.user == children.user  %}
+                                        {% if children.is_editable %}
+                                        <a style="cursor:pointer" el="{{ children.id }}"
+                                           onclick="delete_child_comment(this)" class="step-link"
+                                           url="{% url "home:delete_comment" children.id %}">
+                                            <i class="fa fa-edit"> </i>
+                                        </a>
+                                        {% endif %}
+                                    {% endif %}
+                                    {{ children.created_date }} <a href="{% url "home:public_profile" children.user %}">{{ children.user }}</a> says : </p>
+                                <p id="ch_{{ children.id }}">
+                                <p id="ch_{{ children.id }}_p">{{ children.content }}</p>
+                                <form action="{% url "home:edit_comment" children.id %}" hidden method="post"
+                                      id="ch_{{ children.id }}_f">
+
+                                    {% csrf_token %}
+                                    <textarea class="form-control" name="content" id=""
+                                              cols="30">{{ children.content }}</textarea>
+                                    <button type="submit" class="btn btn-success col-lg-12 mt-2 ">Submit</button>
+                                </form>
+
+                                </p>
+                            </div>
+                        </li>
+
+                    {% endfor %}
+
+                </ul>
+
+            {% endif %}
+        </li>
+    {% endfor %}
+
+
+</ul>
+

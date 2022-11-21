@@ -1,0 +1,160 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Submit Design</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+     <meta content='maximum-scale=1.0, initial-scale=1.0, width=device-width' name='viewport'>
+
+     <style>
+         .step-link:link{
+	text-decoration: none;
+}
+.step-link{
+	color: inherit;
+}
+      .container {
+        margin: 20px auto;
+        max-width: 960px;
+      }
+
+      img {
+        max-width: 100%;
+      }
+
+      .row,
+      .preview {
+        overflow: hidden;
+      }
+
+      .col {
+        float: left;
+      }
+
+      .col-6 {
+        width: 50%;
+      }
+
+      .col-3 {
+        width: 25%;
+      }
+
+      .col-2 {
+        width: 16.7%;
+      }
+
+      .col-1 {
+        width: 8.3%;
+      }
+
+      .my-auto{
+          margin-top: auto;
+          margin-bottom: auto;
+      }
+    </style>
+     <link rel="stylesheet" href="{% static "dashboard/cropper/css/cropper.css" %}">
+     <link rel="stylesheet" href="{% static "dashboard/cropper/css/main.css" %}">
+     <script src="https://use.fontawesome.com/9b595b5b70.js"></script>
+</head>
+<body>
+
+  <div class="container-fluid  ">
+
+    <div class="row " >
+      <div class="col-10  img-container border " style="height: 100vh;" id="crop-body">
+        <img  id="image" >
+        <div  class="" style="margin-top: 25%; margin-left:50%;" id="description">
+          <button class="btn btn-success ml-5" id="fake-input">Upload File</button>
+          <input type="file" id="inputImage" hidden>
+          <br><br>
+          <p><i class="fa fa-check fa-lg" aria-hidden="true"></i> PNG  or JPG (RGB)     </p>
+          <p><i class="fa fa-check fa-lg" aria-hidden="true"></i> Maximum file size 8 mb     </p>
+          <p><i class="fa fa-check fa-lg" aria-hidden="true"></i> Minimum dimensions of 960px by 960px     </p>
+          <p><i class="fa fa-check fa-lg" aria-hidden="true"></i> Maximum dimensions of 2,040px by 8,160px     </p>
+
+        </div>
+
+      </div>
+
+      <div class="col-2 " style="height: 100vh;">
+        <br>
+        <h4 class="text-center">Submit Design</h4>
+        <hr class="ml-2">
+        <div class="ml-3 mr-3">
+          <h4 class="text-muted text-center">Preview</h4>
+
+            <div class="docs-preview   clearfix">
+              <div class="img-preview preview-lg text-center border" >
+               </div>
+               </div>
+               <div class="text-center" id="choose_another" hidden>
+                <button class="btn btn-link " onclick="document.getElementById('inputImage').click();">Choose another image.</button>
+
+               </div>
+                            <img src="{% static "dashboard/gif/loading.gif" %}" id="loading-gif" hidden alt="">
+
+            <br><br><br>
+            <div style="position:absolute; bottom: 10px;" class="col-11">
+              <h4 class="text-muted">Requirements</h4>
+                <br>
+                <ul style="padding: 0;
+                " class="ml-3">
+                    <li>I agree to the  <a class="step-link" href="#" data-toggle="modal" data-target="#exampleModal"><u>terms and conditions.</u></a></li>
+                    <li>I understand the <a class="step-link" href="{% url "home:contest" contest.id %}?tab=brief"><u>design brief.</u></a></li>
+                </ul>
+               <div class="form-check ">
+                  <input id="do-u-understand" class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                  <label class="form-check-label" for="flexCheckDefault">
+                    I understand and agree to the requirements.
+                  </label>
+                </div>
+                <p class="text-red" style="color:red" hidden id="warn">You have to agree to the requirements.</p>
+                <button url=" {% url "home:contest" contest.id %}" class="btn btn-primary btn-md btn-block mt-4" id="submit-design" disabled>Submit Design</button>
+                <div class="mt-2 text-center">
+                  <a href="{% url "home:contest" contest.id %}">Cancel</a>
+                </div>
+            </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+<div class="modal fade bd-example-modal-lg" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Terms of Use</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          {{terms.page|safe}}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+  <script src="{% static "dashboard/cropper/js/cropper.js" %}"></script>
+  <script src="{% static "dashboard/js/request.js" %}"></script>
+  <script src="{% static "dashboard/cropper/js/main.js" %}"></script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0MRYY26K08"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-0MRYY26K08');
+</script>
+</body>
+</html>

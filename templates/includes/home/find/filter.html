@@ -1,0 +1,33 @@
+<h4 class="ml-3">
+    Your query
+
+</h4>
+{% if designers %}
+<a class="ml-3" href="{% url "home:find_a_designer" %}"><i class="fa fa-times mr-2"></i>Remove filters</a>
+    {% else %}
+    <div class="ml-3 mt-5 text-center" >
+    Nothing found <br>
+    <a class="ml-3" href="{% url "home:find_a_designer" %}"><i class="fa fa-arrow-left mr-2"></i>Go back</a>
+    </div>
+{% endif %}
+<div class="row">
+    {% for user in designers %}
+        <div class="col-3  pl-0 pr-0 shadow  pt-2 m-3">
+            <div class="row m-2">
+                <div class="col-2">
+                    <a href="{% url "home:public_profile" user %}"><img class="rounded-circle "
+                                                                        width="45" height="45"
+                                                                        src="{{ user.profile.get_photo }}"
+                                                                        alt=""></a>
+                </div>
+                <div class="col-9 mt-2">
+                    <a href="{% url "home:public_profile" user %}"><span
+                            class="text-muted ml-3 h5">{{ user }}</span></a>
+                </div>
+            </div>
+            <a href="{% url "home:public_profile" user %}"><img class="des_im "
+                                                                src="{{ user.profile.get_last_entry.get_display_image }}"
+                                                                alt=""></a>
+        </div>
+    {% endfor %}
+</div>

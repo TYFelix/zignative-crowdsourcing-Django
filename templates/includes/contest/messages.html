@@ -1,0 +1,41 @@
+{% load static %}
+<div class="container-fluid ">
+    <div class="row">
+        <div class="col-3 pb-5 border">
+            <h4 class="bg-light rounded p-2 ">
+                <i class="fa fa-bullhorn" aria-hidden="true"></i>
+                Announcements
+            </h4>
+            <br>
+            <h6>Client</h6>
+            <br>
+            <div class="col-12 ">
+                <img src="{{ contest.user.profile.get_photo }}" class="avatar"  alt="">
+                <a href="{% url "home:public_profile" contest.user  %}">{{ contest.user }}</a>
+            </div>
+            <hr>
+        </div>
+        <div class="col-9 border">
+            <span><i class="fa fa-bullhorn" aria-hidden="true"></i> Announcements</span>
+            {% if contest.user == request.user and not contest.round == "selecting_winner" %}
+            <form   url="{% url "customer:add_anouns" contest.id %}"  id="anouns_form"   class="d-flex flex-column ">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="anouns_textarea">Leave Announcement</label>
+                        <textarea required class="form-control" id="anouns_textarea" ></textarea>
+                    </div>
+                    <button class="btn btn-success float-right">Submit</button>
+                </form>
+            {% endif %}
+
+
+    <div class="d-flex ml-3 mr-3 pb-5 justify-content-center row" id="anouns_list">
+        {% include "includes/contest/anouns_list.html" %}
+
+
+    </div>
+
+
+        </div>
+    </div>
+</div>

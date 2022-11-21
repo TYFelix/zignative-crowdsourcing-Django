@@ -1,0 +1,267 @@
+{% extends "customer/layout.html" %}
+{% load static %}
+{% load designer_filters %}
+{% block head %}
+    <title>Account | Zignative</title>
+
+    <link rel="stylesheet" href="{% static "dashboard/css/account.css" %}">
+    <style>
+        .row-eq-height {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -ms-flexbox;
+            display: flex;
+        }
+
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+    <div class="main-body">
+
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" class="main-breadcrumb">
+            <ol class="breadcrumb  mb-4 mt-2">
+                <li class="breadcrumb-item ">Account</li>
+            </ol>
+        </nav>
+        <!-- /Breadcrumb -->
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.tags == "error" %}
+                    <div class="alert alert-danger " role="alert">
+
+                {% else %}
+                    <div class="alert alert-{{ message.tags }} " role="alert">
+
+                {% endif %}
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            {% endfor %}
+        {% endif %}
+        <div class="row gutters-sm ">
+            <div class="col-md-4 mb-3">
+                <div class="profile-card card rounded-lg shadow p-2 p-xl-5  text-center position-relative overflow-hidden">
+                    <div class="banner" style="background-image: url('{{ user.profile.get_cover_photo }}')"></div>
+                    <img src="{{ user.profile.get_photo }}" alt=""
+                         class="img-circle img-responsive bg-light mx-auto mb-3">
+                    <h3 class="mb-4"><a class="step-link" href="{% url "home:public_profile" user %}">{{ user }}</a></h3>
+                    <div class="text-center mb-4">
+                        <p class="mb-2 text-success"><i
+                                class="fa fa-user-tag  mr-2"></i> {{ user.profile.get_role_display }}</p>
+                        {% if user.profile.country %}
+                                                <p class="mb-2"><i class="fa fa-map-marker-alt mr-2"></i> {{ user.profile.country.name }}</p>
+
+                        {% endif %}
+                        <br>
+                        <a href="{% url "user:edit_profile" %}" class="btn btn-primary">Edit Profile</a>
+                        <a href="{% url "user:change_password" %}" class="btn btn-outline-primary">Change Password</a>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="col-md-8">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Username</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                {{ user }}
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Email</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                {{ user.email }}
+                            </div>
+                        </div>
+
+
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Biography</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                {{ user.profile.bio }}
+                            </div>
+                        </div>
+                        <hr>
+
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Available for new work</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                {% if user.profile.is_available %}
+                                    {{ user }} is <span class="text-success">currently available</span> for new project
+                                    and contest invitations.
+                                {% else %}
+                                    {{ user }} is <span class="text-danger">not available</span> for new project and
+                                    contest invitations.
+
+                                {% endif %}
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Languages</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+
+                                {{ user.profile.get_languages_display }}
+
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Member Since</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+
+                                {{ user.date_joined }}
+
+                            </div>
+                        </div>
+
+                        <div class="card mt-4">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                    <h6 class="mb-0">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                             stroke-linecap="round" stroke-linejoin="round"
+                                             class="feather feather-globe mr-2 icon-inline">
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <line x1="2" y1="12" x2="22" y2="12"></line>
+                                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                                        </svg>
+                                        Custom URL
+                                    </h6>
+                                    <span class="text-secondary"><a href="{{ domain }}/profile/{{ user }}">{{ domain }}/profile/{{ user.username }}</a></span>
+                                </li>
+
+                            </ul>
+
+                        </div>
+                        <hr>
+                        <div class="card mt-3">
+                            <div class="row p-2">
+                                <div class="col-3">
+                                    <i class="fa fa-link mr-3"></i>
+                                    Refferal Link
+                                </div>
+                                <div class="col-9">
+                                    <input readonly type="text" onclick="copy()"
+                                           value="{{ domain }}/ref/{{ request.user.profile.get_refferal_code }}"
+                                           id="myInput" class="col-8">
+                                    <button id="copy-button" style="background-color:#28a745; color:white"
+                                            onclick="copy()">Copy
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        {% if request.user.profile.role == "designer" %}
+            <div class="row gutters-sm ">
+                <div class="col-md-4 mb-3">
+                    <div class="card p-2">
+                        <h4>Reviews</h4>
+                        {% for review in user.reviews.all %}
+                        <div class="row p-3">
+                            <div class="col-3 mt-4">
+                                <img class="img-rounded" width="65" height="65"
+                                     src="{{ review.writer.profile.get_photo }}" alt="">
+                            </div>
+                            <div class="col-9">
+
+                                <p class="mb-0"><i>"{{ review.content }}"</i></p>
+                                <footer class="blockquote-footer">{{ review.writer }}</footer>
+                                <div id="rating_{{ review.id }}">
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <hr>
+                        {% endfor %}
+
+
+
+                    </div>
+
+                </div>
+                <div class="col-md-8">
+                    <div class="card p-2">
+                        <h4>Portfolio <a href="{% url "user:set_portfolio" %}" class="float-right"><i
+                                class=" fa fa-edit"></i></a></h4>
+
+                        <div class="row mb-3 p-2">
+                            {% for work in works %}
+                                <div class="col-4     d-flex justify-content-center p-1  mt-2">
+
+                                    <div class="border col-12 text-center">
+                                        <span class="float-left"><a
+                                                href="{% url "home:entry_detail" work.entry.contest.id work.entry.id %}">#{{ work.entry.id }}</a> </span>
+                                        <span class="float-right">From <a
+                                                href="{% url "home:contest" work.entry.contest.id %}"
+                                                class="text-success">{{ work.entry.contest }}</a></span><br><br>
+                                        <img src="{{ work.entry.get_image }}" width="150" height="150" alt="">
+                                        <br><br>
+                                    </div>
+                                </div>
+                            {% endfor %}
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static "dashboard/js/star-rating.js" %}"></script>
+
+    <script>
+        function copy() {
+            var copyText = document.getElementById("myInput");
+            var copyButton = document.getElementById("copy-button")
+            copyText.select();
+            copyText.setSelectionRange(0, 99999)
+            document.execCommand("copy");
+            copyButton.innerHTML = "Copied"
+        }
+    </script>
+    <script>
+        {% for review in user.reviews.all %}
+            var myRater_{{ forloop.counter }} = raterJs({
+                element: document.querySelector("#rating_{{ review.id }}"),
+                readOnly:true,
+                rating:Number({{ review.rate }}),
+                rateCallback: function rateCallback(rating, done) {
+                    this.setRating(rating);
+                    done();
+
+                }});
+        {% endfor %}
+    </script>
+{% endblock %}

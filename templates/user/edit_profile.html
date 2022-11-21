@@ -1,0 +1,122 @@
+{% extends "customer/layout.html" %}
+{% load static %}
+{% load designer_filters %}
+{% load profile_filters %}
+{% load crispy_forms_tags %}
+
+{% block head %}
+    <title>Edit Profile | Zignative </title>
+    <link rel="stylesheet" href="{% static "dashboard/cropper/css/cropper.css" %}">
+
+    <style src="{% static "dashboard/css/account.css" %}"></style>
+    <style>
+        .img-container img {
+            max-width: 100%;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+    <div class="main-body">
+
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" class="main-breadcrumb">
+            <ol class="breadcrumb  mb-4 mt-2">
+                <li class="breadcrumb-item "><a href="{% url "user:account" %}" class="step-link">Account</a></li>
+                <li class="breadcrumb-item ">Edit Profile</li>
+            </ol>
+        </nav>
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.tags == "error" %}
+                    <div class="alert alert-danger " role="alert">
+
+                {% else %}
+                    <div class="alert alert-{{ message.tags }} " role="alert">
+
+                {% endif %}
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            {% endfor %}
+        {% endif %}
+
+        <!-- /Breadcrumb -->
+        <form method="POST" action="" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ u_form|crispy }}
+
+            {{ p_form|crispy }}
+
+
+            <label for="">Skills</label>
+            <div class="">
+                <select name="tags" class="selectmultiple form-control"  id="id_tags"
+                        multiple="">
+                    {% for service in services %}
+                        {% if user|am_i_select:service %}
+                            <option selected value="{{ service.id }}">{{ service.title }}</option>
+                        {% else %}
+                            <option value="{{ service.id }}">{{ service.title }}</option>
+
+                        {% endif %}
+                    {% endfor %}
+
+
+                </select>
+                <small id="hint_id_tags" class="form-text text-muted">Hold down “Control”, or “Command” on a
+                    Mac, to select more than one.</small></div>
+            <button type="submit" class="btn btn-success btn-lg btn-block">Save</button>
+        </form>
+        </div>
+    </div>
+
+    <div id="modal" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog"
+         aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Crop your cover</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <img id="image" src="" alt="">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button onclick="crop_now()" type="button" class="btn btn-primary">Crop and Upload</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script>
+        const request = new Request()
+        const csrftoken = getCookie('csrftoken');
+
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    </script>
+    <script src="{% static "dashboard/cropper/js/cropper.js" %}"></script>
+    <script src="{% static "dashboard/cropper/js/cover.js" %}"></script>
+
+{% endblock %}

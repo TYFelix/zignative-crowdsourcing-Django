@@ -1,0 +1,180 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <!--  This file has been downloaded from bootdey.com @bootdey on twitter -->
+    <!--  All snippets are MIT license http://bootdey.com/license -->
+    <title>invoice order receipt - Bootdey.com</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <link href="https://netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+	<script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+       <style type="text/css">
+body{margin-top:20px;
+background:#eee;
+}
+
+.invoice {
+    padding: 30px;
+}
+
+.invoice h2 {
+	margin-top: 0px;
+	line-height: 0.8em;
+}
+
+.invoice .small {
+	font-weight: 300;
+}
+
+.invoice hr {
+	margin-top: 10px;
+	border-color: #ddd;
+}
+
+.invoice .table tr.line {
+	border-bottom: 1px solid #ccc;
+}
+
+.invoice .table td {
+	border: none;
+}
+
+.invoice .identity {
+	margin-top: 10px;
+	font-size: 1.1em;
+	font-weight: 300;
+}
+
+.invoice .identity strong {
+	font-weight: 600;
+}
+
+
+.grid {
+    position: relative;
+	width: 100%;
+	background: #fff;
+	color: #666666;
+	border-radius: 2px;
+	margin-bottom: 25px;
+	box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+</style>
+</head>
+<body>
+<div class="container">
+<div class="row">
+    				<!-- BEGIN INVOICE -->
+					<div class="col-xs-12">
+						<div class="grid invoice">
+							<div class="grid-body">
+								<div class="invoice-title">
+									<div class="row">
+										<div class="col-xs-12">
+											<img src="http://134.122.93.235/assets/images/Logo.svg" alt="" height="35">
+										</div>
+									</div>
+									<br>
+									<div class="row">
+										<div class="col-xs-12">
+											<h2>INVOICE
+											<span class="small"> #{{ invoice.id }}</span></h2>
+										</div>
+									</div>
+								</div>
+								<hr>
+								<div class="row">
+									<div class="col-xs-6">
+										<address>
+											ZIGNATIVE S.R.L.
+CIF: 42659750
+Reg. com: J22/1304/2020
+Address: Sat Valea Adanca Com. Miroslava, Str. Imasului, Nr.83, Camera 1, Et.2, Ap.27, Valea Adanca, Jud. Iasi
+IBAN : RO70INGB0000999910403677
+Bank: ING BANK NV
+										</address>
+									</div>
+									<div class="col-xs-6 text-right">
+										<address>
+											<strong>Invoice To:</strong><br>
+											{{ invoice.billing_json.name }}<br>
+											{{ invoice.billing_json.address1 }} &nbsp;
+											{{ invoice.billing_json.address2 }}<br>
+											{{ invoice.billing_json.city }} |
+											{{ invoice.billing_json.state }} {{ invoice.billing_json.zipcode }}<br>
+                                            {{ invoice.billing_json.country}}<br>
+										</address>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-xs-6">
+
+									</div>
+									<div class="col-xs-6 text-right">
+										<address>
+											<strong>Order Date:</strong><br>
+                                            {{ invoice.created_date}}
+										</address>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12">
+										<h3>ORDER SUMMARY</h3>
+										<table class="table table-striped">
+											<thead>
+												<tr class="line">
+													<td><strong>#</strong></td>
+													<td class="text-center"><strong>DESCRIPTION</strong></td>
+													<td class="text-right"><strong></strong></td>
+													<td class="text-right"><strong>QTY</strong></td>
+													<td class="text-right"><strong>SUBTOTAL</strong></td>
+												</tr>
+											</thead>
+											<tbody>
+                                            {% for key, value in jsonfield.items %}
+
+                                                <tr>
+													<td>{{ key }}</td>
+													<td><strong>{{ value.title }}</strong><br>{{ value.detail }}</td>
+													<td class="text-center"></td>
+													<td class="text-right">1</td>
+                                                    {% if value.free %}
+                                                        <td class="text-right"><del>${{ value.subtotal }}</del> Free</td>
+
+                                                    {% else%}
+                                                        <td class="text-right">${{ value.subtotal }}</td>
+
+                                                    {% endif %}
+												</tr>
+                                            {% endfor %}
+
+
+
+												<tr>
+													<td colspan="3">
+													</td><td class="text-right"><strong>Total</strong></td>
+													<td class="text-right"><strong>${{ total }}</strong></td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+								<div class="row">
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- END INVOICE -->
+				</div>
+</div>
+
+
+
+<script type="text/javascript">
+
+</script>
+</body>
+</html>

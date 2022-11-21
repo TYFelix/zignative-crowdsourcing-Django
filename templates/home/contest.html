@@ -1,0 +1,440 @@
+{% extends "customer/layout.html" %}
+{% load static %}
+{% load contest_filters %}
+{% block head %}
+    <title>{{ contest.title|truncatewords:5 }} | Zignative </title>
+    <script src="https://use.fontawesome.com/5ac93d4ca8.js"></script>
+    <style>
+    .pre-im{
+        cursor:pointer;
+
+    }
+        .date {
+            font-size: 11px
+        }
+
+        .comment-text {
+            font-size: 20px
+        }
+
+        .fs-12 {
+            font-size: 12px
+        }
+
+        .shadow-none {
+            box-shadow: none
+        }
+
+
+        .cursor:hover {
+            color: blue
+        }
+
+        .cursor {
+            cursor: pointer
+        }
+
+        .avatar {
+            vertical-align: middle;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+
+    <div class="container-fluid">
+    <ol class="breadcrumb  mb-4 mt-2">
+        <li class="breadcrumb-item ">
+            {% if request.user.profile.role == "designer" %}
+                <a href="{% url "designer:browse_contests" %}" class="step-link">Contests</a>
+            {% else %}
+                <a href="{% url "customer:browse_contests" %}" class="step-link">Contests</a>
+            {% endif %}
+        </li>
+        <li class="breadcrumb-item active">{{ contest.title }}</li>
+    </ol>
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.tags == "error" %}
+                <div class="alert alert-danger " role="alert">
+
+            {% else %}
+                <div class="alert alert-{{ message.tags }} " role="alert">
+
+            {% endif %}
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        {% endfor %}
+    {% endif %}
+
+<div class="row">
+    <div class="col-8 ">
+        <h3>{{ contest.title }}</h3>
+        {% if contest.is_locked %}
+            {% if contest.status == "completed" %}
+                <span><small class=" border p-1 border-info">The prize was shared</small></span>
+            {% endif %}
+            <span><small class=" border p-1 border-danger"><i class="fa fa-lock"></i> Locked</small></span>
+            {% if contest.status != "completed" and request.user.is_superuser and contest.form_fields.is_guaranteed and contest.is_splittable %}
+                {% if contest.round == "qualify_end" %}
+                    <a href="{% url "customer:split_prize_to_designers" contest.id %}" class="btn btn-success btn-sm">Split
+                        prize to designers</a>
+                {% elif contest.round == "selecting_winner" %}
+                    <a href="{% url "customer:split_prize" contest.id %}" class="btn btn-success btn-sm">Split prize to
+                        finalists</a>
+                {% endif %}
+            {% endif %}
+        {% else %}
+            <span><small class=" border p-1 border-info">{{ contest.get_round_display }}</small></span>
+        {% endif %}
+
+        {% if request.user == contest.user %}
+            {% if contest.round == "qualify_end" %}
+                {#                        You must select up to 5 finalists.#}
+                {#                        Time left to choose; {{ contest.created_date|timesince:contest.finish_date }} left#}
+            {% elif contest.round == "selecting_winner" %}
+                {#                        You must select a winning design!#}
+                {#                        Time left to choose; {{ contest.created_date|timesince:contest.finish_date }} left#}
+            {% elif contest.round == "winner_selected" %}
+            {% endif %}
+
+        {% else %}
+            <span>By <a href="{% url "home:public_profile"  contest.user %}">{{ contest.user }}</a></span>
+
+        {% endif %}
+
+    </div>
+    <div class="col-4 text-right">
+        <div class="">
+            <img src="{% static "dashboard/images/dollar.png" %}" height="25" width="25" alt="">
+            <b>{{ contest.get_price.currency.symbol }}{{ contest.get_prize|floatformat:-2 }}</b>
+        </div>
+        {% if request.user.profile.role == "designer" %}
+            {% if contest.round == "qualify" %}
+                <a href="{% url "designer:submit_design" contest.id %}" type="button" class=" mt-2 btn btn-success">
+                    Submit design
+                </a>
+            {% elif contest.round == "final_round" and request.user|am_i_selected:contest %}
+                <a href="{% url "designer:submit_design" contest.id %}" type="button" class=" mt-2 btn btn-success">
+                    Submit design
+                </a>
+            {% endif %}
+        {% else %}
+            <br>
+            <p><i class="far fa-file"></i> {{ contest.get_entry_count }} designs</p>
+
+        {% endif %}
+        {% if contest.form_fields.is_hidden %}
+            <span class="border p-1"><i class="fa fa-lock" aria-hidden="true"></i> Private Contest</span>
+        {% endif %}
+        {% if contest.form_fields.is_hidden and contest.form_fields.is_private %}
+            |
+        {% endif %}
+        {% if contest.form_fields.is_private %}
+            <span class="border p-1"><i class="fa fa-eye-slash" aria-hidden="true"></i> Blind Contest</span>
+        {% endif %}
+
+
+    </div>
+
+</div>
+
+<ul class="nav nav-tabs mt-3" id="myTab" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link active" id="entries-tab" data-toggle="tab" href="#entries" role="tab"
+           aria-controls="entries" aria-selected="true">Designs ({{ contest.get_entry_count }})</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link " id="profile-tab" data-toggle="tab" href="#profile" role="tab"
+           aria-controls="profile" aria-selected="false">Brief</a>
+    </li>
+    <li class="nav-item ">
+        <a class="nav-link " id="messages-tab" data-toggle="tab" href="#messages" role="tab"
+           aria-controls="messages" aria-selected="false">Messages</a>
+    </li>
+    {% if request.user.profile.role == "client" %}
+        <li class="nav-item">
+            <a class="nav-link " id="poll-tab" data-toggle="tab" href="#poll" role="tab"
+               aria-controls="poll" aria-selected="false">Polls</a>
+        </li>
+    {% endif %}
+    {% if request.user|am_i_winner:contest or contest.user == request.user %}
+        <li class="nav-item">
+            <a class="nav-link " id="files-tab" data-toggle="tab" href="#files" role="tab"
+               aria-controls="profile" aria-selected="false">Files</a>
+        </li>
+    {% endif %}
+
+</ul>
+
+{% include "includes/contest/information_alert.html" %}
+
+<div class="tab-content mb-3" id="myTabContent">
+    <div class="tab-pane fade  show active" id="entries" role="tabpanel" aria-labelledby="entries-tab">
+
+        {% include "includes/contest/contest_entries.html" %}
+
+
+    </div>
+    <div class="tab-pane fade " id="profile" role="tabpanel" aria-labelledby="profile-tab">
+        {% if contest.category.template_name == "logo-design" %}
+            {% include "includes/contest/brief.html" %}
+        {% elif contest.category.template_name == "business-card-design" %}
+            {% include "includes/contest/bc_brief.html" %}
+        {% elif contest.category.template_name == "web-page-design" %}
+            {% include "includes/contest/wp_brief.html" %}
+        {% elif contest.category.template_name == "banner-ad-design" %}
+            {% include "includes/contest/ba_brief.html" %}
+        {% elif contest.category.template_name == "email-template-design" %}
+            {% include "includes/contest/et_brief.html" %}
+        {% elif contest.category.template_name == "social-media-assets-design" %}
+            {% include "includes/contest/sm_brief.html" %}
+        {% elif contest.category.template_name == "company-product-name" %}
+            {% include "includes/contest/cn_brief.html" %}
+        {% elif contest.category.template_name == "mobile-app-design" %}
+            {% include "includes/contest/ma_brief.html" %}
+        {% elif contest.category.template_name == "landing-page-design" %}
+            {% include "includes/contest/lp_brief.html" %}
+        {% elif contest.category.template_name == "t-shirt-design" %}
+            {% include "includes/contest/td_brief.html" %}
+        {% elif contest.category.template_name == "merchandise-design" %}
+            {% include "includes/contest/md_brief.html" %}
+        {% elif contest.category.template_name == "book-cover-design" %}
+            {% include "includes/contest/bkc_brief.html" %}
+
+        {% elif contest.category.template_name == "magazine-cover-design" %}
+            {% include "includes/contest/mgc_brief.html" %}
+        {% elif contest.category.template_name == "wordpress-design" %}
+            {% include "includes/contest/wpd_brief.html" %}
+
+        {% endif %}
+    </div>
+    <div class="tab-pane fade " id="messages" role="tabpanel" aria-labelledby="messages-tab">
+        {% include "includes/contest/messages.html" %}
+    </div>
+    <div class="tab-pane fade " id="poll" role="tabpanel" aria-labelledby="poll-tab">
+        {% include "includes/contest/polls.html" %}
+    </div>
+    <div class="tab-pane fade " id="files" role="tabpanel" aria-labelledby="files-tab">
+        {% include "includes/contest/files.html" %}
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Submit Design</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <form action="{% url "designer:submit_design" contest.id %}" method="POST"
+                  enctype="multipart/form-data">
+
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label for="exampleFormControlFile1">Upload an image</label><br>
+                        <small class="text-muted">The design you will upload must be in image format (png, jpg,
+                            svg).</small>
+                        <br> <br>
+                        {% csrf_token %}
+
+                        <input accept=".png, .jpg, .jpeg, .svg" class="upload_image" type="file" name="image"
+                               required="" id="id_image">
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="finalModal" tabindex="-1" role="dialog" aria-labelledby="finalModal"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Submit Final Design</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <form action="{% url "designer:submit_design" contest.id %}" method="POST"
+                  enctype="multipart/form-data">
+
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label for="exampleFormControlFile1">Upload an image</label><br>
+                        <small class="text-muted">The design you will upload must be in image format (png, jpg,
+                            svg).</small>
+                        <br> <br>
+                        {% csrf_token %}
+
+                        <input accept=".png, .jpg, .jpeg, .svg" class="upload_image" type="file" name="image"
+                               required="" id="id_image">
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+{% if contest.user == request.user %}
+    {% if contest.round == "qualify_end" and not contest.is_splittable %}
+        <div class="row ">
+            <div class="fixedContainer pb-2 pt-2 border bg-light col-12    ">
+                <div class="row">
+                    <div class="col-9 text-center font-weight-bold" id="finalists_text">
+
+                    </div>
+                    <div class="col-3">
+                        <button contest_id="{{ contest.id }}" onclick="confirm_finalist(this)"
+                                class="btn btn-success disabled" id="confirm_finalist">Confirm Finalists
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    {% endif %}
+
+    {% if contest.round == "selecting_winner" and  not contest.is_splittable %}
+        <div class="row ">
+            <div class="fixedContainer pb-2 pt-2 border bg-light col-12    ">
+                <div class="row">
+                    <div class="col-9 text-center font-weight-bold" id="finalists_text">
+
+                    </div>
+                    <div class="col-3">
+                        <button contest_id="{{ contest.id }}"
+                                class="btn btn-success disabled" onclick="confirm_winner(this)" id="confirm_winner">
+                            Select Winner
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    {% endif %}
+
+{% endif %}
+
+
+</div>
+<div class="modal fade" id="pre-im-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalCenterTitle">Attachment</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <img id="inneat" style="max-width:100%;
+max-height:100%;" src="" alt="">
+      </div>
+      <div class="modal-footer">
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}
+
+{% block script %}
+    <script>
+        let url = new URL(window.location.href)
+        let params = new URLSearchParams(url.search);
+
+        let q = params.get('tab')
+        if (q === "files") {
+            document.getElementById("files-tab").click()
+        } else if (q === "brief") {
+            document.getElementById("profile-tab").click()
+        } else if (q === "polls") {
+            document.getElementById("poll-tab").click()
+        } else if (q === "messages") {
+            document.getElementById("messages-tab").click()
+        }
+    </script>
+    <script src="{% static "dashboard/js/contest.js" %}"></script>
+    <script src="{% static "dashboard/js/star-rating.js" %}"></script>
+    <script src="{% static "dashboard/js/stars.js" %}"></script>
+    <script type="text/javascript">
+        function are_u_sure_for_delete(el) {
+            var url = el.getAttribute("url")
+            if (confirm("Are you sure to delete this design?")) {
+                window.location = url
+            } else {
+            }
+        }
+
+        function are_u_sure_for_submit(el) {
+            var url = el.getAttribute("url")
+            if (confirm("Are you sure to submit your works?")) {
+                window.location = url
+            } else {
+            }
+        }
+    </script>
+    {% if request.user == contest.user %}
+        <script>
+            document.getElementById("anouns_form").addEventListener("submit", add_anouns)
+
+        </script>
+        <script>
+            function anouns_delete_question(el) {
+                var url = el.getAttribute("url")
+                if (confirm("Are you sure to delete this announcement ?")) {
+                    delete_anouns(url)
+                } else {
+                }
+            }
+        </script>
+
+    {% endif %}
+    <script>
+    var pre_ims = document.getElementsByClassName("pre-im")
+     Array.from(pre_ims).forEach(function(element) {
+      element.addEventListener('click', openModal);
+    });
+    function openModal(e) {
+        var img_src = e.target.src;
+        $("#pre-im-modal").modal("show")
+        document.getElementById("inneat").src=img_src
+
+    }
+    </script>
+{% endblock %}

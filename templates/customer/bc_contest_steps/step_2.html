@@ -1,0 +1,274 @@
+{% extends "customer/bc_contest_steps/step_1.html" %}
+{% load static %}
+{% block head %}
+    <style>
+    .btn-file {
+    position: relative;
+    overflow: hidden;
+}
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+
+#img-upload{
+    width: 100%;
+}
+    </style>
+{% endblock %}
+{% block step %}
+<div class="col-lg-3 ">
+
+                    <div class="col-lg-10 mt-2 "><a class="step-link" href="{% url "customer:contest_step" contest "step_1" %}">1. Brief</a></div>
+
+                     <div class="col-lg-10 mt-2  link-arrow">2.
+            Style
+        </div>
+                {% if "step_3" in form_fields.filled_steps %}
+                     <div class="col-lg-10 mt-2 ">
+
+                    <a class="step-link" href="{% url "customer:contest_step" contest "step_3" %}">3. Prize & Upgrades</a>
+                         {% else %}
+                    <div class="col-lg-10 mt-2 text-muted">
+                        3. Prize & Upgrades
+                    {% endif %}</div>
+                    {% if "step_4" in form_fields.filled_steps %}
+                     <div class="col-lg-10 mt-2 ">
+                    <a class="step-link" href="{% url "customer:contest_step" contest "step_4" %}">4. Payment </a>
+                         {% else %}
+                                            <div class="col-lg-10 mt-2 text-muted">
+
+                        4. Payment
+                    {% endif %}</div>
+
+
+                </div>
+<div class="col-lg-7 ">
+    <h5>What adjectives should describe your business card?  </h5>
+    <div class="row">
+        <div class="col-lg-12 mt-3">
+            <form action="">
+                <div class="form-group">
+                    <label for="customRange3">Classic</label>
+                    <label for="customRange3" class="float-right">Modern</label>
+                    <input onchange="setDraft(this)" type="range" class="custom-range mt-0" min="0" max="6" step="0.5" id="classic_modern">
+                </div>
+                <div class="form-group">
+                    <label for="customRange3">Mature</label>
+                    <label for="customRange3" class="float-right">Youthful</label>
+                    <input onchange="setDraft(this)" type="range" class="custom-range mt-0" min="0" max="6" step="0.5" id="mature_youthful">
+                </div>
+                <div class="form-group">
+                    <label for="customRange3">Feminine</label>
+                    <label for="customRange3" class="float-right">Masculine</label>
+                    <input  onchange="setDraft(this)" type="range" class="custom-range mt-0" min="0" max="6" step="1" id="femine_masculine">
+                </div>
+                <div class="form-group">
+                    <label for="customRange3">Playful</label>
+                    <label for="customRange3" class="float-right">Sophisticated</label>
+                    <input onchange="setDraft(this)" type="range" class="custom-range mt-0" min="0" max="6" step="1" id="playful_sophisticated">
+                </div>
+                <div class="form-group">
+                    <label for="customRange3">Economical</label>
+                    <label for="customRange3" class="float-right">Luxurious</label>
+                    <input onchange="setDraft(this)" type="range" class="custom-range mt-0" min="0" max="6" step="1" id="economical_luxurious">
+                </div>
+                <div class="form-group">
+                    <label for="customRange3">Geometric</label>
+                    <label for="customRange3" class="float-right">Organic</label>
+                    <input onchange="setDraft(this)" type="range" class="custom-range mt-0" min="0" max="6" step="1" id="geometric_organic">
+                </div>
+                <div class="form-group">
+                    <label for="customRange3">Abstract</label>
+                    <label for="customRange3" class="float-right">Literal</label>
+                    <input onchange="setDraft(this)" type="range" class="custom-range mt-0" min="0" max="6" step="1" id="abstract_literal">
+                </div>
+
+
+            </form>
+                <h5>Add attachment </h5>
+            <div id="attachment-list">
+            {% for attachment in attachments %}
+            <div class="border mt-4 mb-4">
+              <div class="row m-1 ">
+
+                   <div class="col-2 p-3">
+
+                      <img src="{{attachment.get_image}}" class="img-responsive border pre-im" width="120" height="120" alt="">
+
+                  </div>
+                  <div class="col-10 pt-3 pb-3 pl-3">
+                      <div class="border p-3" style="max-height:150px;height:100%;overflow-y:auto">
+                          <div class="float-right" style="display:inline">
+                              <a style="cursor:pointer" url="{% url "customer:delete_attachment" attachment.id %}" onclick="are_u_sure_for_delete(this)" class="step-link">
+                                  <span><i class="fa fa-trash"></i></span>
+                              </a>
+                          </div>
+
+
+
+                          {{ attachment.content }}
+
+                      </div>
+                  </div>
+
+
+              </div>
+            </div>
+            {% endfor %}
+
+            </div>
+
+
+            <div class="border mt-4 mb-4">
+            <form  class="attachment-form" enctype="multipart/form-data" >
+              <div class="row m-2 ">
+                   <div class="col-2 p-3">
+
+                      <img id="image_img" src="{% static "dashboard/images/add-image.png" %}" class="img-responsive border pre-im" width="120" height="120" alt="">
+                      <span class="btn btn-light col-12 text-center btn-sm btn-file">
+                        Browse… <input id="image_input" required type="file" name="image" class="im-up" onchange="im_upload(this)">
+                        </span>
+                  </div>
+                  <div class="col-10 p-3">
+                      <label for="" style="display:none;"></label><textarea id="detail_txt" required placeholder="Detail your attachment" name="detail" class="form-control" id="" style="height:100%"></textarea>
+
+                  </div>
+                  <button type="submit"  class="btn btn-success float-right  btn-block">Add</button>
+
+              </div>
+            </form>
+            </div>
+
+
+            <button onclick="nextStep()" class="btn btn-primary float-right btn-lg btn-block">Next</button>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+{% block script %}
+    {{ form_fields|json_script:"form_fields"}}
+
+    {{ contest|json_script:"contest_id" }}
+    <script src="{% static "dashboard/js/start_contest.js" %}"></script>
+    <script>
+        const request = new Request()
+
+       var datas = JSON.parse(localStorage.getItem(contest_id))
+         var steps=datas.filled_steps
+         if (!steps.includes("step_2")){
+             steps.push("step_2")
+         }
+         storageStuff("filled_steps",steps)
+
+        document.onload = fillData()
+
+
+
+
+        function save_as_draft() {
+            if (localStorage.getItem(contest_id)) {
+                storageStuff("page","step_3")
+                const contest = JSON.parse(localStorage.getItem(contest_id))
+
+                postData('{% url "customer:draft_contest" contest  %}', {"contest": contest})
+                    .then(data => {
+                        console.log(data);
+                    });
+            } else {
+            }
+        }
+
+        function nextStep() {
+            save_as_draft()
+            window.location="{% url "customer:contest_step" contest "step_3" %}"
+
+        }
+        save_as_draft()
+
+
+          const im_upload = imgInp => {
+
+          const [file] = imgInp.files
+          var blah = imgInp.parentElement.parentElement.getElementsByTagName('img')[0]
+
+          if (file) {
+            blah.src = URL.createObjectURL(file)
+          }
+        }
+
+
+         var forms = document.getElementsByClassName("attachment-form")
+
+        for (var i = 0; i < forms.length; i++) {
+            forms[i].addEventListener("submit",attachEvent)
+        }
+        const toBase64 = file => new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+
+        async function upload(file,detail) {
+            var list_html = document.getElementById("attachment-list")
+            var image = document.getElementById("image_img")
+            var image_input = document.getElementById("image_input")
+            var text = document.getElementById("detail_txt")
+
+            var attach = {
+                img:await toBase64(file),
+                detail:detail
+            }
+
+            request.post("{% url 'customer:add_attachment' contest  %}", attach
+
+            , csrftoken)
+            .then(data => {
+                list_html.innerHTML += data.attachment
+                image.src = "{% static "dashboard/images/add-image.png" %}"
+                image_input.value = ''
+                text.value = ''
+
+            })
+            .catch(err => alert("Something went wrong."));
+
+        }
+
+
+
+         function attachEvent(e){
+            var img = e.target.elements.image.files[0];
+            var detail = e.target.elements.detail.value;
+
+
+            upload(img,detail)
+
+            e.preventDefault()
+         }
+
+         function are_u_sure_for_delete(el) {
+        var url=el.getAttribute("url")
+       if (confirm("Are you sure to delete this attachment?")){
+           window.location=url
+       }else{
+       }
+    }
+
+
+    </script>
+{% endblock %}
+
+

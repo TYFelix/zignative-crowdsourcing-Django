@@ -1,0 +1,135 @@
+{% extends "customer/layout.html" %}
+{% load static %}
+
+{% block head %}
+    <title>Edit Contest / Zignative Crowdsourcing</title>
+
+{% endblock %}
+{% block body %}
+
+    <div class="container-fluid">
+
+        <h3 class="text-center mb-4 mt-3">Edit Contest</h3>
+        <div class="row  ">
+
+
+            {% block step %}
+                <div class="col-lg-3 ">
+
+            <div class="col-lg-10 mt-2 link-arrow">1. Brief</div>
+            <a  class="step-link" href="{% url "customer:edit_contest" contest "step_2" %}" onclick="save_as_draft()"><div class="col-lg-10 mt-2 " >2. Visual inspiration</div></a>
+            <a class="step-link" href="{% url "customer:edit_contest" contest "step_3" %}" onclick="save_as_draft()"><div class="col-lg-10 mt-2 " >3. Style</div></a>
+
+
+
+
+
+                </div>
+                <div class="col-lg-7 ">
+                    <h5>Name & Description</h5>
+                    <div  class="mt-2 mb-2">
+                        <div class="form-group">
+                            <label for="contest-title">Contest Title</label>
+                            <input required type="text" id="contest_title" onkeyup="setDraft(this)"
+                                   class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="contest-bname">Organization or business name</label>
+                            <input required type="text" id="contest_bname" onkeyup="setDraft(this)"
+                                   class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="contest-slogan">Slogan(optional)</label>
+                            <input required type="text" id="contest_slogan" onkeyup="setDraft(this)"
+                                   class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="contest_detail">Please describe what your brand does and who the target audience
+                                is</label>
+                            <textarea required type="text" id="contest_detail" onkeyup="setDraft(this)"
+                                      class="form-control"></textarea>
+                        </div>
+
+                        <h3 class="mt-2">Industry</h3>
+                        <div class="form-group">
+                            <label for="exampleFormControlSelect1">Please select your industry:</label>
+                            <select required class="form-control" onchange="setDraft(this)" id="contest_industry">
+                                <option value="">Industry</option>
+                                <option>Accounting</option>
+                                <option>Automotive</option>
+                                <option>Beauty</option>
+                                <option>Construction</option>
+                                <option>Consulting</option>
+                                <option>Dental</option>
+                                <option>Education</option>
+                                <option>Entertainment</option>
+                                <option>Events</option>
+                                <option>Financial</option>
+                                <option>Home & Garden</option>
+                                <option>Insurance</option>
+                                <option>Internet</option>
+                                <option>Legal</option>
+                                <option>Manufacturing & Wholesale</option>
+                                <option>Media</option>
+                                <option>Medical</option>
+                                <option>Miscellaneous</option>
+                                <option>Natural Resources</option>
+                                <option>Non-Profit</option>
+                                <option>Real Estate</option>
+                                <option>Religious</option>
+                                <option>Restaurant</option>
+                                <option>Retail</option>
+                                <option>Service Industries</option>
+                                <option>Sport</option>
+                                <option>Technology</option>
+                                <option>Travel & Hospitality</option>
+
+                            </select>
+                        </div>
+                        <button onclick="nextStep()"  class="btn btn-primary float-right btn-lg btn-block">
+                            Next
+                        </button>
+
+                    </div>
+                </div>
+            {% endblock %}
+        </div>
+    </div>
+
+
+
+{% endblock %}
+
+{% block script %}
+    {{ form_fields|json_script:"form_fields"}}
+
+    {{ contest|json_script:"contest_id" }}
+    <script src="{% static "dashboard/js/start_contest.js" %}"></script>
+    <script>
+        document.onload = fillData()
+
+
+        function save_as_draft() {
+            if (localStorage.getItem(contest_id)) {
+                storageStuff("page","step_3")
+                const contest = JSON.parse(localStorage.getItem(contest_id))
+
+                postData('{% url "customer:draft_contest" contest  %}', {"contest": contest})
+                    .then(data => {
+                        console.log(data);
+                    });
+            } else {
+            }
+        }
+
+        function nextStep() {
+            save_as_draft()
+            window.location="{% url "customer:edit_contest" contest "step_2" %}"
+
+        }
+
+
+
+    </script>
+
+{% endblock %}

@@ -1,0 +1,197 @@
+{% load static %}
+<div class="container border">
+    <div class="row">
+        <div class="col-6">
+            <br>
+            {% if contest.user == request.user and contest.round == "qualify" %}
+                        <a href="{% url "customer:edit_contest" contest.id "step_1" %}" class="step-link"><span><i class="fas fa-edit"></i>  Edit Brief</span></a>
+            {% endif %}
+            <br><br>
+
+            <h5 class="text-muted">Organization or Business Name </h5>
+            <p>{{ contest.form_fields.contest_bname }}</p>
+            <br>
+            {% if contest.form_fields.contest_slogan %}
+            <h5 class="text-muted">Slogan</h5>
+            <p>{{ contest.form_fields.contest_slogan }}</p>
+            <br>
+            {% endif %}
+
+            <h5 class="text-muted">Contest Detail </h5>
+            <p>{{ contest.form_fields.contest_detail }}</p>
+            <br>
+
+            <h5 class="text-muted">Industry</h5>
+            <p>{{ contest.form_fields.contest_industry }}</p>
+            <br><br>
+        </div>
+        <div class="col-6 mt-5">
+
+            <h5 class="text-muted">Visual inspirations</h5>
+
+
+            <div class="row border mb-3">
+
+                {% for example_logo in contest.get_example_logos %}
+                    <div class="col-4 mt-2">
+                        <img src="{{ example_logo.get_image }}" width="150" height="150" alt="">
+                    </div>
+                {% endfor %}
+
+
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 ">
+            <h4 class="text-muted">Style</h4>
+            <br>
+
+            <div class="form-group">
+                <label for="customRange3">Classic</label>
+                <label for="customRange3" class="float-right">Modern</label>
+                {% if  contest.form_fields.classic_modern %}
+                    <input disabled type="range" class="custom-range mt-0"
+                           value="{{ contest.form_fields.classic_modern }}" min="0" max="6" step="0.5"
+                           id="classic_modern">
+                {% else %}
+                    <input disabled type="range" class="custom-range mt-0" value="3" min="0" max="6" step="0.5"
+                           id="classic_modern">
+
+                {% endif %}
+            </div>
+
+
+            <div class="form-group">
+                <label for="customRange3">Mature</label>
+                <label for="customRange3" class="float-right">Youthful</label>
+                {% if  contest.form_fields.mature_youthful %}
+                    <input disabled type="range" class="custom-range mt-0"
+                           value="{{ contest.form_fields.mature_youthful }}" min="0" max="6" step="0.5"
+                           id="mature_youthful">
+                {% else %}
+                    <input disabled type="range" class="custom-range mt-0" value="3" min="0" max="6" step="0.5"
+                           id="mature_youthful">
+
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="customRange3">Femine</label>
+                <label for="customRange3" class="float-right">Masculine</label>
+                {% if  contest.form_fields.femine_masculine %}
+
+                    <input disabled type="range" class="custom-range mt-0"
+                           value="{{ contest.form_fields.femine_masculine }}" min="0" max="6" step="0.5"
+                           id="femine_masculine">
+                {% else %}
+                    <input disabled type="range" class="custom-range mt-0"
+                           value="3" min="0" max="6" step="0.5"
+                           id="femine_masculine">
+                {% endif %}
+            </div>
+
+
+            <div class="form-group">
+                <label for="customRange3">Playful</label>
+                <label for="customRange3" class="float-right">Sophisticated</label>
+                {% if  contest.form_fields.playful_sophisticated %}
+                    <input disabled type="range" class="custom-range mt-0"
+                           value="{{ contest.form_fields.playful_sophisticated }}" min="0" max="6" step="0.5"
+                           id="playful_sophisticated">
+                {% else %}
+                    <input disabled type="range" class="custom-range mt-0"
+                           value="3" min="0" max="6" step="0.5"
+                           id="playful_sophisticated">
+                {% endif %}
+            </div>
+
+
+            <div class="form-group">
+                <label for="customRange3">Economical</label>
+                <label for="customRange3" class="float-right">Luxurious</label>
+                {% if  contest.form_fields.economical_luxurious %}
+                    <input disabled type="range" class="custom-range mt-0"
+                           value="{{ contest.form_fields.economical_luxurious }}" min="0" max="6" step="0.5"
+                           id="economical_luxurious">
+                {% else %}
+                    <input disabled type="range" class="custom-range mt-0"
+                           value="{{ contest.form_fields.economical_luxurious }}" min="0" max="6" step="0.5"
+                           id="economical_luxurious">
+                {% endif %}
+            </div>
+
+
+            <div class="form-group">
+                <label for="customRange3">Geometric</label>
+                <label for="customRange3" class="float-right">Organic</label>
+                {% if  contest.form_fields.geometric_organic %}
+
+                    <input disabled type="range" class="custom-range mt-0"
+                           value="{{ contest.form_fields.geometric_organic }}" min="0" max="6" step="0.5"
+                           id="geometric_organic">
+                {% else %}
+                    <input disabled type="range" class="custom-range mt-0"
+                           value="3" min="0" max="6" step="0.5"
+                           id="geometric_organic">
+                {% endif %}
+
+            </div>
+
+            <div class="form-group">
+                <label for="customRange3">Abstract</label>
+                <label for="customRange3" class="float-right">Literal</label>
+                {% if  contest.form_fields.abstract_literal %}
+                    <input disabled type="range" class="custom-range mt-0"
+                           value="{{ contest.form_fields.abstract_literal }}" min="0" max="6" step="0.5"
+                           id="abstract_literal">
+                {% else %}
+                    <input disabled type="range" class="custom-range mt-0"
+                           value="3" min="0" max="6" step="0.5"
+                           id="abstract_literal">
+                {% endif %}
+
+
+            </div>
+        </div>
+    </div>
+    <div class="row">
+
+        <div class="col-12">
+{% if contest.attachments.all %}
+<h5 class="text-muted">Attachments</h5>
+
+{% endif %}
+            {% for attachment in contest.attachments.all %}
+
+            <div class="border mt-4 mb-4">
+              <div class="row m-1 ">
+
+                   <div class="col-2 p-3">
+
+                      <img src="{{attachment.get_image}}" class="img-responsive border pre-im" width="120" height="120" alt="">
+
+                  </div>
+                  <div class="col-10 pt-3 pb-3 pl-3">
+                      <div class="border p-3" style="max-height:150px;height:100%;overflow-y:auto">
+
+
+
+
+                          {{ attachment.content }}
+
+
+                      </div>
+                  </div>
+
+
+              </div>
+            </div>
+
+            {% endfor %}
+
+        </div>
+    </div>
+</div>
+
+

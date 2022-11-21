@@ -1,0 +1,183 @@
+{% extends "customer/layout.html" %}
+{% load static %}
+{% block head %}
+    <title> Discover| Zignative </title>
+    <script src="https://use.fontawesome.com/5ac93d4ca8.js"></script>
+
+{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <ol class="breadcrumb  mb-4 mt-2">
+            <li class="breadcrumb-item ">Home</li>
+            <li class="breadcrumb-item active">Discover</li>
+        </ol>
+        <h3>Discover graphic design ideas & inspiration</h3>
+        <hr>
+        <div class="row ml-3">
+
+            <form action="" class=" mr-3">
+                <label>
+                    <select class="form-control" id="select_service">
+                        <option value="">All Categories</option>
+                        {% for service in services %}
+                            <option value="{{ service.id }}">{{ service.title }}</option>
+                        {% endfor %}
+
+                    </select>
+                </label>
+            </form>
+
+
+            <form action="" class="float-right">
+                <label>
+                    <select class="form-control" id="select_industry">
+                        <option value="">All Industries</option>
+                        <option>Accounting</option>
+                        <option>Automotive</option>
+                        <option>Beauty</option>
+                        <option>Construction</option>
+                        <option>Consulting</option>
+                        <option>Dental</option>
+                        <option>Education</option>
+                        <option>Entertainment</option>
+                        <option>Events</option>
+                        <option>Financial</option>
+                        <option>Home & Garden</option>
+                        <option>Insurance</option>
+                        <option>Internet</option>
+                        <option>Legal</option>
+                        <option>Manufacturing & Wholesale</option>
+                        <option>Media</option>
+                        <option>Medical</option>
+                        <option>Miscellaneous</option>
+                        <option>Natural Resources</option>
+                        <option>Non-Profit</option>
+                        <option>Real Estate</option>
+                        <option>Religious</option>
+                        <option>Restaurant</option>
+                        <option>Retail</option>
+                        <option>Service Industries</option>
+                        <option>Sport</option>
+                        <option>Technology</option>
+                        <option>Travel & Hospitality</option>
+                    </select>
+                </label>
+            </form>
+
+        </div>
+        <div class="row">
+
+            {% for entry in entries %}
+                <div class="col-lg-2  col-xl-2 col-md-6 col-xs-12  m-3">
+                    <a href="{% url "home:entry_detail" entry.contest.id entry.id %}"><img width="250" class="shadow"
+                                                                                           height="250"
+                                                                                           src="{{ entry.get_display_image }}"
+                                                                                           alt=""></a>
+                    <span class="p-2 mt-2">by <a href="{% url "home:public_profile" entry.user %}">{{ entry.user }}</a></span>
+                </div>
+            {% endfor %}
+
+
+            <div class="row col-12 mb-4 justify-content-center">
+                 <div class="col-auto mt-5">
+                {% if entries.has_other_pages %}
+                    <nav aria-label="">
+                        <ul class="pagination">
+                            {% if entries.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ entries.previous_page_number }}"
+                                       aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                        <span class="sr-only">Previous</span>
+                                    </a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                        <span class="sr-only">Previous</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                            {% for i in entries.paginator.page_range %}
+                                {% if entries.number == i %}
+                                    <li class="page-item active"><a class="page-link">{{ i }}<span class="sr-only">(current)</span></a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item "><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+
+                                {% endif %}
+
+                            {% endfor %}
+
+
+                            {% if entries.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ entries.next_page_number }}" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                        <span class="sr-only">Next</span>
+                                    </a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                        <span class="sr-only">Next</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                {% endif %}
+            </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script>
+        document.getElementById("discover_nav").classList.add("active")
+    </script>
+    <script>
+        var industry = document.getElementById('select_industry')
+        var service = document.getElementById('select_service')
+        industry.addEventListener('change', handle_filter);
+        service.addEventListener('change', handle_filter);
+
+        function handle_filter(e){
+            var fqs = ""
+            if(industry.value !== ""){
+                fqs+="&industry="+industry.value
+            }
+            if(service.value !== ""){
+                fqs+="&service="+service.value
+            }
+            fqs = fqs.substring(1)
+            window.location = "?" + fqs
+        }
+         if (findGetParameter("industry")) {
+            industry.value = findGetParameter("industry");
+        }
+        if (findGetParameter("service")) {
+            service.value = findGetParameter("service");
+        }
+
+        //Thank you Stackoverflow :))
+        function findGetParameter(parameterName) {
+            var result = null,
+                tmp = [];
+            location.search
+                .substr(1)
+                .split("&")
+                .forEach(function (item) {
+                    tmp = item.split("=");
+                    if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+                });
+            return result;
+        }
+    </script>
+{% endblock %}
+
+

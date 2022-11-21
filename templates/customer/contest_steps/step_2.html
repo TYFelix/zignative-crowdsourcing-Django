@@ -1,0 +1,93 @@
+{% extends "customer/contest_steps/step_1.html" %}
+{% load static %}
+{% block step %}
+    <div class="col-lg-3 ">
+
+                <div class="col-lg-10 mt-2 "  ><a class="step-link" href="{% url "customer:contest_step" contest "step_1" %}">1. Brief</a></div>
+
+        <div class="col-lg-10 mt-2  link-arrow">2.
+            Visual inspiration
+        </div>
+       {% if "step_3" in form_fields.filled_steps %}
+                     <div class="col-lg-10 mt-2 ">
+
+                    <a class="step-link" href="{% url "customer:contest_step" contest "step_3" %}">3. Style</a>
+                         {% else %}
+                    <div class="col-lg-10 mt-2 text-muted">
+                        3. Style
+                    {% endif %}</div>
+                    {% if "step_4" in form_fields.filled_steps %}
+                     <div class="col-lg-10 mt-2 ">
+                    <a class="step-link" href="{% url "customer:contest_step" contest "step_4" %}">4. Prize & Upgrades </a>
+                         {% else %}
+                                            <div class="col-lg-10 mt-2 text-muted">
+
+                        4. Prize & Upgrades
+                    {% endif %}</div>
+                 {% if "step_5" in form_fields.filled_steps %}
+                     <div class="col-lg-10 mt-2 ">
+                    <a class="step-link" href="{% url "customer:contest_step" contest "step_5" %}">5. Payment</a>
+                         {% else %}
+                                         <div class="col-lg-10 mt-2 text-muted">
+
+                        5. Payment
+                    {% endif %}</div>
+
+    </div>
+    <div class="col-lg-7 ">
+        <h5>Please select up to six logos that you like the style</h5>
+    <span class="text-danger" id="warn_logo" style="visibility: hidden">Please choose at least 6 logos</span>
+        <div class="row mb-3">
+            {% for logo in logos %}
+                <div id="{{ logo.id }}" class="col-lg-3 logo-element  d-flex justify-content-center mr-2 mt-2">
+                    <img src="{{ logo.get_image }}" width="150" height="150" alt="">
+                </div>
+            {% endfor %}
+        {% if logos.has_next  %}
+            <a  href="?page={{ page_num }}" class="btn btn-success float-right  col-lg-9  mt-3" >Load More</a>
+        {% endif %}
+            <button onclick="control()" class="btn btn-primary float-right btn-lg col-lg-9 btn-block mt-5">Next</button>
+        </div>
+
+
+    </div>
+{% endblock %}
+{% block script %}
+    {{ form_fields|json_script:"form_fields"}}
+
+    {{ contest|json_script:"contest_id" }}
+    <script src="{% static "dashboard/js/start_contest.js" %}"></script>
+    <script>
+         var datas = JSON.parse(localStorage.getItem(contest_id))
+         var steps=datas.filled_steps
+         if (!steps.includes("step_2")){
+             steps.push("step_2")
+         }
+         storageStuff("filled_steps",steps)
+
+
+        if (localStorage.getItem(contest_id)) {
+            const logos = document.getElementsByClassName("logo-element")
+            const datas = JSON.parse(localStorage.getItem(contest_id))
+            if (datas.selected_logos) {
+
+
+                Array.from(logos).forEach(
+                    function (element, index, array) {
+                        if (datas.selected_logos.includes(element.id)) {
+                            element.classList.add("logo-selected")
+                            selected_logos.push(element.id)
+                        }
+                    })
+            }
+        }
+
+        function control(){
+            if(selected_logos.length >= 6){
+                window.location="{% url "customer:contest_step" contest "step_3" %}"
+            }else{
+                document.getElementById("warn_logo").style.visibility=""
+            }
+        }
+    </script>
+{% endblock %}

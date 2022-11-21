@@ -1,0 +1,239 @@
+{% extends "customer/layout.html" %}
+{% load static %}
+
+{% block head %}
+    <title>Edit Contest / Zignative Crowdsourcing</title>
+
+{% endblock %}
+{% block body %}
+    <div class="container-fluid">
+        <ol class="breadcrumb  mb-4 mt-2">
+            <li class="breadcrumb-item "><a href="{% url "customer:categories" %}" class="step-link">Categories</a></li>
+            <li class="breadcrumb-item active">Edit Contest</li>
+        </ol>
+        <h3 class="text-center mb-4">Edit Contest</h3>
+        <div class="row  ">
+
+
+            {% block step %}
+
+                <div class="col-lg-3 ">
+
+                    <div class="col-lg-10 mt-2 link-arrow">1. Brief</div>
+                    <div class="col-lg-10 mt-2 ">
+
+                    <a class="step-link" href="{% url "customer:bc_edit_contest" contest "step_2" %}">2. Style</a>
+                  </div>
+
+
+
+                </div>
+                <div class="col-lg-7 ">
+                    <h5>Name & Description</h5>
+                        <div class="form-group">
+                            <label for="contest-title">Contest Title</label>
+                            <input required type="text" id="contest_title" onkeyup="setDraft(this)"
+                                   class="form-control">
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="contest_detail">Tell us about your organization and your target audience
+                                is</label>
+                            <textarea required type="text" id="contest_detail" onkeyup="setDraft(this)"
+                                      class="form-control"></textarea>
+                        </div>
+
+                        <br>
+                        <h5 class="mt-2">Do you want a two-sided business card?</h5>
+                        <div class="form-group">
+                            <label for="contest-title">Should your card have a design on both the front and back? Keep in mind most printers charge more for a two-sided card.</label>
+                            <div class="form-check">
+                              <input onclick="radioClick(this)" class="form-check-input" type="radio" name="side" id="one">
+                              <label class="form-check-label" for="flexRadioDefault1">
+                                One-Sided
+                              </label>
+                            </div>
+                            <div class="form-check">
+                              <input  onclick="radioClick(this)"  class="form-check-input" type="radio" name="side" id="two" checked>
+                              <label class="form-check-label" for="flexRadioDefault2">
+                                Two-Sided
+                              </label>
+                            </div>
+                        </div>
+                        <br>
+
+                        <br>
+                        <h5 class="mt-2">What is the final size of your business card?</h5>
+                        <div class="form-group">
+                            <div class="form-check">
+                              <input onclick="radioClick(this)" class="form-check-input" type="radio" name="final_size" id="standard">
+                              <label class="form-check-label" for="final_size1">
+                                Standard U.S. Canada (3.5" x 2")
+                              </label>
+                            </div>
+                            <div class="form-check">
+                              <input onclick="radioClick(this)" class="form-check-input" type="radio" name="final_size" id="micro" checked>
+                              <label class="form-check-label" for="final_size2">
+                                Micro (1"x3")
+                              </label>
+                            </div>
+                            <div class="form-check">
+                              <input onclick="radioClick(this)" class="form-check-input" type="radio" name="final_size" id="square" >
+                              <label class="form-check-label" for="final_size3">
+                                Square (2.25" x 2.25")
+                              </label>
+                            </div>
+                            <div class="form-check">
+                              <input onclick="radioClick(this)" class="form-check-input" type="radio" name="final_size" id="other" >
+                              <label class="form-check-label" for="final_size4">
+                                Other
+                              </label>
+                            </div>
+                        </div>
+                        <br>
+
+
+                        <br>
+                        <h5 class="mt-2">What corner style do you prefer?</h5>
+                        <div class="form-group">
+                            <div class="form-check">
+                              <input onclick="radioClick(this)" class="form-check-input" type="radio" name="corner_style" id="round" checked>
+                              <label class="form-check-label" for="corner_1">
+                                Round
+                              </label>
+                            </div>
+                            <div class="form-check">
+                              <input onclick="radioClick(this)" class="form-check-input" type="radio" name="corner_style" id="square" >
+                              <label class="form-check-label" for="corner_2">
+                                Square
+                              </label>
+                            </div>
+                            <div class="form-check">
+                              <input onclick="radioClick(this)" class="form-check-input" type="radio" name="corner_style" id="no_preference" >
+                              <label class="form-check-label" for="corner_3">
+                                No Preference
+                              </label>
+                            </div>
+                        </div>
+                        <br>
+
+
+                        <br>
+                        <h5 class="mt-2">What is the exact text for your business card?</h5>
+                        <div class="form-group">
+                            <label for="contest-text">Things you might include: Logo, Tagline, Name, Title, Office Phone, Mobile Phone, Fax, Email, Address.</label>
+                            <input required type="text" id="exact_text" onkeyup="setDraft(this)"
+                                   class="form-control">
+                        </div>
+                        <br>
+
+                         <br>
+                        <h5 class="mt-2">What 3 most important things you want people to think when they see your business card?</h5>
+                        <div class="form-group">
+                            <label for="contest-text">E.g.: Our brand is modern, professional, and trustworthy.</label>
+                            <input required type="text" id="important_things" onkeyup="setDraft(this)"
+                                   class="form-control">
+                        </div>
+                        <br>
+
+                        <h5 class="mt-2">Industry</h5>
+                        <div class="form-group">
+                            <label for="exampleFormControlSelect1">Please select your industry:</label>
+                            <select required class="form-control" onchange="setDraft(this)" id="contest_industry">
+                                <option value="">Industry</option>
+                                <option>Accounting</option>
+                                <option>Automotive</option>
+                                <option>Beauty</option>
+                                <option>Construction</option>
+                                <option>Consulting</option>
+                                <option>Dental</option>
+                                <option>Education</option>
+                                <option>Entertainment</option>
+                                <option>Events</option>
+                                <option>Financial</option>
+                                <option>Home & Garden</option>
+                                <option>Insurance</option>
+                                <option>Internet</option>
+                                <option>Legal</option>
+                                <option>Manufacturing & Wholesale</option>
+                                <option>Media</option>
+                                <option>Medical</option>
+                                <option>Miscellaneous</option>
+                                <option>Natural Resources</option>
+                                <option>Non-Profit</option>
+                                <option>Real Estate</option>
+                                <option>Religious</option>
+                                <option>Restaurant</option>
+                                <option>Retail</option>
+                                <option>Service Industries</option>
+                                <option>Sport</option>
+                                <option>Technology</option>
+                                <option>Travel & Hospitality</option>
+
+                            </select>
+                        </div>
+                        <br>
+                        <h5 class="mt-2">Do you want to provide any additional info?</h5>
+                         <div class="form-group">
+                            <label for="contest_detail">Are there specific design elements you want to see? Is there anything you do not want to see? Include links to things that inspired you, competitor information, or any other info. If you need special file formats, please list them here.</label>
+                            <textarea  type="text" id="contest_info" onkeyup="setDraft(this)"
+                                      class="form-control"></textarea>
+                        </div>
+                        <br>
+                        <button onclick="nextStep()"  class="btn btn-primary float-right btn-lg btn-block">
+                            Next
+                        </button>
+
+                </div>
+            {% endblock %}
+        </div>
+    </div>
+
+
+
+{% endblock %}
+
+{% block script %}
+    {{ form_fields|json_script:"form_fields"}}
+
+    {{ contest|json_script:"contest_id" }}
+    <script src="{% static "dashboard/js/start_contest.js" %}"></script>
+    <script>
+        document.onload = fillData()
+
+        const datas = JSON.parse(localStorage.getItem(contest_id))
+
+
+        if("side" in datas){
+            document.getElementById(datas.side).click()
+        }
+        if("final_size" in datas){
+            document.getElementById(datas.final_size).click()
+        }
+        if("corner_style" in datas){
+            document.getElementById(datas.corner_style).click()
+        }
+        document.onload = fillData()
+
+
+        function save_as_draft() {
+            if (localStorage.getItem(contest_id)) {
+                const contest = JSON.parse(localStorage.getItem(contest_id))
+
+                postData('{% url "customer:draft_contest" contest  %}', {"contest": contest})
+                    .then(data => {
+                        console.log(data);
+                    });
+            } else {
+            }
+        }
+
+        function nextStep() {
+            save_as_draft()
+            window.location="{% url "customer:bc_edit_contest" contest "step_2" %}"
+
+        }
+    </script>
+
+{% endblock %}

@@ -1,0 +1,156 @@
+{% extends "customer/layout.html" %}
+{% load static %}
+{% block head %}
+    <title>Teams | Zignative</title>
+{% endblock %}
+
+{% block body %}
+
+    <div class="container ">
+        <ol class="breadcrumb  mb-4 mt-2">
+            <li class="breadcrumb-item ">Contests</li>
+            <li class="breadcrumb-item active">Teams</li>
+        </ol>
+
+        <div class="row mb-5">
+            <div class="col-9">
+                <h4>Teams</h4>
+            </div>
+            <div class="col-3">
+                <button class="btn btn-success"><i class="fa fa-plus mr-2"></i>Create new team</button>
+            </div>
+        </div>
+        <h5 class="mt-5">Your teams</h5>
+        <div class="row mt-4">
+            <div class="col-4">
+                <div class="card bg-light mb-3" style="max-width: 18rem;">
+                    <div class="card-header"><img width="45" height="45" src="{{ request.user.profile.get_photo }}"
+                                                  alt="">
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Rocket Team</h5>
+                        <p class="card-text">2 People</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="card bg-light mb-3" style="max-width: 18rem;">
+                    <div class="card-header"><img width="45" height="45" src="{{ request.user.profile.get_photo }}"
+                                                  alt="">
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Rocket Team</h5>
+                        <p class="card-text">2 People</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <h4>Recent</h4>
+            <hr>
+            <div class="row mb-3">
+                <div class="col-1">
+                    <img width="45" height="45" src="{{ request.user.profile.get_photo }}"
+                                                  alt="">
+                </div>
+                <div class="col-9">
+                    Muhammet BULUT has rated a design entry in <a href="#">Unlimited logo & business card contest</a><br>
+                    <small class="text-muted">10 minutes ago</small>
+                </div>
+
+            </div>
+            <div class="row mb-3">
+                <div class="col-1">
+                    <img width="45" height="45" src="{{ request.user.profile.get_photo }}"
+                                                  alt="">
+                </div>
+                <div class="col-9">
+                    Muhammet BULUT has rated a design entry in <a href="#">Unlimited logo & business card contest</a><br>
+                    <small class="text-muted">10 minutes ago</small>
+                </div>
+
+            </div>
+            <div class="row mb-3">
+                <div class="col-1">
+                    <img width="45" height="45" src="{{ request.user.profile.get_photo }}"
+                         alt="">
+                </div>
+                <div class="col-9">
+                    Muhammet BULUT has rated a design entry in <a href="#">Unlimited logo & business card
+                    contest</a><br>
+                    <small class="text-muted">10 minutes ago</small>
+                </div>
+
+            </div>
+            <div class="row mb-3">
+                <div class="col-1">
+                    <img width="45" height="45" src="{{ request.user.profile.get_photo }}"
+                         alt="">
+                </div>
+                <div class="col-9">
+                    Muhammet BULUT has rated a design entry in <a href="#">Unlimited logo & business card
+                    contest</a><br>
+                    <small class="text-muted">10 minutes ago</small>
+                </div>
+
+            </div>
+            <div class="row mb-3">
+                <div class="col-1">
+                    <img width="45" height="45" src="{{ request.user.profile.get_photo }}"
+                         alt="">
+                </div>
+                <div class="col-9">
+                    Muhammet BULUT has rated a design entry in <a href="#">Unlimited logo & business card
+                    contest</a><br>
+                    <small class="text-muted">10 minutes ago</small>
+                </div>
+
+            </div>
+            <div class="row mb-3">
+                <div class="col-1">
+                    <img width="45" height="45" src="{{ request.user.profile.get_photo }}"
+                         alt="">
+                </div>
+                <div class="col-9">
+                    Muhammet BULUT has rated a design entry in <a href="#">Unlimited logo & business card
+                    contest</a><br>
+                    <small class="text-muted">10 minutes ago</small>
+                </div>
+
+            </div>
+            <div class="row mb-3">
+                <div class="col-1">
+                    <img width="45" height="45" src="{{ request.user.profile.get_photo }}"
+                         alt="">
+                </div>
+                <div class="col-9">
+                    Muhammet BULUT has rated a design entry in <a href="#">Unlimited logo & business card
+                    contest</a><br>
+                    <small class="text-muted">10 minutes ago</small>
+                </div>
+
+            </div>
+            <div class="row mb-3">
+                <div class="col-1">
+                    <img width="45" height="45" src="{{ request.user.profile.get_photo }}"
+                         alt="">
+                </div>
+                <div class="col-9">
+                    Muhammet BULUT has rated a design entry in <a href="#">Unlimited logo & business card
+                    contest</a><br>
+                    <small class="text-muted">10 minutes ago</small>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script>
+        document.getElementById("nav_teams").style.backgroundColor = "#D2562C"
+        document.getElementById("nav_teams").classList.replace("text-dark", "text-white")
+
+    </script>
+{% endblock %}
